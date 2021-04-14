@@ -25,3 +25,14 @@ Migrate(app, db)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'users.login'
+
+
+##########################################
+######### REGISTER BLUEPRINTS ############
+##########################################
+
+from schoolclubinfomanager.core.views import core
+from schoolclubinfomanager.users.views import users
+
+app.register_blueprint(core)
+app.register_blueprint(users)
