@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Flask sass test</title>
+
+  </head>
+  <body>
+    <header>
+      <h1>School Club Information Manager</h1>
+    </header>
+
+
+    {% if current_user.is_authenticated %}
+
+    <li class=""><a href="{{ url_for('users.logout')}}">Log out</a></li>
+
+    {% else %}
+
+    <li class=""><a href="{{ url_for('users.login')}}">Log in</a></li>
+    <li class=""><a href="{{ url_for('users.register')}}">Register</a></li>
+
+    {% endif %}
+
+    <div class="">
+      {% block content %}
+
+      {% endblock %}
+
+    </div>
+
+  </body>
+</html>
