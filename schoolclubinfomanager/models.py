@@ -41,7 +41,7 @@ class School(db.Model):
     font = db.Column(db.String(64), nullable=False)
     website = db.Column(db.String(64))
     yeargroups = db.relationship("YearGroup", back_populates="school")
-    tokens = db.relationship('ApproveNewUserToken', back_populates="school")
+    #tokens = db.relationship('ApproveNewUserToken', back_populates="school")
 
     def __init__(self, name, club_summary, banner_colour, font_colour, font, website):
         self.name = name
@@ -65,6 +65,9 @@ class YearGroup(db.Model):
         self.name = name
         self.school_id = school_id
 
+#https://stackoverflow.com/questions/44941757/sqlalchemy-exc-operationalerror-sqlite3-operationalerror-no-such-table
+db.create_all()
+'''
 class ApproveNewUserToken(db.Model):
 
     school_id = db.Column(db.Integer, ForeignKey(School.id), primary_key=True)
@@ -78,4 +81,4 @@ class ApproveNewUserToken(db.Model):
         self.issued_time = issued_time
 
     def __repr__(self):
-        return f"{self.token}"
+        return f"{self.token}"'''

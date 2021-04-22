@@ -21,8 +21,8 @@ def register():
         return redirect(url_for('users.login'))
     return (render_template('register.html', form=form))
 
-
-@users.route('/login')
+# LOGIN
+@users.route('/login', methods=['GET', 'POST'])
 def login():
 
     form = LoginForm()
@@ -38,5 +38,10 @@ def login():
                 next = url_for('core.index')
 
             return redirect(next) # this return is connected to the if user.check_password statement
-        return render_template('login.html', form=form) # this return is connected to the overall form - check indentaion!
-        
+    return render_template('login.html', form=form) # this return is connected to the overall form - check indentaion!
+
+# LOGOUT
+@users.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('users.login'))
