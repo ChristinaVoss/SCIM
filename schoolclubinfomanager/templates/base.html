@@ -2,7 +2,11 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Flask sass test</title>
+    <title>SCIM</title>
+    {% assets "asset_css" %}
+    <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}"/>
+    {% endassets %}
+
 
   </head>
   <body>
