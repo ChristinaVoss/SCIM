@@ -10,9 +10,12 @@
       <h1>School Club Information Manager</h1>
     </header>
 
-
+    <ul>
     {% if current_user.is_authenticated %}
+    <!-- user is logged in -->
 
+    <li class=""><a href="{{ url_for('users.user_account')}}">Your account details</a></li>
+    <li class=""><a href="{{ url_for('users.list_users')}}">List users</a></li>
     <li class=""><a href="{{ url_for('users.logout')}}">Log out</a></li>
 
     {% else %}
@@ -21,6 +24,7 @@
     <li class=""><a href="{{ url_for('users.register')}}">Register</a></li>
 
     {% endif %}
+    </ul>
 
     <div class="">
       {% block content %}

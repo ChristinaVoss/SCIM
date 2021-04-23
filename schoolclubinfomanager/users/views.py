@@ -1,8 +1,8 @@
-from flask import render_template, url_for, redirect, request, Blueprint
+from flask import render_template, url_for, redirect, request, Blueprint, session
 from flask_login import login_user, current_user, logout_user, login_required
 from schoolclubinfomanager import db
 from schoolclubinfomanager.models import User
-from schoolclubinfomanager.users.forms import RegistrationForm, LoginForm, UpdateUserForm
+from schoolclubinfomanager.users.forms import RegistrationForm, LoginForm, UpdateUserForm, DeleteUserForm
 
 users = Blueprint('users', __name__)
 
@@ -61,7 +61,7 @@ def user_account():
 
     form = UpdateUserForm()
     if form.validate_on_submit():
-        
+
         current_user.name = form.name.data
         current_user.email = form.email.data
 
@@ -74,3 +74,21 @@ def user_account():
         form.email.data = current_user.email
 
     return render_template('user_account.html', form=form)
+
+
+# DELETE USER
+@users.route('/delete_user/<user>', methods=['GET', 'POST'])
+@login_required
+def delete_user(user):
+    # MUST CREATE MORE CHECKS - YOU SHOULD BE ABLE TO DELETE LAST USER! (OR YOURSELF?)
+
+    user = User.query.filter_by(id=user).first()
+    form = DeleteUserForm()
+    if form.validate_on_submit():
+        db.session.delete(user)
+        db.session.commit()
+        # user has pressed "Delete user button,
+        # so delete user and return to list"
+        return redirect(url_for('users.list_users'))
+    # when user first enters page, this is inital view
+    return render_template('delete_user.html', form=form, user=user)

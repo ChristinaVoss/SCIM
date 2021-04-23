@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Delete user account of {{user.name}}?</h2>
+
+<p>User email: {{ user.email}}</p>
+
+<br><br><br>
+
+<form method="POST">
+  {{ form.hidden_tag() }}<!-- to make sure we can accept the form -->
+ <a href="{{ url_for('users.list_users')}}" class="">Cancel</a>
+  {{ form.submit() }}
+</form>
+
+{% endblock %}
