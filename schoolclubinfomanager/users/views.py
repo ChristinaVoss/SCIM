@@ -52,7 +52,7 @@ def logout():
 @login_required
 def list_users():
     users = User.query.all()
-    return render_template('list_users.html', users=users)
+    return render_template('admin/list_users.html', users=users)
 
 # EDIT USERS
 @users.route('/user_account', methods=["GET", "POST"])
@@ -73,7 +73,7 @@ def user_account():
         form.name.data = current_user.name
         form.email.data = current_user.email
 
-    return render_template('user_account.html', form=form)
+    return render_template('admin/user_account.html', form=form)
 
 
 # DELETE USER
@@ -91,4 +91,4 @@ def delete_user(user):
         # so delete user and return to list"
         return redirect(url_for('users.list_users'))
     # when user first enters page, this is inital view
-    return render_template('delete_user.html', form=form, user=user)
+    return render_template('admin/delete_user.html', form=form, user=user)
