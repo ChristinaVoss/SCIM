@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+{% include "admin/navigation.html" %}
 <h2>Delete user account of {{user.name}}?</h2>
 
 <p>User email: {{ user.email}}</p>

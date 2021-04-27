@@ -1,0 +1,70 @@
+
+
+{% block nav %}
+<div class="sidebar">
+  <ul class="nav">
+    <li class="nav__item">
+      <ion-icon name="home-sharp"></ion-icon>
+      <a href="#" class="nav__link">School account details</a>
+    </li>
+    <li class="nav__item">
+      <ion-icon name="people-sharp"></ion-icon>
+      <a href="#" class="nav__link">Manage admin users</a>
+      <ion-icon name="chevron-down-sharp"></ion-icon>
+
+      <ul class="nav__sub-menu">
+        <li class="nav__sub-menu__item">
+          <ion-icon name="person-sharp"></ion-icon>
+          <a href="{{ url_for('users.user_account')}}" class="nav__link">Your account details</a>
+        </li>
+        <li class="nav__sub-menu__item">
+          <ion-icon name="person-add-sharp"></ion-icon>
+          <a href="#" class="nav__link">New user token</a>
+        </li>
+        <li class="nav__sub-menu__item">
+          <ion-icon name="list-sharp"></ion-icon>
+          <a href="{{ url_for('users.list_users')}}" class="nav__link">List and manage users</a>
+        </li>
+      </ul>
+
+    </li>
+    <li class="nav__item">
+      <ion-icon name="add-sharp"></ion-icon>
+      <a href="#" class="nav__link">Create new club</a>
+    </li>
+    <li class="nav__item">
+      <ion-icon name="list-sharp"></ion-icon>
+      <a href="#" class="nav__link">List clubs</a>
+    </li>
+    <li class="nav__item">
+      <ion-icon name="create-sharp"></ion-icon>
+      <a href="#" class="nav__link">Edit club</a>
+    </li>
+    <li class="nav__item">
+      <ion-icon name="trash-sharp"></ion-icon>
+      <a href="#" class="nav__link">Delete club</a>
+    </li>
+
+    <li class="nav__item">
+      <ion-icon name="id-card-sharp"></ion-icon>
+      <a href="#" class="nav__link">Manage club staff</a>
+      <ion-icon name="chevron-down-sharp"></ion-icon>
+
+      <ul class="nav__sub-menu">
+        <li class="nav__sub-menu__item">
+          <ion-icon name="people-circle-sharp"></ion-icon>
+          <a href="#" class="nav__link">Staff members</a>
+        </li>
+        <li class="nav__sub-menu__item">
+          <ion-icon name="business-sharp"></ion-icon>
+          <a href="#" class="nav__link">Companies</a>
+        </li>
+      </ul>
+
+    </li>
+  </ul>
+</div>
+
+<a href="{{ url_for('users.logout')}}">Log out</a>
+
+{% endblock %}
