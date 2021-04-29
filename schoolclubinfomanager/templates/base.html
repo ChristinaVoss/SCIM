@@ -11,29 +11,23 @@
 
   </head>
   <body>
-    <header>
-      <h1>School Club Information Manager</h1>
-    </header>
-
+    {% include "admin/header.html" %}
 
     {% if current_user.is_authenticated %}
     <!-- user is logged in -->
-    {% block nav %}
-    {% endblock %}
+      {% include "admin/navigation.html" %}
 
     {% else %}
-    <ul>
-      <li class=""><a href="{{ url_for('users.login')}}">Log in</a></li>
-      <li class=""><a href="{{ url_for('users.register')}}">Register</a></li>
-    </ul>
+      <ul>
+        <li class=""><a href="{{ url_for('users.login')}}">Log in</a></li>
+        <li class=""><a href="{{ url_for('users.register')}}">Register</a></li>
+      </ul>
     {% endif %}
-
 
     <div class="">
       {% block content %}
-
+        <!-- page specific content goes here -->
       {% endblock %}
-
     </div>
 
   </body>
