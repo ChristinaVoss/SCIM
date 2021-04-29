@@ -1,0 +1,19 @@
+<header class="header">
+
+  {% if school_name %}
+
+    <h1 class="header__title">
+      School Club Information Manager for {{school_name}}
+    </h1>
+
+  {% else %}
+    <h1 class="header__title">
+      Welcome to the School Club information Manager
+    </h1>
+
+  {% endif %}
+
+  {% if current_user.is_authenticated %}
+    <a href="{{ url_for('users.logout')}}">Log out</a>
+  {% endif %}
+</header>

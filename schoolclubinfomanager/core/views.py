@@ -8,4 +8,7 @@ core = Blueprint('core', __name__)
 # temporary view to check application runs
 @core.route('/')
 def index():
-    return render_template('admin/navigation.html')
+
+
+
+    return render_template('base.html')
