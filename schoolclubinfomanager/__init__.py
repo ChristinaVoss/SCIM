@@ -58,7 +58,9 @@ login_manager.login_view = 'users.login'
 ##########################################
 
 from schoolclubinfomanager.core.views import core
+from schoolclubinfomanager.school.views import school
 from schoolclubinfomanager.users.views import users
 
 app.register_blueprint(core)
+app.register_blueprint(school)
 app.register_blueprint(users)

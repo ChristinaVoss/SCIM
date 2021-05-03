@@ -7,7 +7,7 @@ from wtforms.validators import DataRequired, Email, EqualTo
 from flask_login import current_user
 from schoolclubinfomanager.models import User
 
-# Flask forms allow you to easily create forms in format:
+# Flask forms (wtforms) allow you to easily create forms in format:
 # variable_name = Field_type('Label that will show', validators=[V_func1(), V_func2(),...])
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
