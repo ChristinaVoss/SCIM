@@ -1,13 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% for s in school %}
 <div class="school-account">
-  <!--<h2 class="h2">Account details</h2><a href="#" class="link-small">edit</a>
+  <h2 class="h2">Account details</h2><a href="#" class="link-small">edit</a>
   <p class="school-account__item">School name:
-    <span class="school-account__item--value">{{ school.name}}</span>
+    <span class="school-account__item--value">{{ s.name}}</span>
   </p>
-  <p class="school-account__item">Logo filename:
-    <span class="school-account__item--value">{{ school.logo}}</span>
+  <p class="school-account__item">Logo:
+    <img src="{{ url_for('static', filename='img/'+s.logo)}}" alt="school logo" class="logo--medium">
   </p>
   <p class="school-account__item">Year groups:
     <span class="school-account__item--value">
@@ -17,18 +18,16 @@
     </span>
   </p>
   <p class="school-account__item">Number of clubs on offer:
-    <span class="school-account__item--value">0</span>
+    <span class="school-account__item--value">0</span><!-- UPDATE WITH DYMANIC VALUE WHEN CLUBS EXIST! -->
   </p>
   <p class="school-account__item">School website:
-    <span class="school-account__item--value">{{ school.website}}</span>
+    <span class="school-account__item--value">{{ s.website}}</span>
   </p>
   <p class="school-account__item">Banner style:
-    <span class="school-account__item--value">Background colour: {{ school.banner_colour}}</span>
-    <span class="school-account__item--value">Font colour: {{ school.font_colour}}</span>
-    <span class="school-account__item--value">Font: {{ school.font}}</span>
-  </p>-->
-  {% for s in school %}
-  <p>{{s.id, s.name, s.logo, s.banner_colour, s.font}}</p>
+    <span class="school-account__item--value">Background colour: {{ s.banner_colour}}</span>
+    <span class="school-account__item--value">Font colour: {{ s.font_colour}}</span>
+    <span class="school-account__item--value">Font: {{ s.font}}</span>
+  </p>
   {% endfor %}
 
 </div>
