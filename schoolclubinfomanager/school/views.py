@@ -9,6 +9,7 @@ school = Blueprint('school', __name__)
 
 # SETUP STEP 1
 @school.route('/setup1', methods=['GET', 'POST'])
+@login_required
 def setup_step1():
     form = SchoolSetupStep1()
 
@@ -46,6 +47,7 @@ def setup_step1():
 
 # SETUP STEP 2
 @school.route('/setup2/<school>', methods=['GET', 'POST'])
+@login_required
 def setup_step2(school):
     form = SchoolSetupStep2()
     school = School.query.filter_by(id=school).first()
@@ -65,10 +67,11 @@ def setup_step2(school):
 
 # HOME
 @school.route('/school_account', methods=['GET'])
+@login_required
 def school_account():
     school = School.query.all()
-    '''ygs = YearGroup.query.all()
-
+    ygs = YearGroup.query.all()
+    '''
     for yg in ygs:
         db.session.delete(yg)
 
@@ -78,4 +81,4 @@ def school_account():
     db.session.commit()'''
     #year_groups = YearGroup.query.filter_by(school_id=school.id)
     #return render_template('admin/school_account.html', school=school, year_groups=year_groups)
-    return render_template('admin/school_account.html', school=school)
+    return render_template('admin/school_account.html', school=school, year_groups=ygs)

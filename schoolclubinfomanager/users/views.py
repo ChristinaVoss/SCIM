@@ -36,10 +36,9 @@ def login():
             school = School.query.all()
 
             if not school:
-                return redirect(url_for('school.setup_step1'))#redirect(url_for('school.school_account'))
+                return redirect(url_for('school.setup_step1'))
             else:
-                return render_template('admin/school_account.html', school=school)#redirect(url_for('school.setup_step1'))
-
+                return redirect(url_for('school.school_account'))
     return render_template('login.html', form=form) # this return is connected to the overall form - check indentaion!
 
 # LOGOUT
