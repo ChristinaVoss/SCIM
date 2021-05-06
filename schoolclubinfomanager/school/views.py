@@ -67,6 +67,15 @@ def setup_step2(school):
 @school.route('/school_account', methods=['GET'])
 def school_account():
     school = School.query.all()
+    '''ygs = YearGroup.query.all()
+
+    for yg in ygs:
+        db.session.delete(yg)
+
+
+    for s in school:
+        db.session.delete(s)
+    db.session.commit()'''
     #year_groups = YearGroup.query.filter_by(school_id=school.id)
     #return render_template('admin/school_account.html', school=school, year_groups=year_groups)
     return render_template('admin/school_account.html', school=school)
