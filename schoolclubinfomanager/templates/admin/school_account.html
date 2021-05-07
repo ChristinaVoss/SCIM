@@ -3,7 +3,7 @@
 {% block content %}
 {% for s in school %}
 <div class="school-account">
-  <h2 class="h2">Account details</h2><a href="#" class="link-small">edit</a>
+  <h2 class="h2">Account details</h2><a href="{{url_for('school.edit_step1')}}" class="link-small">edit</a>
   <p class="school-account__item">School name:
     <span class="school-account__item--value">{{ s.name}}</span>
   </p>

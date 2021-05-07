@@ -82,3 +82,72 @@ def school_account():
     #year_groups = YearGroup.query.filter_by(school_id=school.id)
     #return render_template('admin/school_account.html', school=school, year_groups=year_groups)
     return render_template('admin/school_account.html', school=school, year_groups=ygs)
+
+
+#EDIT SCHOOL DETAILS STEP1
+@school.route('/edit-school-details-step1', methods=['GET', 'POST'])
+@login_required
+def edit_step1():
+    form = SchoolSetupStep1()
+    school = School.query.first()
+    year_groups = YearGroup.query.all()
+    existing_yg = {yg.name for yg in year_groups}
+
+    if form.validate_on_submit():
+
+        # save logo
+        if form.logo.data: #if they actually uploaded a logo
+            school_name = form.name.data
+            school_name = school_name.replace(' ', '')
+            school.logo = add_logo(form.logo.data, school_name)
+
+        school.name = form.name.data
+        school.club_summary = form.summary.data
+        school.website = form.school_website.data
+
+        db.session.commit()
+        #update database with year groups
+        new_year_groups = set(form.year_groups.data)
+        for group in new_year_groups:
+            if group not in existing_yg:
+                yg = YearGroup(group, school.id)
+                db.session.add(yg)
+
+        to_delete = existing_yg - new_year_groups
+        if to_delete:
+            for yg in to_delete:
+                temp = YearGroup.query.filter_by(name = yg).first()
+                db.session.delete(temp)
+
+        db.session.commit()
+        return redirect(url_for('school.edit_step2', school=school.id))
+    elif request.method == "GET":
+        # they are not really submitting anything and we grab their current details
+        form.name.data = school.name
+        form.summary.data = school.club_summary
+        form.school_website.data = school.website
+        form.year_groups.data = existing_yg
+
+    return (render_template('admin/edit_step1.html', form=form))
+
+# EDIT SCHOOL DETAILS STEP 2
+@school.route('/edit-school-details-step2/<school>', methods=['GET', 'POST'])
+@login_required
+def edit_step2(school):
+    form = SchoolSetupStep2()
+    school = School.query.filter_by(id=school).first()
+    if form.validate_on_submit():
+        # this setup step collects information on colours and looks for parent side banner
+        school.banner_colour = form.banner_colour.data
+        school.font_colour = form.font_colour.data
+        school.font = form.font.data
+
+        db.session.commit()
+        return redirect(url_for('school.school_account'))
+
+    elif request.method == "GET":
+
+        form.banner_colour.data = school.banner_colour
+        form.font_colour.data = school.font_colour
+        form.font.data = school.font
+    return (render_template('admin/edit_step2.html', form=form, school=school))
