@@ -42,7 +42,7 @@ def setup_step1():
 
         db.session.commit()
         return redirect(url_for('school.setup_step2', school=school.id))
-    return (render_template('admin/setup_step1.html', form=form))
+    return (render_template('admin/school_details_step1.html', form=form, title="Set up"))
 
 
 # SETUP STEP 2
@@ -62,7 +62,7 @@ def setup_step2(school):
 
         db.session.commit()
         return redirect(url_for('school.school_account'))
-    return (render_template('admin/setup_step2.html', form=form, school=school))
+    return (render_template('admin/school_details_step2.html', form=form, school=school, title="Set up"))
 
 
 # HOME
@@ -78,7 +78,8 @@ def school_account():
 
     for s in school:
         db.session.delete(s)
-    db.session.commit()'''
+    db.session.commit()
+    '''
     #year_groups = YearGroup.query.filter_by(school_id=school.id)
     #return render_template('admin/school_account.html', school=school, year_groups=year_groups)
     return render_template('admin/school_account.html', school=school, year_groups=ygs)
@@ -128,7 +129,7 @@ def edit_step1():
         form.school_website.data = school.website
         form.year_groups.data = existing_yg
 
-    return (render_template('admin/edit_step1.html', form=form))
+    return (render_template('admin/school_details_step1.html', form=form, title="Edit"))
 
 # EDIT SCHOOL DETAILS STEP 2
 @school.route('/edit-school-details-step2/<school>', methods=['GET', 'POST'])
@@ -150,4 +151,4 @@ def edit_step2(school):
         form.banner_colour.data = school.banner_colour
         form.font_colour.data = school.font_colour
         form.font.data = school.font
-    return (render_template('admin/edit_step2.html', form=form, school=school))
+    return (render_template('admin/school_details_step2.html', form=form, school=school, title="Edit"))

@@ -7,9 +7,11 @@
   <p class="school-account__item">School name:
     <span class="school-account__item--value">{{ s.name}}</span>
   </p>
+  {% if s.logo %}
   <p class="school-account__item">Logo:
     <img src="{{ url_for('static', filename='img/'+s.logo)}}" alt="school logo" class="logo--medium">
   </p>
+  {% endif %}
   <p class="school-account__item">Year groups:
     <span class="school-account__item--value">
       {% for yg in year_groups %}
