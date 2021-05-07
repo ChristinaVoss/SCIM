@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% for s in school %}
+<div class="school-account">
+  <h2 class="h2">Account details</h2><a href="{{url_for('school.edit_step1')}}" class="link-small">edit</a>
+  <p class="school-account__item">School name:
+    <span class="school-account__item--value">{{ s.name}}</span>
+  </p>
+  {% if s.logo %}
+  <p class="school-account__item">Logo:
+    <img src="{{ url_for('static', filename='img/'+s.logo)}}" alt="school logo" class="logo--medium">
+  </p>
+  {% endif %}
+  <p class="school-account__item">Year groups:
+    <span class="school-account__item--value">
+      {% for yg in year_groups %}
+        {{yg.name}}
+      {% endfor %}
+    </span>
+  </p>
+  <p class="school-account__item">Number of clubs on offer:
+    <span class="school-account__item--value">0</span><!-- UPDATE WITH DYMANIC VALUE WHEN CLUBS EXIST! -->
+  </p>
+  <p class="school-account__item">School website:
+    <span class="school-account__item--value">{{ s.website}}</span>
+  </p>
+  <p class="school-account__item">Banner style:
+    <span class="school-account__item--value">Background colour: {{ s.banner_colour}}</span>
+    <span class="school-account__item--value">Font colour: {{ s.font_colour}}</span>
+    <span class="school-account__item--value">Font: {{ s.font}}</span>
+  </p>
+  {% endfor %}
+
+</div>
+
+
+{% endblock %}

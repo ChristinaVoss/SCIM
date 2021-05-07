@@ -3,6 +3,8 @@
   <head>
     <meta charset="utf-8">
     <title>SCIM</title>
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.js"></script>-->
     {% assets "asset_css" %}
     <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}"/>
     {% endassets %}
@@ -11,29 +13,23 @@
 
   </head>
   <body>
-    <header>
-      <h1>School Club Information Manager</h1>
-    </header>
-
+    {% include "admin/header.html" %}
 
     {% if current_user.is_authenticated %}
     <!-- user is logged in -->
-    {% block nav %}
-    {% endblock %}
+      {% include "admin/navigation.html" %}
 
     {% else %}
-    <ul>
-      <li class=""><a href="{{ url_for('users.login')}}">Log in</a></li>
-      <li class=""><a href="{{ url_for('users.register')}}">Register</a></li>
-    </ul>
+      <ul>
+        <li class=""><a href="{{ url_for('users.login')}}">Log in</a></li>
+        <li class=""><a href="{{ url_for('users.register')}}">Register</a></li>
+      </ul>
     {% endif %}
-
 
     <div class="">
       {% block content %}
-
+        <!-- page specific content goes here -->
       {% endblock %}
-
     </div>
 
   </body>

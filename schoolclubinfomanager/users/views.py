@@ -1,7 +1,7 @@
 from flask import render_template, url_for, redirect, request, Blueprint, session
 from flask_login import login_user, current_user, logout_user, login_required
 from schoolclubinfomanager import db
-from schoolclubinfomanager.models import User
+from schoolclubinfomanager.models import User, School
 from schoolclubinfomanager.users.forms import RegistrationForm, LoginForm, UpdateUserForm, DeleteUserForm
 
 users = Blueprint('users', __name__)
@@ -32,12 +32,13 @@ def login():
 
         if user.check_password(form.password.data) and user is not None:
             login_user(user)
-            next = request.args.get('next') # grabs info about where the user was trying to access prior to login
 
-            if next == None or not next[0] == '/':
-                next = url_for('core.index')
+            school = School.query.all()
 
-            return redirect(next) # this return is connected to the if user.check_password statement
+            if not school:
+                return redirect(url_for('school.setup_step1'))
+            else:
+                return redirect(url_for('school.school_account'))
     return render_template('login.html', form=form) # this return is connected to the overall form - check indentaion!
 
 # LOGOUT

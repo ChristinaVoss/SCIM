@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="setup">
+  <h2 class="setup__title">{{title}} school account details</h2>
+  <p class="setup__comment"><sup>*</sup> Mandatory fields</p>
+
+
+  <form action="" method="POST"  class="setup__form" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}<!-- to make sure we can accept the form -->
+    {{ form.name.label }} {{ form.name(class="setup__string-field")}}
+    {{ form.summary.label }} {{ form.summary(class="setup__textarea-field")}}
+    <label for="logo">Upload logo</label><input type="file" name="logo" id="logo">
+    <!--{{ form.logo.label }} {{ form.name(class="setup__file-field")}}-->
+    {{ form.year_groups.label }} {{ form.year_groups(class="setup__checkbox-field")}}
+    {{ form.school_website.label }} {{ form.school_website(class="setup__stringfield")}}
+    {{ form.submit(class="btn") }}
+  </form>
+</div>
+
+{% endblock %}
