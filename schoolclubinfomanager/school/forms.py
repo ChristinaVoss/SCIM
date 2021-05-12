@@ -46,10 +46,10 @@ class SchoolSetupStep1(FlaskForm):
 
 class SchoolSetupStep2(FlaskForm):
     # use HTML input color option instead
-    font_colour = StringField('Pick colour for school name', validators=[Regexp('#[A-Fa-f0-9]{6}', message="Font colour must be valid hexadecimal number")], default='#57F7FA')
-    banner_colour = StringField('Pick main background colour for banner', validators=[Regexp('#[A-Fa-f0-9]{6}', message="Banner colour must be valid hexadecimal number")], default='#5F6EE6')
-    font = SelectField('Pick font for school name on top banner', choices=FONTS, default='Arial')
-    submit = SubmitField('Next')
+    font_colour = StringField('Choose colour for school name', validators=[Regexp('#[A-Fa-f0-9]{6}', message="Font colour must be valid hexadecimal number")], default='#57F7FA')
+    banner_colour = StringField('Choose background colour for banner', validators=[Regexp('#[A-Fa-f0-9]{6}', message="Banner colour must be valid hexadecimal number")], default='#5F6EE6')
+    font = SelectField('Choose font', choices=FONTS, default='Arial')
+    submit = SubmitField('Save')
 
 '''
 Do this for incremental stage 2 when you deal with filters.

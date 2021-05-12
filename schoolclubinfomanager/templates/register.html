@@ -1,14 +1,18 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block authentication %}
 
-<form method="POST">
+<form method="POST" class="user_authentication__form form">
   {{ form.hidden_tag() }} <!-- to make sure we can accept the form -->
-  {{ form.email.label }} {{ form.email(class="")}}<br>
-  {{ form.name.label }} {{ form.name(class="")}}<br>
-  {{ form.password.label }} {{ form.password(class="")}}<br>
-  {{ form.pass_confirm.label }} {{ form.pass_confirm(class="")}}<br>
-  {{ form.submit() }}
+  {{ form.name.label(class="form__label") }} {{ form.name(class="form__input", placeholder="Your name")}}<br>
+  {{ form.email.label(class="form__label") }} {{ form.email(class="form__input", placeholder="name@example.com")}}<br>
+  {{ form.password.label(class="form__label") }} {{ form.password(class="form__input", placeholder="Enter a password")}}<br>
+  {{ form.pass_confirm.label(class="form__label") }} {{ form.pass_confirm(class="form__input", placeholder="Confirm the password")}}<br>
+  {{ form.submit(class="btn") }}
 </form>
+<div class="user_authentication__question">
+  <p class="user_authentication__question__text">Already have an account?</p>
+  <a href="{{ url_for('users.login')}}" class="user_authentication__question__link">Log in</a>
+</div>
 
 {% endblock %}

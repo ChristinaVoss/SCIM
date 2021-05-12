@@ -1,0 +1,169 @@
+.hide {
+  position: absolute !important;
+  top: -9999px !important;
+  left: -9999px !important;
+}
+
+.form {
+  background-color: $color-light;
+  //margin: 3rem;
+  padding: 2rem 2rem 3rem 2rem;
+
+  // all labels for text fields
+  &__label {
+    color: $color-grey-dark-3;
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: .7rem 0 0rem .2rem;
+
+  }
+
+  // All standard input fields
+  &__input {
+    border: none;
+    border-radius: 0.2rem;
+    font-family: inherit;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    padding: 1rem 2rem;
+    width: 100%;
+
+    &::-webkit-input-placeholder,
+    &::-moz-placeholder {
+      color: $color-grey-dark-2;
+    }
+  }
+
+  &__textarea {
+    border: none;
+    height: 10rem;
+    margin-bottom: 2rem;
+    padding: 1rem 2rem;
+    width: 100%;
+  }
+
+  // COLOUR INPUT
+  &__color-input {
+    border: none;
+    height: 4rem;
+  }
+
+  // DROPDOWN FIELD
+  &__dropdown-field {
+    height: 3rem;
+  }
+
+
+  // FILE input
+  &__file {
+    // needs finxing - provides NO feedback to user to show they have uploaded file!
+    margin: 2rem 0 4rem 0;
+    &__label {
+      background-color: $color-primary-dark;
+      border-radius: 2px;
+      color: $color-light;
+      font-weight: 500;
+      padding: 1rem 1.5rem 1rem 3rem;
+      position: relative;
+
+      &:hover {
+        background-color: $color-grey-dark-2;
+      }
+
+      //When clicked https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-within
+      &:focus-within {
+        font-weight: 700;
+      }
+
+      &-input {
+        background-color: blue;
+      }
+    }
+
+    &__icon {
+      font-size: 1.6rem;
+      padding-right: .3rem;
+      position: absolute;
+      left: 1rem;
+    }
+
+
+  }
+
+  // checkbox container - based on solution from https://www.w3schools.com/howto/howto_css_custom_checkbox.asp
+  &__checkbox {
+    display: grid;
+    grid-gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    margin: 2rem 0;
+
+    // wraps each individual checkbox
+    &__label {
+      color: $color-grey-dark-3;
+      cursor: pointer;
+      font-weight: 500;
+      padding-left: 3.5rem;
+      position: relative;
+
+      &:hover {
+        font-weight: 700;
+      }
+
+      // change colour when you hover over label or checkbox
+      &:hover .form__checkbox__field ~ .form__checkbox__checkmark {
+        background-color: $color-grey-dark-1; //change!!
+      }
+
+      // Add colour for checked state
+      .form__checkbox__field:checked ~ .form__checkbox__checkmark {
+        background-color: $color-primary-dark; //change!!
+      }
+
+      // Show the checkmark when checked
+      .form__checkbox__field:checked ~ .form__checkbox__checkmark:after {
+        display: block;
+      }
+
+      .form__checkbox__checkmark:after {
+        left: 10px;
+        top: 5px;
+        width: 7px;
+        height: 11px;
+        border: solid 1px white;
+        border-width: 0 3px 3px 0;
+        transform: rotate(45deg);
+      }
+
+
+    }
+
+    // hide default HTML checkbox
+    &__field {
+      cursor: pointer;
+    }
+
+    // style the custom checkbox
+    &__checkmark {
+      position: absolute;
+      top: -.5rem;
+      left: 0;
+      height: 25px;
+      width: 25px;
+      background-color: #eee;
+
+      // Create the checkmark indicator (hidden when not checked)
+      &:after {
+        content: "";
+        position: absolute;
+        display: none;
+      }
+    }
+  }
+
+  // SUBMIT button
+  .btn {
+    width: 100%;
+    //margin-top: 1rem;
+  }
+}

@@ -1,12 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Users</h2>
-<ul>
-  {% for user in users %}
-  <li>Id: {{user.id}}, Name: {{user.name}}, Email: {{user.email}} <a href="{{ url_for('users.delete_user', user=user.id)}}">delete user</a></li><br>
+<h2 class="list-users">Users</h2>
 
+<table class="table">
+  <tr class="table__row list-users__row">
+    <th class="table__header">id</th>
+    <th class="table__header">Name</th>
+    <th class="table__header">Email</th>
+    <th class="table__header"></th>
+  </tr>
+  {% for user in users %}
+  <tr class="table__row">
+    <td class="table__cell">{{user.id}}</td>
+    <td class="table__cell">{{user.name}}</td>
+    <td class="table__cell">{{user.email}}</td>
+    <td class="table__cell">
+      <a href="{{ url_for('users.delete_user', user=user.id)}}" class="btn--delete">
+        delete user
+      </a>
+    </td>
+  </tr>
   {% endfor %}
-</ul>
+
+</table>
+
 
 {% endblock %}

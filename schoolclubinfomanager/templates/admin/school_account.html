@@ -1,17 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% for s in school %}
+
 <div class="school-account">
-  <h2 class="h2">Account details</h2><a href="{{url_for('school.edit_step1')}}" class="link-small">edit</a>
-  <p class="school-account__item">School name:
-    <span class="school-account__item--value">{{ s.name}}</span>
-  </p>
-  {% if s.logo %}
-  <p class="school-account__item">Logo:
-    <img src="{{ url_for('static', filename='img/'+s.logo)}}" alt="school logo" class="logo--medium">
-  </p>
-  {% endif %}
+  <div class="school-account__header">
+    <h2 class="h2">Account details</h2><a href="{{url_for('school.edit_step1')}}" class="link link-small">edit</a>
+  </div>
+  <div class="school-account__details">
   <p class="school-account__item">Year groups:
     <span class="school-account__item--value">
       {% for yg in year_groups %}
@@ -23,14 +18,21 @@
     <span class="school-account__item--value">0</span><!-- UPDATE WITH DYMANIC VALUE WHEN CLUBS EXIST! -->
   </p>
   <p class="school-account__item">School website:
-    <span class="school-account__item--value">{{ s.website}}</span>
+    <span class="school-account__item--value">{{ school.website}}</span>
   </p>
-  <p class="school-account__item">Banner style:
-    <span class="school-account__item--value">Background colour: {{ s.banner_colour}}</span>
-    <span class="school-account__item--value">Font colour: {{ s.font_colour}}</span>
-    <span class="school-account__item--value">Font: {{ s.font}}</span>
-  </p>
-  {% endfor %}
+</div>
+  <h3 class="school-account__subheading">Parent side banner</h3>
+  <p class="comment">
+    What the banner will look like on the parent side application,
+    based on your choices. <br>You can edit this at any time, using the edit button at the top of the page.</p>
+  <div class="school-account__banner" style="background-color:{{school.banner_colour}};">
+    <p class="school-account__banner__title" style="font-family:{{school.font}};color:{{school.font_colour}};">Clubs for {{school.name}}</p>
+    {% if school.logo %}
+    <img src="{{ url_for('static', filename='img/'+school.logo)}}" alt="school logo" class="logo--small">
+    {% endif %}
+    <a href="#" class="school-account__banner__link" style="color:{{school.font_color}};">Return to school website</a>
+  </div>
+
 
 </div>
 

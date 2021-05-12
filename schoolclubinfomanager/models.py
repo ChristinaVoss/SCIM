@@ -50,6 +50,8 @@ class School(db.Model):
         self.logo = logo
         self.website = website
         self.num_clubs = 0
+        self.banner_colour = "#19456b"
+        self.font_colour = "FFFFFF"
 
     def __repr__(self):
         return f"{self.name}"

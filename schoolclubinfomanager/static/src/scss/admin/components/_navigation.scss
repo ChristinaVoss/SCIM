@@ -1,0 +1,72 @@
+.nav {
+  //remove bullet list dots on main and sub menu items:
+  &,
+  &__sub-menu {
+    list-style: none;
+  }
+
+  // style "button" (list items)
+  &__item {
+    //padding: 1rem 1rem 1rem 2rem;
+    width: 100%;
+
+    &:first-child {
+      margin-top: 1rem;
+    }
+
+    &:hover,
+    &:hover &__link {
+      background-color: $color-grey-light-1;
+
+    }
+  }
+
+  &__icon {
+    margin-left: 2rem;
+
+    &--drop {
+      margin: 0;
+    }
+  }
+
+  &__label,
+  &__link {
+    display: inline-block;
+
+    &:hover {
+      font-weight: 700;
+    }
+  }
+
+  &__label {
+    padding: 1rem 0;
+  }
+
+  &__link {
+    padding: 1rem 1rem 1rem 0;
+  }
+
+  &__icon,
+  &__link,
+  &__label {
+    color: $color-grey-dark-3;
+    font-size: 1.3rem;
+    font-weight: 400;
+    text-decoration: none;
+  }
+
+  // toggle for hiding/showing submenus
+  &__checkbox {
+    display: none;
+  }
+
+  &__sub-menu {
+    display: none;
+  }
+
+  &__checkbox:checked ~ &__sub-menu {
+    display: block;
+  }
+
+
+}
