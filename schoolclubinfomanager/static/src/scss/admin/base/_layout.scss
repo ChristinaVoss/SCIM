@@ -1,0 +1,61 @@
+.container {
+  display: grid;
+  grid-template-rows: [header-start] 17rem [header-end main-start] 1fr [main-end];
+  grid-template-columns: [left-margin-start] 1fr [left-margin-end nav-start] 20rem
+                         [nav-end main-start] 3fr [main-end right-margin-start] 1fr
+                         [right-margin-end]
+}
+
+.header {
+  grid-column: nav-start / main-end;
+  background-color: $color-primary-dark;
+  display: grid;
+
+  &__title {
+    align-self: center;
+    text-align: center;
+  }
+
+  &__link {
+    justify-self: end;
+    margin-bottom: .5rem;
+  }
+}
+
+.sidebar {
+  grid-column: nav-start / nav-end;
+  //grid-row: main-start / -1;
+  height: 100vh;
+  background-color: $color-grey-light-2;
+}
+
+.user_authentication {
+  grid-column: nav-start / main-end;
+  justify-self: center;
+  margin: 3rem;
+
+  &__form {
+    display: grid;
+    //grid-template-columns: 1fr 1fr;
+    //grid-gap: 1rem;
+    //align-items: end;
+  }
+
+  &__question {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+}
+
+.user_account__form {
+  width: 50%;
+  margin-top: 2rem;
+  //margin-left: 2rem;
+}
+
+.main-content {
+  grid-column: main-start /main-end;
+  margin: 2rem 0 2rem 4rem;
+
+}

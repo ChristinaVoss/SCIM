@@ -11,33 +11,76 @@ window.onload = function() {
         window.location.reload();
     }
 }
+
+function changeBannerColour() {
+  let colour = document.getElementById("banner_colour").value;
+  document.getElementById("school-banner").style.backgroundColor = colour;
+  document.getElementById("banner_colour-name").innerHTML = colour;
+}
+
+function changeFontColour() {
+  let colour = document.getElementById("font_colour").value;
+  document.getElementById("school-font").style.color = colour;
+  document.getElementById("font_colour-name").innerHTML = colour;
+}
+/*
+function changeFont() {
+  let font = document.getElementById("font").value;
+  document.getElementById("school-font").style.fontFamily = font;
+}
+*/
+var changeFont = function(font){
+  console.log(font.value)
+    document.getElementById("school-font").style.fontFamily = font.value;
+}
+
 </script>
 
 <div class="setup">
   <h2 class="h2">{{title}} school account details</h2>
-  <p class="setup__comment"><sup>*</sup> Mandatory fields</p>
 
-  <form method="POST" class="setup__form">
+  <form method="POST" class="form setup__form">
+    <h3>Style the top banner for your parent side app</h3>
+    <p class="comment">Click on the square colour boxes to open colour-picker,
+      then click "preview" to see name and colour on banner.</p>
     {{ form.hidden_tag() }}<!-- to make sure we can accept the form -->
-    <label for="font_colour">Pick colour for school name</label>
-    <input type="color" id="font_colour" name="font_colour" value="">
-    <label for="banner_colour">Pick main background colour for banner</label>
-    <input type="color" id="banner_colour" name="banner_colour" value="">
-    {{ form.font.label }} {{ form.font(class="setup__dropdown-field")}}
-    <a href="{{ url_for('school.edit_step1')}}" class="btn">Back</a>
-    {{ form.submit(class="btn") }}
+
+    <label for="banner_colour" class="form__label">Choose background colour for banner</label>
+    <div class="setup__col-align">
+      <input type="color" id="banner_colour" name="banner_colour" value="{{school.banner_colour}}" class="form__color-input">
+      <p class="setup__col-align__name" id="banner_colour-name">{{school.banner_colour}}</p>
+      <input type="button" name="bannerColButton" value="Preview" onclick="changeBannerColour()" class="btn--col-input">
+    </div>
+
+    <label for="font_colour" class="form__label">Choose colour for school name</label>
+    <div class="setup__col-align">
+      <input type="color" id="font_colour" name="font_colour" value="{{school.font_colour}}" class="form__color-input">
+      <p class="setup__col-align__name" id="font_colour-name">{{school.font_colour}}</p>
+      <input type="button" name="fontColButton" value="Preview" onclick="changeFontColour()" class="btn--col-input">
+    </div>
+
+    {{ form.font.label(class="form__label") }} {{ form.font(class="setup__dropdown-field", id="font", onchange="changeFont(this);" )}}
+
+    <div class="setup__display-banner">
+      <h3 class="">How your top banner will look</h3>
+      <div class="school-account__banner" id="school-banner" style="background-color:{{school.banner_colour}};">
+        <p class="school-account__banner__title" id="school-font" style="font-family:{{school.font}};color:{{school.font_colour}};">Clubs for {{school.name}}</p>
+        {% if school.logo %}
+        <img src="{{ url_for('static', filename='img/'+school.logo)}}" alt="school logo" class="logo--small">
+        {% endif %}
+        <a href="#" class="school-account__banner__link" style="color:{{school.font_color}};">Return to school website</a>
+      </div>
+    </div>
+
+
+    <div class="setup__back-next">
+      <a href="{{ url_for('school.edit_step1')}}" class="btn--back">Back</a>
+      {{ form.submit(class="btn") }}
+    </div>
+
   </form>
 
-  <div class="setup__display-banner">
-    <h2 class="h2">How your top banner will look</h2>
-    <div class="setup__display-banner__box">
-      <h3 class="h3">Clubs for {{ school.name }}</h3>
-      <h4 class="h4">Return to school website</h4>
-      {% if school.logo %}
-      <img src="{{ url_for('static', filename='img/'+school.logo)}}" alt="school logo" class="logo--medium">
-      {% endif %}
-    </div>
-  </div>
+
 
 </div>
 

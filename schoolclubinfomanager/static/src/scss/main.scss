@@ -1,1 +1,13 @@
+@import "admin/base/base";
+@import "admin/base/layout";
+@import "admin/base/typography";
 
+
+@import "admin/components/buttons";
+@import "admin/components/form";
+@import "admin/components/navigation";
+@import "admin/components/table";
+
+@import "admin/pages/list-users";
+@import "admin/pages/school-account";
+@import "admin/pages/school_details_step2";

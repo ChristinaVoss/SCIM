@@ -6,14 +6,28 @@
   <p class="setup__comment"><sup>*</sup> Mandatory fields</p>
 
 
-  <form action="" method="POST"  class="setup__form" enctype="multipart/form-data">
+  <form action="" method="POST"  class="form setup__form" enctype="multipart/form-data">
     {{ form.hidden_tag() }}<!-- to make sure we can accept the form -->
-    {{ form.name.label }} {{ form.name(class="setup__string-field")}}
-    {{ form.summary.label }} {{ form.summary(class="setup__textarea-field")}}
-    <label for="logo">Upload logo</label><input type="file" name="logo" id="logo">
+    {{ form.name.label(class="form__label") }} {{ form.name(class="form__input")}}
+    {{ form.summary.label(class="form__label") }} {{ form.summary(class="form__textarea")}}
+    <div class="form__file">
+      <label for="logo" class="form__file__label">
+        <ion-icon name="cloud-upload-outline" class="form__file__icon"></ion-icon>Upload logo
+      <input type="file" name="logo" id="logo" class="form__file-input hide">
+      </label>
+    </div>
+
     <!--{{ form.logo.label }} {{ form.name(class="setup__file-field")}}-->
-    {{ form.year_groups.label }} {{ form.year_groups(class="setup__checkbox-field")}}
-    {{ form.school_website.label }} {{ form.school_website(class="setup__stringfield")}}
+    <label for="" class="form__label">Year groups you offer clubs to</label>
+    <div class="form__checkbox">
+
+    {% for yg in form.year_groups %}
+        <label class="form__checkbox__label">{{yg.label}}{{yg(class="form__checkbox__field  hide")}}
+          <span class="form__checkbox__checkmark"></span>
+        </label>
+    {% endfor %}
+  </div>
+    {{ form.school_website.label(class="form__label") }} {{ form.school_website(class="form__input")}}
     {{ form.submit(class="btn") }}
   </form>
 </div>

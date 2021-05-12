@@ -9,6 +9,6 @@ core = Blueprint('core', __name__)
 @core.route('/')
 def index():
 
+    school = School.query.first()
 
-
-    return render_template('base.html')
+    return render_template('base.html', school=school)

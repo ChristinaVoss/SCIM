@@ -1,0 +1,64 @@
+.school-account {
+
+  &__header {
+    display: grid;
+    grid-template-columns: max-content max-content;
+    align-items: flex-end;
+
+    .link {
+      margin-bottom: .5rem;
+      margin-left: .3rem;
+      color: $color-primary-dark;
+
+      &:hover {
+        font-weight: 500;
+        border-bottom: solid 2px;
+      }
+    }
+  }
+
+  &__details {
+    margin: 4rem 0;
+  }
+
+  &__item {
+    font-weight: 400;
+    margin-bottom: 1rem;
+
+    &--value {
+      font-weight:300;
+    }
+  }
+
+  &__subheading {
+    margin-top: 2rem;
+    //margin-bottom: .2rem;
+  }
+
+
+
+  &__banner {
+    display: grid;
+    grid-template-columns: max-content max-content 1fr;
+    align-items: center;
+
+    &__title {
+      padding-left: 1rem;
+
+    }
+
+    &__link {
+      text-decoration: none;
+      text-transform: uppercase;
+      color: $color-light;
+      justify-self: end;
+      padding: 0 1rem;
+    }
+  }
+}
+
+.logo {
+  &--small {
+    height: 4rem;
+  }
+}

@@ -29,7 +29,7 @@ assets = Environment(app)
 css = Bundle('src/scss/main.scss',
              filters=['libsass'],
              output='dist/css/styles.css',
-             depends='src/scss/*.scss')
+             depends='src/scss/*/*/*.scss')
 
 assets.register("asset_css", css)
 css.build()

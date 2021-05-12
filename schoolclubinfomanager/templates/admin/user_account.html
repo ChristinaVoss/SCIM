@@ -1,17 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>{{current_user.name}}</h2>
+<div class="user_account">
+  <h2>Your user account details</h2>
 
-<p>Email: {{ current_user.email}}</p>
+  <form method="POST" class="form user_account__form">
+    <h3>Your details</h3>
+    <p class="comment">The form is pre-filled with your current details.
+      To update a(ny) field(s), change the value(s) and press "update details".</p>
 
-<br><br><br>
-
-<form method="POST">
-  {{ form.hidden_tag() }} <!-- to make sure we can accept the form -->
-  {{ form.name.label }} {{ form.name(class="")}}<br>
-  {{ form.email.label }} {{ form.email(class="")}}<br>
-  {{ form.submit() }}
-</form>
-
+    {{ form.hidden_tag() }} <!-- to make sure we can accept the form -->
+    {{ form.name.label(class="form__label") }} {{ form.name(class="form__input")}}<br>
+    {{ form.email.label(class="form__label") }} {{ form.email(class="form__input")}}<br>
+    {{ form.submit(class="btn") }}
+  </form>
+</div>
 {% endblock %}

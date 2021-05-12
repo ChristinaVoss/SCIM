@@ -1,0 +1,54 @@
+body {
+  font-family: $font-primary;
+  font-weight: 300;
+}
+
+p {
+  font-size: 1.6rem;
+}
+
+h2 {
+  font-size: 3rem;
+  font-weight: 400;
+  //margin-bottom: 2rem;
+}
+
+h3 {
+  font-size: 2rem;
+  font-weight: 400;
+}
+
+.comment {
+  font-size: 1.3rem;
+  font-style: italic;
+  margin-bottom: 2rem;
+}
+
+.header {
+  &__title {
+    padding: 2.2rem 0 2.2rem 0;
+    color: $color-light;
+    font-size: 4rem;
+  }
+
+  &__link {
+    color: $color-light;
+    margin-right: 10px;
+  }
+}
+.user_authentication__question {
+    &__text {
+      color: $color-grey-dark-1;
+      font-size: 1rem;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+    &__link {
+      color: $color-primary-dark;
+      font-weight: 500;
+      text-decoration: none;
+      text-transform: uppercase;
+      margin-left: 0.5rem;
+    }
+}

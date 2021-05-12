@@ -2,59 +2,63 @@
 <div class="sidebar">
   <ul class="nav">
     <li class="nav__item">
-      <ion-icon name="home-sharp"></ion-icon>
+      <ion-icon name="home-sharp" class="nav__icon"></ion-icon>
       <a href="{{ url_for('school.school_account')}}" class="nav__link">School account details</a>
     </li>
     <li class="nav__item">
-      <ion-icon name="people-sharp"></ion-icon>
-      <a href="#" class="nav__link">Manage admin users</a>
-      <ion-icon name="chevron-down-sharp"></ion-icon>
+      <ion-icon name="people-sharp" class="nav__icon"></ion-icon>
+
+      <input type="checkbox" class="nav__checkbox" id="navi-toggle">
+      <label for="navi-toggle" class="nav__label">Manage admin users</label>
+      <ion-icon name="chevron-down-sharp" class="nav__icon nav__icon--drop"></ion-icon>
+
 
       <ul class="nav__sub-menu">
-        <li class="nav__sub-menu__item">
-          <ion-icon name="person-sharp"></ion-icon>
+        <li class="nav__item nav__sub-menu__item">
+          <ion-icon name="person-sharp" class="nav__icon"></ion-icon>
           <a href="{{ url_for('users.user_account')}}" class="nav__link">Your account details</a>
         </li>
-        <li class="nav__sub-menu__item">
-          <ion-icon name="person-add-sharp"></ion-icon>
+        <li class="nav__item nav__sub-menu__item">
+          <ion-icon name="person-add-sharp" class="nav__icon"></ion-icon>
           <a href="#" class="nav__link">New user token</a>
         </li>
-        <li class="nav__sub-menu__item">
-          <ion-icon name="list-sharp"></ion-icon>
+        <li class="nav__item nav__sub-menu__item">
+          <ion-icon name="list-sharp" class="nav__icon"></ion-icon>
           <a href="{{ url_for('users.list_users')}}" class="nav__link">List and manage users</a>
         </li>
       </ul>
 
     </li>
     <li class="nav__item">
-      <ion-icon name="add-sharp"></ion-icon>
+      <ion-icon name="add-sharp" class="nav__icon"></ion-icon>
       <a href="#" class="nav__link">Create new club</a>
     </li>
     <li class="nav__item">
-      <ion-icon name="list-sharp"></ion-icon>
+      <ion-icon name="list-sharp" class="nav__icon"></ion-icon>
       <a href="#" class="nav__link">List clubs</a>
     </li>
     <li class="nav__item">
-      <ion-icon name="create-sharp"></ion-icon>
-      <a href="#" class="nav__link">Edit club</a>
+      <ion-icon name="create-sharp" class="nav__icon"></ion-icon>
+      <a href="#" class="nav__link">Update club status</a>
     </li>
     <li class="nav__item">
-      <ion-icon name="trash-sharp"></ion-icon>
+      <ion-icon name="trash-sharp" class="nav__icon"></ion-icon>
       <a href="#" class="nav__link">Delete club</a>
     </li>
 
     <li class="nav__item">
-      <ion-icon name="id-card-sharp"></ion-icon>
-      <a href="#" class="nav__link">Manage club staff</a>
-      <ion-icon name="chevron-down-sharp"></ion-icon>
+      <ion-icon name="id-card-sharp" class="nav__icon"></ion-icon>
+      <input type="checkbox" class="nav__checkbox" id="navi-toggle2">
+      <label for="navi-toggle2" class="nav__label">Manage club staff</label>
+      <ion-icon name="chevron-down-sharp" class="nav__icon nav__icon--drop"></ion-icon>
 
       <ul class="nav__sub-menu">
-        <li class="nav__sub-menu__item">
-          <ion-icon name="people-circle-sharp"></ion-icon>
+        <li class="nav__item nav__sub-menu__item">
+          <ion-icon name="people-circle-sharp" class="nav__icon"></ion-icon>
           <a href="#" class="nav__link">Staff members</a>
         </li>
-        <li class="nav__sub-menu__item">
-          <ion-icon name="business-sharp"></ion-icon>
+        <li class="nav__item nav__sub-menu__item">
+          <ion-icon name="business-sharp" class="nav__icon"></ion-icon>
           <a href="#" class="nav__link">Companies</a>
         </li>
       </ul>
