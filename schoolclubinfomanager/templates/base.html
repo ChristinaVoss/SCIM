@@ -39,12 +39,11 @@
         {% include "admin/navigation.html" %}
 
       {% else %}
-        <ul class="user_authentication">
-          <!--<li class=""><a href="{{ url_for('users.login')}}">Log in</a></li>-->
+        <div class="user_authentication">
+
           {% block authentication %}
           {% endblock %}
-          <!--<li class=""><a href="{{ url_for('users.register')}}">Register</a></li>-->
-        </ul>
+        </div>
       {% endif %}
       <!-- third child of container -->
       <div class="main-content">

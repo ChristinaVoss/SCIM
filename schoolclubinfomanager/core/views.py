@@ -9,6 +9,7 @@ core = Blueprint('core', __name__)
 @core.route('/')
 def index():
 
-    school = School.query.first()
+    #school = School.query.first()
 
-    return render_template('base.html', school=school)
+    #return render_template('base.html', school=school)
+    return redirect(url_for('users.login'))

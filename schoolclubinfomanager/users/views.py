@@ -49,12 +49,22 @@ def logout():
 
 
 # LIST USERS
+#@users.route('/list_users/<user>', defaults={'user': None})
 @users.route('/list_users')
+@users.route('/list_users/<user>', methods=["GET", "POST"])
 @login_required
-def list_users():
+def list_users(user=None):
+    form = DeleteUserForm()
     users = User.query.all()
     school = School.query.first() # base tempalte needs this variable
-    return render_template('admin/list_users.html', users=users, school=school)
+    user = User.query.filter_by(id=user).first()
+    if form.validate_on_submit():
+        db.session.delete(user)
+        db.session.commit()
+        # user has pressed "Delete user button,
+        # so delete user and return to list"
+        return redirect(url_for('users.list_users', _anchor="close-delete-user"))
+    return render_template('admin/list_users.html', users=users, school=school, form=form, user=user)
 
 # EDIT USERS
 @users.route('/user_account', methods=["GET", "POST"])
@@ -79,18 +89,3 @@ def user_account():
 
 
 # DELETE USER
-@users.route('/delete_user/<user>', methods=['GET', 'POST'])
-@login_required
-def delete_user(user):
-    # MUST CREATE MORE CHECKS - YOU SHOULD BE ABLE TO DELETE LAST USER! (OR YOURSELF?)
-
-    user = User.query.filter_by(id=user).first()
-    form = DeleteUserForm()
-    if form.validate_on_submit():
-        db.session.delete(user)
-        db.session.commit()
-        # user has pressed "Delete user button,
-        # so delete user and return to list"
-        return redirect(url_for('users.list_users'))
-    # when user first enters page, this is inital view
-    return render_template('admin/delete_user.html', form=form, user=user)
