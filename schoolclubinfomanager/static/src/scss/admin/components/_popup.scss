@@ -1,0 +1,48 @@
+// hide popup, but set location
+.popup {
+  position: fixed;
+  background-color: rgba(200, 200, 200, 0.75);
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  padding: 25rem 33vw;
+
+  &__container {
+    justify-content: center;
+    background-color: white;
+    display: grid;
+    grid-gap: 3rem;
+    position: relative;
+    width: 50rem;
+    padding: 4rem;
+    position: relative;
+    text-align: center;
+
+    p {
+      font-size: 2rem;
+    }
+    
+    .form {
+      background-color: inherit;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      justify-content: space-between;
+      padding: 0;
+
+      .btn,
+      .btn--delete {
+        width: 10rem;
+      }
+    }
+  }
+}
+
+// show popup when it is the target
+.popup:target {
+  opacity: 1;
+  pointer-events: auto;
+}
