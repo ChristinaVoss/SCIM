@@ -12,7 +12,7 @@ school = Blueprint('school', __name__)
 @login_required
 def setup_step1():
     form = SchoolSetupStep1()
-
+    #school = School.query.first()
     if form.validate_on_submit():
         # first setup step collects core school information
 
@@ -69,7 +69,7 @@ def setup_step2(school):
 @school.route('/school_account', methods=['GET'])
 @login_required
 def school_account():
-    school = School.query.all()
+    school = School.query.first()
     ygs = YearGroup.query.all()
     '''
     for yg in ygs:
@@ -129,7 +129,7 @@ def edit_step1():
         form.school_website.data = school.website
         form.year_groups.data = existing_yg
 
-    return (render_template('admin/school_details_step1.html', form=form, title="Edit"))
+    return (render_template('admin/school_details_step1.html', form=form, title="Edit", school=school))
 
 # EDIT SCHOOL DETAILS STEP 2
 @school.route('/edit-school-details-step2/<school>', methods=['GET', 'POST'])

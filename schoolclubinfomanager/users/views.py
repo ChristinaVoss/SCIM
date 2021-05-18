@@ -10,7 +10,7 @@ users = Blueprint('users', __name__)
 @users.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
-
+    school = School.query.first() # base template needs this variable
     if form.validate_on_submit():
         user = User(email=form.email.data,
                     name = form.name.data,
@@ -19,14 +19,14 @@ def register():
         db.session.add(user)
         db.session.commit()
         return redirect(url_for('users.login'))
-    return (render_template('register.html', form=form))
+    return (render_template('register.html', form=form, school=school))
 
 # LOGIN
 @users.route('/login', methods=['GET', 'POST'])
 def login():
 
     form = LoginForm()
-
+    school = School.query.first() # base template needs this variable
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
 
@@ -39,7 +39,7 @@ def login():
                 return redirect(url_for('school.setup_step1'))
             else:
                 return redirect(url_for('school.school_account'))
-    return render_template('login.html', form=form) # this return is connected to the overall form - check indentaion!
+    return render_template('login.html', form=form, school=school) # this return is connected to the overall form - check indentaion!
 
 # LOGOUT
 @users.route('/logout')
@@ -49,17 +49,28 @@ def logout():
 
 
 # LIST USERS
+#@users.route('/list_users/<user>', defaults={'user': None})
 @users.route('/list_users')
+@users.route('/list_users/<user>', methods=["GET", "POST"])
 @login_required
-def list_users():
+def list_users(user=None):
+    form = DeleteUserForm()
     users = User.query.all()
-    return render_template('admin/list_users.html', users=users)
+    school = School.query.first() # base tempalte needs this variable
+    user = User.query.filter_by(id=user).first()
+    if form.validate_on_submit():
+        db.session.delete(user)
+        db.session.commit()
+        # user has pressed "Delete user button,
+        # so delete user and return to list"
+        return redirect(url_for('users.list_users', _anchor="close-delete-user"))
+    return render_template('admin/list_users.html', users=users, school=school, form=form, user=user)
 
 # EDIT USERS
 @users.route('/user_account', methods=["GET", "POST"])
 @login_required
 def user_account():
-
+    school = School.query.first() # base tempalte needs this variable
     form = UpdateUserForm()
     if form.validate_on_submit():
 
@@ -74,22 +85,7 @@ def user_account():
         form.name.data = current_user.name
         form.email.data = current_user.email
 
-    return render_template('admin/user_account.html', form=form)
+    return render_template('admin/user_account.html', form=form, school=school)
 
 
 # DELETE USER
-@users.route('/delete_user/<user>', methods=['GET', 'POST'])
-@login_required
-def delete_user(user):
-    # MUST CREATE MORE CHECKS - YOU SHOULD BE ABLE TO DELETE LAST USER! (OR YOURSELF?)
-
-    user = User.query.filter_by(id=user).first()
-    form = DeleteUserForm()
-    if form.validate_on_submit():
-        db.session.delete(user)
-        db.session.commit()
-        # user has pressed "Delete user button,
-        # so delete user and return to list"
-        return redirect(url_for('users.list_users'))
-    # when user first enters page, this is inital view
-    return render_template('admin/delete_user.html', form=form, user=user)
