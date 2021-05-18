@@ -35,21 +35,23 @@ class School(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
     club_summary = db.Column(db.Text)
+    logo = db.Column(db.String(64))
     num_clubs = db.Column(db.Integer, nullable=False)
-    banner_colour = db.Column(db.String(7), nullable=False)
-    font_colour = db.Column(db.String(7), nullable=False)
-    font = db.Column(db.String(64), nullable=False)
+    banner_colour = db.Column(db.String(7))
+    font_colour = db.Column(db.String(7))
+    font = db.Column(db.String(64))
     website = db.Column(db.String(64))
     yeargroups = db.relationship("YearGroup", back_populates="school")
     #tokens = db.relationship('ApproveNewUserToken', back_populates="school")
 
-    def __init__(self, name, club_summary, banner_colour, font_colour, font, website):
+    def __init__(self, name, club_summary, logo, website):
         self.name = name
         self.club_summary = club_summary
-        self.banner_colour = banner_colour
-        self.font_colour = font_colour
-        self.font = font
+        self.logo = logo
         self.website = website
+        self.num_clubs = 0
+        self.banner_colour = "#19456b"
+        self.font_colour = "FFFFFF"
 
     def __repr__(self):
         return f"{self.name}"
@@ -58,7 +60,7 @@ class YearGroup(db.Model):
     __tablename__= 'yeargroups'
 
     school_id = db.Column(db.Integer, ForeignKey(School.id), primary_key=True)
-    name = db.Column(db.String(20), unique=True, primary_key=True)
+    name = db.Column(db.String(20), primary_key=True)
     school = db.relationship("School", back_populates="yeargroups")
 
     def __init__(self, name, school_id):

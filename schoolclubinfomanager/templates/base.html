@@ -2,36 +2,55 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Flask sass test</title>
+    <title>SCIM</title>
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.js"></script>-->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700;900&display=swap" rel="stylesheet">
+    {% assets "asset_css" %}
+    <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}"/>
+    {% endassets %}
+
+    <script type="module" src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule="" src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.js"></script>
 
   </head>
   <body>
-    <header>
-      <h1>School Club Information Manager</h1>
+    <div class="container">
+      <!-- first child of container -->
+      <header class="header">
+      {% if school.name %}
+        <h1 class="header__title">
+          School Club Information Manager <br>for {{school.name}}
+        </h1>
+      {% else %}
+        <h1 class="header__title">
+          Welcome to the <br>School Club information Manager
+        </h1>
+      {% endif %}
+
+      {% if current_user.is_authenticated %}
+        <a href="{{ url_for('users.logout')}}" class="header__link link">Log out</a>
+      {% endif %}
     </header>
+    <!-- second child of container (sidebar or user_authentication) depending on whether user is logged in-->
+      {% if current_user.is_authenticated %}
+      <!-- user is logged in -->
+        {% include "admin/navigation.html" %}
 
-    <ul>
-    {% if current_user.is_authenticated %}
-    <!-- user is logged in -->
+      {% else %}
+        <div class="user_authentication">
 
-    <li class=""><a href="{{ url_for('users.user_account')}}">Your account details</a></li>
-    <li class=""><a href="{{ url_for('users.list_users')}}">List users</a></li>
-    <li class=""><a href="{{ url_for('users.logout')}}">Log out</a></li>
-
-    {% else %}
-
-    <li class=""><a href="{{ url_for('users.login')}}">Log in</a></li>
-    <li class=""><a href="{{ url_for('users.register')}}">Register</a></li>
-
-    {% endif %}
-    </ul>
-
-    <div class="">
-      {% block content %}
-
-      {% endblock %}
-
+          {% block authentication %}
+          {% endblock %}
+        </div>
+      {% endif %}
+      <!-- third child of container -->
+      <div class="main-content">
+        {% block content %}
+          <!-- page specific content goes here -->
+        {% endblock %}
+      </div>
     </div>
-
   </body>
 </html>

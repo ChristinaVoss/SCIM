@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="list-users">Users</h2>
+
+<table class="table">
+  <tr class="table__row list-users__row">
+    <th class="table__header">id</th>
+    <th class="table__header">Name</th>
+    <th class="table__header">Email</th>
+    <th class="table__header"></th>
+  </tr>
+  {% for user in users %}
+  <tr class="table__row">
+    <td class="table__cell">{{user.id}}</td>
+    <td class="table__cell">{{user.name}}</td>
+    <td class="table__cell">{{user.email}}</td>
+    <td class="table__cell">
+      <a href="{{ url_for('users.list_users', _anchor="popup", user=user.id)}}" class="btn--delete">
+        delete user
+      </a>
+    </td>
+  </tr>
+
+  {% endfor %}
+
+</table>
+
+<div class="popup" id="popup">
+  <div class="popup__container">
+    <p>Are you sure you want to delete the user:</p>
+    {% if user %}
+    <p>{{user.name}}, id: {{user.id}}, email: {{user.email}}?</p>
+    {% endif %}
+
+    <form method="POST" class="form">
+      {{ form.hidden_tag() }}<!-- to make sure we can accept the form -->
+     <a href="{{ url_for('users.list_users')}}" class="btn">Cancel</a>
+      {{ form.submit(class="btn--delete") }}
+    </form>
+  </div>
+</div>
+
+<div class="popup" id="close-delete-user">
+  <div class="popup__container">
+    <p>User successfully deleted</p>
+
+     <a href="{{ url_for('users.list_users')}}" class="btn">Close</a>
+
+  </div>
+</div>
+
+
+
+
+{% endblock %}
