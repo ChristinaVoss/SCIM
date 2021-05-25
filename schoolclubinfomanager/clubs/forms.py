@@ -1,0 +1,73 @@
+#form imports
+from flask_wtf import FlaskForm
+from schoolclubinfomanager import db
+from schoolclubinfomanager.models import YearGroup, StaffMember, ExternalCompany
+from wtforms import StringField,SubmitField, ValidationError, SelectMultipleField, SelectField, TextAreaField, widgets, DateField, DateTimeField, BooleanField, RadioField
+from wtforms.validators import DataRequired, EqualTo, URL, Length, Regexp, Optional, Email
+from flask_wtf.file import FileField, FileAllowed
+
+#school imports
+###from flask_login import current_user
+from schoolclubinfomanager.models import Club, ClubDay, ClubYearGroup, ContactToBook, ExternalCompany, StaffClub, StaffMember, YearGroup
+
+DAYS = [('mon', 'Monday'),
+         ('tue', 'Tuesday'),
+         ('wed', 'Wednesday'),
+         ('thu', 'Thursday'),
+         ('fri', 'Friday'),
+         ('sat', 'Saturday'),
+         ('sun', 'Sunday')]
+
+YEAR_GROUPS = sorted([(yg.name, yg.name) for yg in YearGroup.query.all()])
+STAFF = sorted([(s.name, s.name) for s in StaffMember.query.all()])
+COMPANIES = sorted([(c.name, c.name) for c in ExternalCompany.query.all()])
+
+# helper class to create checkbox fields (https://gist.github.com/doobeh/4668212)
+class MultiCheckboxField(SelectMultipleField):
+    widget = widgets.ListWidget(prefix_label=False)
+    option_widget = widgets.CheckboxInput()
+
+# Flask forms (wtforms) allow you to easily create forms in format:
+# variable_name = Field_type('Label that will show', validators=[V_func1(), V_func2(),...])
+class CreateClub(FlaskForm):
+    # CORE INFORMATION
+    name = StringField('Name of club*', validators=[DataRequired(), Length(min=2, max=64)])
+    start_date = DateField('Start date (this term)*', format='%d/%m/%Y', validators=[DataRequired()])
+    end_date = DateField('End date (this term)*', format='%d/%m/%Y', validators=[DataRequired()])
+    start_time = DateTimeField('Start time*', format='%H:%M', validators=[DataRequired()])
+    end_time = DateTimeField('End time*', format='%H:%M', validators=[DataRequired()])
+    location = RadioField()
+    at_school_premises = StringField('At school premises - fill in room name/number')
+    off_school_premises = TextAreaField('Off school premises - provide address')
+    days = MultiCheckboxField('Day(s) the club will be running*', choices=DAYS, validators=[DataRequired()])
+    #category = RadioField('Category')
+    # WHO CAN JOIN
+    year_groups = MultiCheckboxField('Year groups you offer clubs to*', choices=YEAR_GROUPS, validators=[DataRequired()])
+    experience = StringField('Experience needed to join club')
+    outfit = StringField('Please wear')
+    equipment = StringField('Please bring')
+    # BOOKING AND COST
+    drop_in = RadioField("Drop in (no need to book)", default="checked")
+    teacher = StringField('Talk to teacher:')
+    email = StringField('Email:')
+    call = StringField('Call:')
+    is_free = RadioField('Free', default="checked")
+    cost = StringField('Paid:')
+    # DESCRIPTION OF CLUB AND PHOTO
+    photo = FileField('Upload photo', validators=[FileAllowed(['jpg', 'jpeg', 'png', 'svg']), Optional()])
+    description = TextAreaField('Description of club and/or club activities*')
+    #DESCRIPTION OF CLUB LEADER< COMPANY OR STAFF
+    staff_dropdown = SelectField(u'Existing staff members')
+    companies_dropdown = SelectField(u'Existing companies')
+    staff_name = StringField('Name of club staff member')
+    staff_email = StringField('Email', validators=[Email(), Optional()])
+    staff_description = TextAreaField('Description of new staff member')
+    company_name = StringField('Name of company')
+    company_email = StringField('Email', validators=[Email(), Optional()])
+    company_description = TextAreaField('Description of company')
+    company_website = StringField('Company website', validators=[URL()])
+    staff = SelectField('Choose from list of staff members in system', choices=STAFF)
+    companies = SelectField('Choose from list of companies in system', choices=COMPANIES)
+    # SUBMIT FORM
+    submit = SubmitField('Save')
+    # Not sure how to add more staff members yet (dynamically) - need to look up!

@@ -134,6 +134,7 @@ class Club(db.Model):
     time_of_day = db.Column(db.Integer, nullable=False)
     num_of_places = db.Column(db.Integer, nullable=False)
     drop_in = db.Column(db.Boolean, nullable=False)
+    published = db.Column(db.Boolean, default=False)
     contacts_to_book = db.relationship("ContactToBook", back_populates="clubs")
     contact_to_book_id = db.Column(db.Integer, ForeignKey(ContactToBook.id))
     ext_company_id = db.Column(db.Integer, ForeignKey(ExternalCompany.id))
@@ -200,7 +201,7 @@ class StaffMember(db.Model):
     def __repr__(self):
         return f"{self.name}"
 
-# Composite entity to join clubs and staff members 
+# Composite entity to join clubs and staff members
 class StaffClub(db.Model):
 
     club_id = db.Column(db.Integer, ForeignKey(Club.id), primary_key=True)

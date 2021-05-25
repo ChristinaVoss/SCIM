@@ -6,10 +6,10 @@
 
 .form {
   background-color: $color-light;
-  //margin: 3rem;
   padding: 2rem 2rem 3rem 2rem;
+  z-index: -10;
 
-  // all labels for text fields
+  // LABELS
   &__label {
     color: $color-grey-dark-3;
     display: block;
@@ -17,48 +17,111 @@
     font-weight: 700;
     margin: .7rem 0 0rem .2rem;
 
+    &--nomargin {
+      @extend .form__label;
+      margin-top: 0;
+    }
   }
 
-  // All standard input fields
+  // INPUT (STANDARD)
   &__input {
     border: none;
     border-radius: 0.2rem;
-    font-family: inherit;
+    color: $color-grey-dark-3;
+    font-family: $font-primary;
     font-size: 1.5rem;
     margin-bottom: 1rem;
     padding: 1rem 2rem;
     width: 100%;
 
-    &::-webkit-input-placeholder,
-    &::-moz-placeholder {
-      color: $color-grey-dark-2;
+
+    &::placeholder {
+      color: $color-grey-dark-1;
+    }
+
+    &--pound {
+      position: relative;
+
+      &:before {
+        position: absolute;
+        top: -.5rem;
+        content: "£";
+        left: .6rem;
+        font-size: 1.5rem;
+        font-weight: 500;
+        color: $color-grey-dark-3;
+      }
+      // input field inside the --pound div
+      input {
+        padding-left: 1.8rem;
+      }
     }
   }
 
+  // TEXTAREA
   &__textarea {
     border: none;
+    font-family: inherit;
     height: 10rem;
     margin-bottom: 2rem;
     padding: 1rem 2rem;
     width: 100%;
+
+    &::placeholder {
+      color: $color-grey-dark-1;
+      font-family: $font-primary;
+    }
+  }
+
+  // DATE AND TIME
+  &__date-and-time {
+    @extend .form__input;
+    padding: 1rem 0 1rem 1rem;
+    width: 14rem;
+    font-size: 1.3rem;
+    color: $color-grey-dark-1; // why aren't they all???
+
+
+    &:in-range {
+      color: $color-grey-dark-2;
+    }
+
+    &:hover {
+      background-color: $color-grey-light-2;
+    }
   }
 
   // COLOUR INPUT
   &__color-input {
     border: none;
-    height: 4rem;
+    height: 3.8rem;
   }
 
   // DROPDOWN FIELD
-  &__dropdown-field {
-    height: 3rem;
+  &__dropdown {
+  width: 15rem;
+  padding: .5rem 3.5rem .5rem .5rem;
+  font-size: 1.5rem;
+  border: 1px solid $color-grey-dark-2;
+  height: 3.5rem;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: url("../../img/svg/chevron-down-outline.svg") 96% / 2rem no-repeat #fff;
+
+  &:hover {
+    font-weight: 500;
+    background: url("../../img/svg/chevron-down-outline.svg") 96% / 2.2rem no-repeat $color-grey-light-2;
+  }
+
   }
 
 
   // FILE input
   &__file {
-    // needs finxing - provides NO feedback to user to show they have uploaded file!
     margin: 2rem 0 4rem 0;
+    position: relative;
+
     &__label {
       background-color: $color-primary-dark;
       border-radius: 2px;
@@ -66,6 +129,7 @@
       font-weight: 500;
       padding: 1rem 1.5rem 1rem 3rem;
       position: relative;
+      z-index: 10;
 
       &:hover {
         background-color: $color-grey-dark-2;
@@ -76,9 +140,16 @@
         font-weight: 700;
       }
 
-      &-input {
-        background-color: blue;
-      }
+
+    }
+    // is effectively placed behind the label, so that the chosen filename is shown, but the button is hidden
+    &__input {
+      position: absolute;
+      z-index: 1;
+      top: -.3rem;
+      left: 1rem;;
+      font-size: 1.5rem;
+      color: $color-grey-dark-2;
     }
 
     &__icon {
@@ -91,11 +162,12 @@
 
   }
 
-  // checkbox container - based on solution from https://www.w3schools.com/howto/howto_css_custom_checkbox.asp
+  // CHECKBOX container - based on solution from https://www.w3schools.com/howto/howto_css_custom_checkbox.asp
+  // consider changing to standard as more accessible. (as with radio buttons below)
   &__checkbox {
     display: grid;
     grid-gap: 2rem;
-    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
     margin: 2rem 0;
 
     // wraps each individual checkbox
@@ -134,8 +206,6 @@
         border-width: 0 3px 3px 0;
         transform: rotate(45deg);
       }
-
-
     }
 
     // hide default HTML checkbox
@@ -150,7 +220,7 @@
       left: 0;
       height: 25px;
       width: 25px;
-      background-color: #eee;
+      background-color: #fff;
 
       // Create the checkmark indicator (hidden when not checked)
       &:after {
@@ -159,6 +229,12 @@
         display: none;
       }
     }
+  }
+
+  // RADIO BUTTON STYLING
+  &__radio{
+    width: 2rem;
+    height: 2rem;
   }
 
   // SUBMIT button
