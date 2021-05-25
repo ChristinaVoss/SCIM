@@ -59,7 +59,11 @@ var changeFont = function(font){
       <input type="button" name="fontColButton" value="Preview" onclick="changeFontColour()" class="btn--col-input">
     </div>
 
-    {{ form.font.label(class="form__label") }} {{ form.font(class="setup__dropdown-field", id="font", onchange="changeFont(this);" )}}
+    {{ form.font.label(class="form__label") }}
+    <div class="hide">
+      <ion-icon name="chevron-down-outline" id="chevron-down"></ion-icon>
+    </div>
+    {{ form.font(class="form__dropdown", id="font", onchange="changeFont(this);" )}}
 
     <div class="setup__display-banner">
       <h3 class="">How your top banner will look</h3>

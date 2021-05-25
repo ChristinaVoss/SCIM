@@ -25,7 +25,7 @@
 .sidebar {
   grid-column: nav-start / nav-end;
   //grid-row: main-start / -1;
-  height: 100vh;
+  height: 100%;
   background-color: $color-grey-light-2;
 }
 

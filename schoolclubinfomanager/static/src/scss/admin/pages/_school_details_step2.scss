@@ -26,16 +26,52 @@
   &__col-align {
     display: grid;
     grid-template-columns: repeat(3, min-content);
-    align-items: center;
+    align-items: stretch;
 
     &__name {
-      font-size: 1.2rem;
-      padding: .75rem;
+      font-size: 1.5rem;
+      padding: .5rem 1rem .25rem 1rem;
       background-color: white;
-      border: solid 1px $color-grey-dark-1;
+      border: solid 1px $color-grey-dark-2;
       color: $color-grey-dark-2;
       margin-left: -3px;
+      //height: 3rem;
     }
 
   }
+}
+
+/* Style only for Google Chrome/Opera */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  .setup__col-align {
+    align-items: center;
+
+    &__name {
+      height: 3rem;
+    }
+  }
+
+  .btn--col-input {
+    height: 3rem;
+  }
+}
+
+@supports (-moz-appearance:none) {
+  .setup__col-align {
+    align-items: stretch;
+
+    &__name {
+      height: auto;
+    }
+  }
+
+  .btn--col-input {
+    height: auto;
+  }
+
+}
+
+/* Style only for Internet Explorer */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+
 }
