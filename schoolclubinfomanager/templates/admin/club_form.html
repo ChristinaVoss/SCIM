@@ -10,10 +10,10 @@
 
     <h3 class="club__form__subheading">Core information - name, what, when, where</h3>
     {{ form.hidden_tag() }}<!-- to make sure we can accept the form -->
-    <div class="club__form__item--right">
+    <div class="club__form__item--left">
       {{ form.name.label(class="form__label") }} {{ form.name(class="form__input", placeholder="Art club")}}
     </div>
-    <div class="club__form__item--right club__form__split-column">
+    <div class="club__form__item--left club__form__split-column">
       <div class="">
         {{ form.start_date.label(class="form__label") }}
         <input type="date" name="start_date" min="{{ today }}" max="{{ one_year }}" id="start_date" class="form__date-and-time" onchange="dateTimeEndValidation('start_date', 'end_date')" required>
@@ -23,7 +23,7 @@
         <input type="date" name="end_date" min="" id="end_date" class="form__date-and-time" onchange="dateTimeEndValidation('start_date', 'end_date')" required>
       </div>
     </div>
-    <div class="club__form__item--right  club__form__split-column">
+    <div class="club__form__item--left  club__form__split-column">
       <div class="">
         {{ form.start_time.label(class="form__label") }}
         <input type="time" name="start_time" id="start_time" min="06:00" max="23:00" class="form__date-and-time" onchange="dateTimeEndValidation('start_time', 'end_time')" required>
@@ -33,7 +33,7 @@
         <input type="time" name="end_time" id="end_time" class="form__date-and-time" min="" onchange="dateTimeEndValidation('start_time', 'end_time')" required>
       </div>
     </div>
-    <div class="club__form__item--right">
+    <div class="club__form__item--left">
       <p class="form__label">Club location*</p>
       <div class="club__form__radio-and-text-group">
         <input type="radio" id="at_school" class="form__radio" name="location" value="at_school"  onclick="setFocus('at_school_input')" checked>
@@ -52,19 +52,17 @@
 Downton street,
 Madeup Town,
 AB1 2CD") }}
-
-
         </label>
       </div>
-
     </div>
     <div class="club__form__item--days">
       <label for="" class="form__label">Day(s) the club will be running*</label>
       <div class="form__checkbox">
         {% for day in form.days %}
-            <label class="form__checkbox__label">{{day.label}}{{day(class="form__checkbox__field  hide")}}
-              <span class="form__checkbox__checkmark"></span>
-            </label>
+            <div class="form__checkbox__group">
+              {{day(class="form__checkbox__field ")}}
+              {{day.label(class="form__checkbox__label")}}
+            </div>
         {% endfor %}
       </div>
     </div>
@@ -74,21 +72,25 @@ AB1 2CD") }}
       <label for="" class="form__label">Year group(s) this club will be available to*</label>
       <div class="form__checkbox">
         {% for yg in form.year_groups %}
-            <label class="form__checkbox__label">{{yg.label}}{{yg(class="form__checkbox__field  hide")}}
-              <span class="form__checkbox__checkmark"></span>
-            </label>
+            <div class="form__checkbox__group">
+              {{yg(class="form__checkbox__field")}}
+              <span class="form__checkbox__label">Year Group </span>{{yg.label(class="form__checkbox__label")}}
+
+            </div>
         {% endfor %}
       </div>
     </div>
     <div class="club__form__item--left">
+      {{ form.num_places.label(class="form__label") }} {{ form.num_places(class="form__input--number") }}
+    </div>
+    <div class="club__form__item--right row7">
       <p class="form__label">Equipment/outfit needed:</p>
       {{ form.outfit.label(class="form__label") }} {{ form.outfit(class="form__input", placeholder="Apron") }}
       {{ form.equipment.label(class="form__label") }} {{ form.equipment(class="form__input", placeholder="Oil pastels, paint brushes") }}
     </div>
-    <div class="club__form__item--left">
+    <div class="club__form__item--right">
       {{ form.experience.label(class="form__label") }} {{ form.experience(class="form__input", placeholder="None - all welcome/Beginner") }}
     </div>
-
     <h3 class="club__form__subheading">Booking and cost</h3>
     <div class="club__form__item">
       <p class="form__label">To book a place*</p>
@@ -96,149 +98,174 @@ AB1 2CD") }}
         <input type="radio" id="drop_in" name="book" class="form__radio" value="drop_in" checked>
         <label for="drop_in">
           <!-- not sure if database is updated by this at all!! -->
-          {{ form.drop_in.label(class="form__label--nomargin") }}
-          {{ form.drop_in(class="form__boolean", id="drop_in_boolean") }}
+          {{ form.book.label(class="form__label--nomargin") }}
         </label>
       </div>
       <div class="club__form__radio-and-text-group">
         <input type="radio" id="teacher" name="book" value="teacher" class="form__radio" onclick="setFocus('teacher-input')">
         <label for="teacher">
           {{ form.teacher.label(class="form__label") }}
-          {{ form.teacher(class="form__input", id="teacher-input", onclick="checkRadio('teacher')", placeholder="Mr Smith") }}
+          {{ form.teacher(class="form__input", id="teacher-input", onclick="checkRadio('teacher')", placeholder="Mr Smith", list="teachers") }}
+          <datalist id="teachers">
+            {% for t in teachers %}
+              {% if t %}
+              <option value="{{t}}">
+              {% endif %}
+            {% endfor %}
+          </datalist>
         </label>
       </div>
       <div class="club__form__radio-and-text-group">
         <input type="radio" id="email" name="book" value="email" class="form__radio" onclick="setFocus('email-input')">
         <label for="email">
           {{ form.email.label(class="form__label") }}
-          {{ form.email(class="form__input", id="email-input", onclick="checkRadio('email')", placeholder="smith@email.com") }}
+          {{ form.email(class="form__input", id="email-input", onclick="checkRadio('email')", placeholder="smith@email.com", list="emails") }}
+          <datalist id="emails">
+            {% for e in emails %}
+              {% if e %}
+              <option value="{{e}}">
+              {% endif %}
+            {% endfor %}
+          </datalist>
         </label>
       </div>
       <div class="club__form__radio-and-text-group">
         <input type="radio" id="call" name="book" value="call" class="form__radio" onclick="setFocus('call-input')">
         <label for="call">
           {{ form.call.label(class="form__label") }}
-          {{ form.call(class="form__input", id="call-input", onclick="checkRadio('call')", placeholder="01234567890") }}
+          {{ form.call(class="form__input", id="call-input", onclick="checkRadio('call')", placeholder="01234567890", list="phone_numbers") }}
+          <datalist id="phone_numbers">
+            {% for p in phone_numbers %}
+              {% if p %}
+              <option value="{{p}}">
+              {% endif %}
+            {% endfor %}
+          </datalist>
         </label>
       </div>
     </div>
 
-    <div class="club__form__item">
-      <p class="form__label">How much will the club cost?*</p>
-        <label for="free" class="club__form__radio-and-text-group">
-          <input type="radio" id="free" name="cost" value="free" class="form__radio" checked>
-          {{ form.is_free.label(class="form__label--nomargin") }}
-          {{ form.is_free(class="form__input hide") }}
-        </label>
+        <div class="club__form__item">
+          <p class="form__label">How much will the club cost?*</p>
+            <label for="free" class="club__form__radio-and-text-group">
+              <input type="radio" id="free" name="is_free" value="free" class="form__radio" checked>
+              {{ form.is_free.label(class="form__label--nomargin") }}
 
-      <div class="club__form__radio-and-text-group">
-        <input type="radio" id="paid" name="cost" value="paid" class="form__radio" onclick="setFocus('paid-input')">
-        <label for="paid">
-          {{ form.cost.label(class="form__label") }}
-          <span class="form__input--pound">
-            {{ form.cost(class="form__input", id="paid-input", onclick="checkRadio('paid')", placeholder="3.50") }}
-          </span>
+            </label>
 
-        </label>
-      </div>
-    </div>
+          <div class="club__form__radio-and-text-group">
+            <input type="radio" id="paid" name="is_free" value="paid" class="form__radio" onclick="setFocus('paid-input')">
+            <label for="paid">
+              {{ form.cost.label(class="form__label") }}
+              <span class="form__input--pound">
+                {{ form.cost(class="form__input", id="paid-input", onclick="checkRadio('paid')", placeholder="3.50") }}
+              </span>
 
-    <h3 class="club__form__subheading">Description of club and photo</h3>
-    <div class="club__form__item">
-      <div class="form__file">
-        <label for="photo" class="form__file__label">
-          <ion-icon name="cloud-upload-outline" class="form__file__icon"></ion-icon>Upload photo</label>
-        <input type="file" name="photo" id="photo" class="form__file__input">
-      </div>
-    </div>
-    <div class="club__form__item">
-      {{ form.description.label(class="form__label") }}
-      {{ form.description(class="form__textarea") }}
-    </div>
-
-    <h3 class="club__form__subheading">Description of club leader, company or staff</h3>
-    <div class="club__form__item--full">
-      <p class="comment">Enter details about the staff that will run the club</p>
-      <!-- complex nested form, place top level radiobuttons as subitems,
-      each containing separate form items-->
-      <div class="club__form__subitem">
-        <div class="club__form__radio-and-text-group">
-          <input type="radio" id="new" class="form__radio" name="staff" value="new" onclick="showSubFormHideOther('new_entries', 'existing_dropdowns')" checked >
-          <label for="new" class="form__label--nomargin">
-            New entry
-          </label>
+            </label>
+          </div>
         </div>
+        <h3 class="club__form__subheading">Description of club and photo</h3>
+        <div class="club__form__item">
+          <div class="form__file">
+            <label for="photo" class="form__file__label">
+              <ion-icon name="cloud-upload-outline" class="form__file__icon"></ion-icon>Upload photo</label>
+            <input type="file" name="photo" id="photo" class="form__file__input">
+          </div>
+        </div>
+        <div class="club__form__item">
+          {{ form.description.label(class="form__label") }}
+          {{ form.description(class="form__textarea") }}
+        </div>
+        <h3 class="club__form__subheading">Description of club leader, company or staff</h3>
+        <div class="club__form__item--full">
+          <p class="comment">Enter details about the staff that will run the club</p>
 
-        <!-- Following div is hidden until checked.
-        New entries, choose person or company: -->
-        <div class="club__form__subitem__subitem" id="new_entries">
-          <div class="club__form big-top-margin">
+          <div class="club__form__subitem">
             <div class="club__form__radio-and-text-group">
-              <input type="radio" id="person" class="form__radio" name="type_of_staff" value="person" onclick="showSubFormHideOther('person_form', 'company_form')" checked>
-              <label for="person" class="form__label">
-                Person
+              <input type="radio" id="new" class="form__radio" name="new_entry" value="new" onclick="showSubFormHideOther('new_entries', 'existing_dropdowns')" checked >
+              <label for="new" class="form__label--nomargin">
+                New entry
               </label>
             </div>
+
+            <div class="club__form__subitem__subitem" id="new_entries">
+              <div class="club__form big-top-margin">
+                <div class="club__form__radio-and-text-group">
+                  <input type="radio" id="person" class="form__radio" name="type_of_staff" value="person" onclick="showSubFormHideOther('person_form', 'company_form')" checked>
+                  <label for="person" class="form__label">
+                    Person
+                  </label>
+                </div>
+                <div class="club__form__radio-and-text-group">
+                  <input type="radio" id="company" class="form__radio" name="type_of_staff" value="company" onclick="showSubFormHideOther('company_form', 'person_form')">
+                  <label for="company" class="form__label">
+                    Company
+                  </label>
+                </div>
+              </div>
+
+              <div class="person big-top-margin" id="person_form">
+                {{ form.staff_name.label(class="form__label") }}
+                {{ form.staff_name(class="form__input", placeholder="Ms Kahlo") }}
+                {{ form.staff_email.label(class="form__label") }}
+                {{ form.staff_email(class="form__input", placeholder="kahlo@email.com") }}
+                {{ form.staff_description.label(class="form__label") }}
+                {{ form.staff_description(class="form__textarea", placeholder="Ms Kahlo spends most of her time painting and is excited to be teaching a new generation of artists.") }}
+              </div>
+
+              <div class="company big-top-margin" id="company_form">
+                {{ form.company_name.label(class="form__label") }}
+                {{ form.company_name(class="form__input", placeholder="Arty Party") }}
+                {{ form.company_email.label(class="form__label") }}
+                {{ form.company_email(class="form__input", placeholder="info@artyparty.com") }}
+                {{ form.company_website.label(class="form__label") }}
+                {{ form.company_website(class="form__input", placeholder="www.artyparty.com") }}
+                {{ form.company_description.label(class="form__label") }}
+                {{ form.company_description(class="form__textarea", placeholder="Arty Party brings experienced staff in every art form to your schools to give children access to new techinques in painting, drawing, building and so much more, with fun and inspiring projects!") }}
+              </div>
+
+
+            </div>
+
+          </div>
+
+          <div class="club__form__subitem">
             <div class="club__form__radio-and-text-group">
-              <input type="radio" id="company" class="form__radio" name="type_of_staff" value="company" onclick="showSubFormHideOther('company_form', 'person_form')">
-              <label for="company" class="form__label">
-                Company
+              <input type="radio" id="existing" class="form__radio" name="new_entry" value="existing" onclick="showSubFormHideOther('existing_dropdowns', 'new_entries')">
+              <label for="existing" class="form__label--nomargin">
+                Staff or company already exists in the system
               </label>
             </div>
-          </div>
 
-          <div class="person big-top-margin" id="person_form">
-            {{ form.staff_name.label(class="form__label") }}
-            {{ form.staff_name(class="form__input", placeholder="Ms Kahlo") }}
-            {{ form.staff_email.label(class="form__label") }}
-            {{ form.staff_email(class="form__input", placeholder="kahlo@email.com") }}
-            {{ form.staff_description.label(class="form__label") }}
-            {{ form.staff_description(class="form__textarea", placeholder="Ms Kahlo spends most of her time painting and is excited to be teaching a new generation of artists.") }}
-          </div>
-
-          <div class="company big-top-margin" id="company_form">
-            {{ form.company_name.label(class="form__label") }}
-            {{ form.company_name(class="form__input", placeholder="Arty Party") }}
-            {{ form.company_email.label(class="form__label") }}
-            {{ form.company_email(class="form__input", placeholder="info@artyparty.com") }}
-            {{ form.company_website.label(class="form__label") }}
-            {{ form.company_website(class="form__input", placeholder="www.artyparty.com") }}
-            {{ form.company_description.label(class="form__label") }}
-            {{ form.company_description(class="form__textarea", placeholder="Arty Party brings experienced staff in every art form to your schools to give children access to new techinques in painting, drawing, building and so much more, with fun and inspiring projects!") }}
-          </div>
-        </div>
-      </div>
-      <!-- staff or company exists, choose dropdown options
-      (two dropdowsn, one for companies one for staff): -->
-      <div class="club__form__subitem">
-        <div class="club__form__radio-and-text-group">
-          <input type="radio" id="existing" class="form__radio" name="staff" value="existing" onclick="showSubFormHideOther('existing_dropdowns', 'new_entries')">
-          <label for="existing" class="form__label--nomargin">
-            Staff or company already exists in the system
-          </label>
-        </div>
-
-        <!-- Following div is hidden until checked.
-        Choose staff or company from dropdown menus: -->
-        <div class="club__form__subitem__subitem big-top-margin" id="existing_dropdowns">
-          <div class="staff-dropdown">
-            {{ form.staff.label(class="form__label") }}
-            <div class="hide">
-              <ion-icon name="chevron-down-outline" id="chevron-down"></ion-icon>
+            <div class="club__form__subitem__subitem big-top-margin" id="existing_dropdowns">
+              <div class="club__form__radio-and-text-group">
+                <input type="radio" id="existing_staff" class="form__radio" name="existing_clubrunner" value="existing_staff" checked>
+                <label for="existing" class="form__label--nomargin">
+                  <div class="staff-dropdown">
+                    {{ form.staff.label(class="form__label") }}
+                    <div class="hide">
+                      <ion-icon name="chevron-down-outline" id="chevron-down"></ion-icon>
+                    </div>
+                    {{ form.staff(class="form__dropdown")}}
+                  </div>
+              </div>
+              <div class="club__form__radio-and-text-group">
+                <input type="radio" id="existing_company" class="form__radio" name="existing_clubrunner" value="existing_company">
+                <div class="companies-dropdown">
+                  {{ form.companies.label(class="form__label") }}
+                  <div class="hide">
+                    <ion-icon name="chevron-down-outline" id="chevron-down"></ion-icon>
+                  </div>
+                  {{ form.companies(class="form__dropdown")}}
+                </div>
+              </div>
             </div>
-            {{ form.staff(class="form__dropdown")}}
-          </div>
-          <div class="companies-dropdown">
-            {{ form.companies.label(class="form__label") }}
-            <div class="hide">
-              <ion-icon name="chevron-down-outline" id="chevron-down"></ion-icon>
-            </div>
-            {{ form.companies(class="form__dropdown")}}
+
           </div>
 
+
         </div>
-      </div>
-    </div>
+
     <div class="club__form__item--submit">
       {{ form.submit(class="btn") }}
     </div>

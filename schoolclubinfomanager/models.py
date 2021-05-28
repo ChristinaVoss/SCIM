@@ -158,6 +158,13 @@ class Club(db.Model):
         self.num_of_places = num_of_places
         self.drop_in = drop_in
 
+        if start_time.hour < 10:
+            self.time_of_day = 'morning'
+        elif start_time.hour < 14:
+            self.time_of_day = 'lunch'
+        else:
+            self.time_of_day = 'after school'
+
     def __repr__(self):
         return f"{self.name}"
 
@@ -192,9 +199,8 @@ class StaffMember(db.Model):
     description = db.Column(db.String(500))
     staffclubs = db.relationship("StaffClub", back_populates="staffmember")
 
-    def __init__(self, name, website, email, description):
+    def __init__(self, name, email, description):
         self.name = name
-        self.website = website
         self.email = email
         self.description = description
 
