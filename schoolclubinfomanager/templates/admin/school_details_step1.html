@@ -22,9 +22,11 @@
     <div class="form__checkbox">
 
     {% for yg in form.year_groups %}
-        <label class="form__checkbox__label">{{yg.label}}{{yg(class="form__checkbox__field  hide")}}
-          <span class="form__checkbox__checkmark"></span>
-        </label>
+        <div class="form__checkbox__label">
+          {{yg(class="form__checkbox__field")}}
+          {{yg.label(class="form__checkbox__label")}}
+
+        </div>
     {% endfor %}
   </div>
     {{ form.school_website.label(class="form__label") }} {{ form.school_website(class="form__input")}}

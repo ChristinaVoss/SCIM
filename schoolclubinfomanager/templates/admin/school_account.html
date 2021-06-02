@@ -27,10 +27,11 @@
     based on your choices. <br>You can edit this at any time, using the edit button at the top of the page.</p>
   <div class="school-account__banner" style="background-color:{{school.banner_colour}};">
     <p class="school-account__banner__title" style="font-family:{{school.font}};color:{{school.font_colour}};">Clubs for {{school.name}}</p>
+
+    <a href="#" class="school-account__banner__link" style="color:{{school.font_color}};">Return to school website</a>
     {% if school.logo %}
     <img src="{{ url_for('static', filename='img/'+school.logo)}}" alt="school logo" class="logo--small">
     {% endif %}
-    <a href="#" class="school-account__banner__link" style="color:{{school.font_color}};">Return to school website</a>
   </div>
 
 
