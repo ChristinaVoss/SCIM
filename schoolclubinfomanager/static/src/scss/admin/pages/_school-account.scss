@@ -39,8 +39,9 @@
 
   &__banner {
     display: grid;
-    grid-template-columns: max-content max-content 1fr;
+    grid-template-columns: minmax(max-content, 80%) max-content 1fr;
     align-items: center;
+
 
     &__title {
       padding-left: 1rem;
@@ -51,8 +52,8 @@
       text-decoration: none;
       text-transform: uppercase;
       color: $color-light;
-      justify-self: end;
       padding: 0 1rem;
+
     }
   }
 }
@@ -60,5 +61,7 @@
 .logo {
   &--small {
     height: 4rem;
+    padding: .3rem;
+    justify-self: end;
   }
 }
