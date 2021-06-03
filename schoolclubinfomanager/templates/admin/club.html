@@ -69,6 +69,34 @@
   {% elif book.call %}
     <p>To book a place, contact: {{book.call}}</p>
   {% endif %}
+  <div class="club-overview__buttons">
+    <a href="{{ url_for('clubs.club', _anchor='popupclub', club_id=club.id)}}" class="btn--delete">
+      delete club
+    </a>
+    <a href="#" class="btn">
+      edit details
+    </a>
+  </div>
+
+
+
+  <div class="popup" id="popupclub">
+    <div class="popup__container">
+      <p>Are you sure you want to delete the club:</p>
+      {% if club %}
+      <p>{{club.id}}. {{club.name}}?</p>
+      {% endif %}
+      <p>This action cannot be undone once completed</p>
+
+      <form method="POST" class="form">
+        {{ form.hidden_tag() }}<!-- to make sure we can accept the form -->
+        {{ form.delete(class="btn--delete") }}
+       <a href="{{ url_for('clubs.club', club_id=club.id)}}" class="btn">Cancel</a>
+
+      </form>
+    </div>
+  </div>
+
 </div>
 
 

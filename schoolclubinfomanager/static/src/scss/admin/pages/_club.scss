@@ -1,0 +1,20 @@
+.club-overview {
+  &__buttons {
+    margin-top: 4rem;
+    display: grid;
+    width: 45%;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 2rem;
+    align-items: stretch;
+
+    .btn--delete {
+      padding-top: .9rem;
+      font-size: 1.2rem;
+    }
+  }
+
+  h4 {
+    margin-top: 2rem;
+    font-size: 1.4rem;
+  }
+}
