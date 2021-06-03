@@ -81,3 +81,13 @@ class CreateClub(FlaskForm):
     # SUBMIT FORM
     submit = SubmitField('Save')
     # Not sure how to add more staff members yet (dynamically) - need to look up!
+
+class Publish(FlaskForm):
+    publish = SubmitField('Publish')
+    unpublish = SubmitField('Unpublish')
+
+
+
+
+class DeleteClub(FlaskForm):
+    delete = SubmitField('Delete club')

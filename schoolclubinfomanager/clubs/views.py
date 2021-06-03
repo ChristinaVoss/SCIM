@@ -2,7 +2,7 @@ from flask import render_template, url_for, redirect, request, Blueprint, sessio
 from flask_login import login_user, current_user, logout_user, login_required
 from schoolclubinfomanager import db
 from schoolclubinfomanager.models import School, YearGroup, Club, ClubDay, ClubYearGroup, ContactToBook, StaffClub, StaffMember, ExternalCompany
-from schoolclubinfomanager.clubs.forms import CreateClub
+from schoolclubinfomanager.clubs.forms import CreateClub, Publish, DeleteClub
 from schoolclubinfomanager.clubs.picture_handler import add_photo
 import datetime
 import sys
@@ -247,6 +247,7 @@ def club(club_id):
     ygs = ClubYearGroup.query.filter_by(club_id=club.id).all()
     sc = StaffClub.query.filter_by(club_id=club.id).first()
     book = ContactToBook.query.filter_by(id=club.contact_to_book_id).first()
+    form = DeleteClub()
     if sc:
         # club is run by individual staff and not a company. (should I check for all instead of first?)
         staff_member = StaffMember.query.filter_by(id=sc.staffmember_id).first()
@@ -257,4 +258,53 @@ def club(club_id):
     else:
         ext_c = None
 
-    return render_template('admin/club.html', school=school, club=club, days=days, ygs=ygs, book=book, staff_member=staff_member, ext_c=ext_c)
+    if form.validate_on_submit():
+        for yg in ygs:
+            db.session.delete(yg)
+
+        for day in days:
+            db.session.delete(day)
+
+        if sc:
+            db.session.delete(sc)
+
+        db.session.delete(club)
+        db.session.commit()
+        # user has pressed "Delete club,
+        # so delete it and return to list overview"
+
+
+        return redirect(url_for('clubs.list_clubs', _anchor="close-delete-club"))
+    return render_template('admin/club.html', school=school, club=club, days=days, ygs=ygs, book=book, staff_member=staff_member, ext_c=ext_c, form=form)
+
+# LIST CLUBS
+@clubs.route('/list_clubs/', methods=['GET', 'POST'])
+@login_required
+def list_clubs():
+    school= School.query.first()
+    clubs = Club.query.all()
+    form = Publish()
+    #form = UnPublish()
+    test = None
+
+    if form.validate_on_submit():
+        club_id = request.form['publish']
+
+        club = Club.query.filter_by(id=club_id).first()
+        if club.published:
+            club.published = False
+        else:
+            club.published = True
+        db.session.commit()
+        #club = Club.query.filter_by(id=publish_form['publish']).first()
+        #club.published = True
+        #db.session.commit()
+
+        return redirect(url_for('clubs.list_clubs'))#render_template('admin/list_clubs.html',test=club_id, school=school, clubs=clubs, form=form)#render_template('admin/list_clubs.html',test=test, school=school, clubs=clubs, publish_form=publish_form, unpublish_form=unpublish_form)
+
+    '''if unpublish_form.validate_on_submit():
+        club = Club.query.filter_by(id=unpublish_form['unpublish']).first()
+        club.published = False
+        db.session.commit()'''
+
+    return render_template('admin/list_clubs.html',test=test, school=school, clubs=clubs, form=form)
