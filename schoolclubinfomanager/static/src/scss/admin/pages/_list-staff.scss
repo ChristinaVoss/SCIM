@@ -1,0 +1,26 @@
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1px;
+  margin-top: 2rem;
+
+  &__left,
+  &__right {
+    background-color: $color-grey-dark-1;
+    padding: 1rem;
+    border-radius: 4px 4px 0 0;
+
+    a {
+      text-decoration: none;
+      color: #fff;
+      //font-weight: 700;
+    }
+  }
+
+  &__left {
+    background-color: $color-secondary;
+  }
+}
+.tabs__content { display: none; }
+
+.tabs__content:target { display: block; }

@@ -16,7 +16,7 @@
     <td class="table__cell">{{user.name}}</td>
     <td class="table__cell">{{user.email}}</td>
     <td class="table__cell">
-      <a href="{{ url_for('users.list_users', _anchor="popup", user=user.id)}}" class="btn--delete">
+      <a href="{{ url_for('users.list_users', _anchor='popup', user=user.id)}}" class="btn--delete">
         delete user
       </a>
     </td>

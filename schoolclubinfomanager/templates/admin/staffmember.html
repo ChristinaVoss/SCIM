@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="staffmember">
+<h2>{{sm.id}}. {{sm.name}}</h2>
+<div class="staffmember__details">
+
+  <p>{{sm.email}}</p>
+  <br>
+  <p>{{sm.description}}</p>
+</div>
+
+<div class="staffmember__form">
+  <h3>Update details about {{sm.name}}</h3>
+  <form method="POST" class="form">
+    {{ form.hidden_tag() }}
+    {{ form.name.label(class="form__label") }}{{ form.name(class="form__input") }}
+    {{ form.email.label(class="form__label") }}{{ form.email(class="form__input") }}
+    {{ form.description.label(class="form__label") }}{{ form.description(class="form__textarea") }}
+    {{ form.submit_update(class="btn")}}
+  </form>
+</div>
+
+
+<div class="staffmember__table">
+  <h3>{{sm.name}} runs the following clubs</h3>
+  {% if clubs %}
+  <table class="table">
+    <tr class="table__row">
+      <th class="table__header">id</th>
+      <th class="table__header">Name</th>
+      <th class="table__header"></th>
+    </tr>
+
+    {% for club in clubs %}
+    <tr class="table__row">
+      <td class="table__cell">{{club.id}}</td>
+      <td class="table__cell">{{club.name}}</td>
+      <td class="table__cell">
+        <a href="{{ url_for('clubs.staffmember', _anchor='remove-from-club-popup', sm_id=sm.id, club_id=club.id)}}" class="btn--delete">
+          Remove {{sm.name}} from {{club.name}} - they no longer run this club
+        </a>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% else %}
+<p class="comment">{{sm.name}} is not currently linked to any clubs</p>
+{% endif %}
+
+<div class="staffmember__delete-staff">
+  <p>Delete {{sm.name}} from the system?</p>
+      <a href="{{ url_for('clubs.staffmember', _anchor='remove-staff-popup', sm_id=sm.id)}}" class="btn--delete">
+        Remove staff member {{sm.name}}
+      </a>
+</div>
+{% if test %}{{test}}{% endif %}
+
+<!-- REMOVE CLUB FROM STAFF -->
+<div class="popup" id="remove-from-club-popup">
+  <div class="popup__container">
+    <p>Are you sure you want to remove {{sm.name}}{% if popup_club %} from {{popup_club.name}}{% endif %}</p>
+
+    <form method="POST" class="form">
+      {{ form.hidden_tag() }}<!-- to make sure we can accept the form -->
+     <a href="{{ url_for('clubs.staffmember', sm_id=sm.id)}}" class="btn">Cancel</a>
+      {% set value = 'Remove ' + sm.name%}
+      {{ form.removeStaffFromClub(class="btn--delete", value=value) }}
+    </form>
+  </div>
+</div>
+
+<div class="popup" id="close-remove-from-club">
+  <div class="popup__container">
+    <p>{{sm.name}} successfully removed from the club</p>
+     <a href="{{ url_for('clubs.staffmember', sm_id=sm.id)}}" class="btn">Close</a>
+  </div>
+</div>
+
+<!-- REMOVE STAFF (DELETE) -->
+<div class="popup" id="remove-staff-popup">
+  <div class="popup__container">
+    <p>Are you sure you want to remove staff member {{sm.name}}?</p>
+    <p>This action cannot be  undone once completed.</p>
+
+    <form method="POST" class="form">
+      {{ form.hidden_tag() }}<!-- to make sure we can accept the form -->
+     <a href="{{ url_for('clubs.staffmember', sm_id=sm.id)}}" class="btn">Cancel</a>
+      {% set value = 'Remove ' + sm.name %}
+      {{ form.removeStaff(class="btn--delete", value=value) }}
+    </form>
+  </div>
+</div>
+
+</div>
+{% endblock %}

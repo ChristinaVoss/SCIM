@@ -86,8 +86,22 @@ class Publish(FlaskForm):
     publish = SubmitField('Publish')
     unpublish = SubmitField('Unpublish')
 
-
-
-
 class DeleteClub(FlaskForm):
     delete = SubmitField('Delete club')
+
+class EditStaffDetails(FlaskForm):
+    name = StringField('Update name')
+    email = StringField('Update email', validators=[Email(), Optional()])
+    description = TextAreaField('Update descrition of this staff member')
+    submit_update = SubmitField('Update details')
+    removeStaffFromClub = SubmitField('')
+    removeStaff = SubmitField('')
+
+class EditCompanyDetails(FlaskForm):
+    name = StringField('Update name')
+    email = StringField('Update email', validators=[Email(), Optional()])
+    website = StringField('Company website', validators=[URL(), Optional()])
+    description = TextAreaField('Update description of this company')
+    submit_update = SubmitField('Update details')
+    removeCompanyFromClub = SubmitField('')
+    removeCompany = SubmitField('')

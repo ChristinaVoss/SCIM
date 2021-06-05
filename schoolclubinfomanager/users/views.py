@@ -49,7 +49,6 @@ def logout():
 
 
 # LIST USERS
-#@users.route('/list_users/<user>', defaults={'user': None})
 @users.route('/list_users')
 @users.route('/list_users/<user>', methods=["GET", "POST"])
 @login_required

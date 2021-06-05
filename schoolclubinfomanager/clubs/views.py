@@ -2,7 +2,7 @@ from flask import render_template, url_for, redirect, request, Blueprint, sessio
 from flask_login import login_user, current_user, logout_user, login_required
 from schoolclubinfomanager import db
 from schoolclubinfomanager.models import School, YearGroup, Club, ClubDay, ClubYearGroup, ContactToBook, StaffClub, StaffMember, ExternalCompany
-from schoolclubinfomanager.clubs.forms import CreateClub, Publish, DeleteClub
+from schoolclubinfomanager.clubs.forms import CreateClub, Publish, DeleteClub, EditStaffDetails, EditCompanyDetails
 from schoolclubinfomanager.clubs.picture_handler import add_photo
 import datetime
 import sys
@@ -89,8 +89,8 @@ def create_club():
             at_school = False
             location = form.off_school_premises.data
 
-        cost = form.is_free.data
-        if cost == 'free':
+        free_boolean = form.is_free.data
+        if free_boolean == 'free':
             is_free = True
             cost = None
         else:
@@ -139,6 +139,7 @@ def create_club():
                 teacher_name = form.teacher.data
                 if bool(ContactToBook.query.filter_by(teacher_name=teacher_name).first()):
                     #name already exists in the system, just link to club
+                    booking_details_exist = True
                     contact = ContactToBook.query.filter_by(teacher_name=teacher_name).first()
                     club.contact_to_book_id = contact.id
                     db.session.commit()
@@ -149,6 +150,7 @@ def create_club():
                 email = form.email.data
                 if bool(ContactToBook.query.filter_by(email=email).first()):
                     #email already exists in the system, just link to club
+                    booking_details_exist = True
                     contact = ContactToBook.query.filter_by(email=email).first()
                     club.contact_to_book_id = contact.id
                     db.session.commit()
@@ -159,6 +161,7 @@ def create_club():
                 call = form.call.data
                 if bool(ContactToBook.query.filter_by(call=call).first()):
                     #number already exists in the system, just link to club
+                    booking_details_exist = True
                     contact = ContactToBook.query.filter_by(call=call).first()
                     club.contact_to_book_id = contact.id
                     db.session.commit()
@@ -308,3 +311,102 @@ def list_clubs():
         db.session.commit()'''
 
     return render_template('admin/list_clubs.html',test=test, school=school, clubs=clubs, form=form)
+
+
+
+# MANAGE STAFF AND Companies
+@clubs.route('/list_staff_and_companies/', methods=['GET', 'POST'])
+@login_required
+def list_staff_and_companies():
+    school= School.query.first()
+    staffmembers = StaffMember.query.all()
+    scs = StaffClub.query.all()
+    companies = ExternalCompany.query.all()
+    clubs = Club.query.all()
+    return render_template('admin/list_staff_and_companies.html',school=school, staffmembers=staffmembers, scs=scs, clubs=clubs, companies=companies)
+
+# SINGLE STAFF MEMBER
+@clubs.route('/staffmember/<sm_id>', methods=['GET', 'POST'])
+@clubs.route('/staffmember/<sm_id>/<club_id>', methods=['GET', 'POST'])
+@login_required
+def staffmember(sm_id, club_id=None):
+    form = EditStaffDetails()
+    school= School.query.first()
+    sm = StaffMember.query.filter_by(id=sm_id).first()
+    scs = StaffClub.query.filter_by(staffmember_id=sm.id).all()
+    clubs = [Club.query.filter_by(id=sc.club_id).first() for sc in scs]
+    if club_id:
+        popup_club = Club.query.filter_by(id=club_id).first()
+    else:
+        popup_club = None
+    if form.validate_on_submit():
+        if form.removeStaff.data:#if request.form['removeStaff']:
+            for sc in scs:
+                db.session.delete(sc)
+            db.session.commit()
+
+            db.session.delete(sm)
+            db.session.commit()
+
+            return redirect(url_for('clubs.list_staff_and_companies'))
+        sc = StaffClub.query.filter_by(club_id=club_id).first()
+        if sc:
+            db.session.delete(sc)
+            db.session.commit()
+            # user has pressed "Remove <name> from <club> - They no longer run this club" button,
+            # so delete link to club and return to their overview"
+            return redirect(url_for('clubs.staffmember', _anchor="close-remove-from-club", sm_id=sm.id))
+        if form.name.data:
+            sm.name = form.name.data
+        if form.email.data:
+            sm.email = form.email.data
+        if form.description.data:
+            sm.description = form.description.data
+
+        db.session.commit()
+        return redirect(url_for('clubs.staffmember', sm_id=sm.id))
+
+    return render_template('admin/staffmember.html',school=school, sm=sm, clubs=clubs, form=form, popup_club=popup_club)
+
+# SINGLE COMPANY
+@clubs.route('/company/<c_id>', methods=['GET', 'POST'])
+@clubs.route('/company/<c_id>/<club_id>', methods=['GET', 'POST'])
+@login_required
+def company(c_id, club_id=None):
+    form = EditCompanyDetails()
+    school= School.query.first()
+    c = ExternalCompany.query.filter_by(id=c_id).first()
+    clubs = Club.query.filter_by(ext_company_id=c.id).all()
+    if club_id:
+        popup_club = Club.query.filter_by(id=club_id).first()
+    else:
+        popup_club = None
+    if form.validate_on_submit():
+        if form.removeCompany.data:
+            for sc in scs:
+                db.session.delete(sc)
+            db.session.commit()
+
+            db.session.delete(c)
+            db.session.commit()
+
+            return redirect(url_for('clubs.list_staff_and_companies'))
+        '''if form.removeCompanyFromClub.data:
+            db.session.delete()
+            db.session.commit()
+            # user has pressed "Remove <company> from <club> - They no longer run this club" button,
+            # so delete link to club and return to their overview"
+            return redirect(url_for('clubs.staffmember', _anchor="close-remove-from-club", c_id=c.id))'''
+        if form.name.data:
+            c.name = form.name.data
+        if form.email.data:
+            c.email = form.email.data
+        if form.website.data:
+            c.website = form.website.data
+        if form.description.data:
+            c.description = form.description.data
+
+        db.session.commit()
+        return redirect(url_for('clubs.company', c_id=c.id))
+
+    return render_template('admin/company.html',school=school, c=c, clubs=clubs, form=form, popup_club=popup_club)
