@@ -36,24 +36,25 @@
     <div class="club__form__item--left">
       <p class="form__label">Club location*</p>
       <div class="club__form__radio-and-text-group">
-        <input type="radio" id="at_school" class="form__radio" name="location" value="at_school"  onclick="setFocus('at_school_input')" checked>
+
+        <input type="radio" id="at_school" class="form__radio" name="location" value="at_school"  onclick="setFocus('at_school_input')"  {% if ((club) and (club.at_school)) or (club==None) %}checked{% endif %}>
         <label for="at_school">
           {{ form.at_school_premises.label(class="form__label") }}
           {{ form.at_school_premises(class="form__input", id="at_school_input", onclick="checkRadio('at_school')", placeholder="Room 23b") }}
         </label>
-      </div>
-      <div class="club__form__radio-and-text-group">
-        <input type="radio" id="off_school" class="form__radio" name="location" value="off_school"  onclick="setFocus('off_school_input')">
-        <label for="off_school">
+        </div>
+        <div class="club__form__radio-and-text-group">
+          <input type="radio" id="off_school" class="form__radio" name="location" value="off_school"  onclick="setFocus('off_school_input')"  {% if (club)  and (club.at_school == False) %}checked{% endif %}>
+          <label for="off_school">
+        {{ form.off_school_premises.label(class="form__label") }}
+        {{ form.off_school_premises(class="form__textarea", id="off_school_input",
+      placeholder="Art center,
+  Downton street,
+  Madeup Town,
+  AB1 2CD", onclick="checkRadio('off_school')") }}
+          </label>
+        </div>
 
-          {{ form.off_school_premises.label(class="form__label") }}
-          {{ form.off_school_premises(class="form__textarea", id="off_school_input", onclick="checkRadio('off_school')",
-          placeholder="Art center,
-Downton street,
-Madeup Town,
-AB1 2CD") }}
-        </label>
-      </div>
     </div>
     <div class="club__form__item--days">
       <label for="" class="form__label">Day(s) the club will be running*</label>
@@ -95,14 +96,14 @@ AB1 2CD") }}
     <div class="club__form__item">
       <p class="form__label">To book a place*</p>
       <div class="club__form__radio-and-text-group">
-        <input type="radio" id="drop_in" name="book" class="form__radio" value="drop_in" checked>
+        <input type="radio" id="drop_in" name="book" class="form__radio" value="drop_in" {% if ((club) and (club.drop_in)) or (club==None) %} checked {% endif %}>
         <label for="drop_in">
           <!-- not sure if database is updated by this at all!! -->
           {{ form.book.label(class="form__label--nomargin") }}
         </label>
       </div>
       <div class="club__form__radio-and-text-group">
-        <input type="radio" id="teacher" name="book" value="teacher" class="form__radio" onclick="setFocus('teacher-input')">
+        <input type="radio" id="teacher" name="book" value="teacher" class="form__radio" onclick="setFocus('teacher-input')" {% if (contact_to_book)  and (contact_to_book.teacher_name != None) %} checked {% endif %}>
         <label for="teacher">
           {{ form.teacher.label(class="form__label") }}
           {{ form.teacher(class="form__input", id="teacher-input", onclick="checkRadio('teacher')", placeholder="Mr Smith", list="teachers") }}
@@ -116,7 +117,7 @@ AB1 2CD") }}
         </label>
       </div>
       <div class="club__form__radio-and-text-group">
-        <input type="radio" id="email" name="book" value="email" class="form__radio" onclick="setFocus('email-input')">
+        <input type="radio" id="email" name="book" value="email" class="form__radio" onclick="setFocus('email-input')" {% if (contact_to_book)  and (contact_to_book.email != None) %} checked {% endif %}>
         <label for="email">
           {{ form.email.label(class="form__label") }}
           {{ form.email(class="form__input", id="email-input", onclick="checkRadio('email')", placeholder="smith@email.com", list="emails") }}
@@ -130,7 +131,7 @@ AB1 2CD") }}
         </label>
       </div>
       <div class="club__form__radio-and-text-group">
-        <input type="radio" id="call" name="book" value="call" class="form__radio" onclick="setFocus('call-input')">
+        <input type="radio" id="call" name="book" value="call" class="form__radio" onclick="setFocus('call-input')" {% if (contact_to_book)  and (contact_to_book.call != None) %} checked {% endif %}>
         <label for="call">
           {{ form.call.label(class="form__label") }}
           {{ form.call(class="form__input", id="call-input", onclick="checkRadio('call')", placeholder="01234567890", list="phone_numbers") }}
@@ -148,13 +149,13 @@ AB1 2CD") }}
         <div class="club__form__item">
           <p class="form__label">How much will the club cost?*</p>
             <label for="free" class="club__form__radio-and-text-group">
-              <input type="radio" id="free" name="is_free" value="free" class="form__radio" checked>
+              <input type="radio" id="free" name="is_free" value="free" class="form__radio" {% if ((club) and (club.is_free)) or (club==None) %} checked {% endif %}>
               {{ form.is_free.label(class="form__label--nomargin") }}
 
             </label>
 
           <div class="club__form__radio-and-text-group">
-            <input type="radio" id="paid" name="is_free" value="paid" class="form__radio" onclick="setFocus('paid-input')">
+            <input type="radio" id="paid" name="is_free" value="paid" class="form__radio" onclick="setFocus('paid-input')" {% if (club)  and (club.is_free == False) %}checked{% endif %}>
             <label for="paid">
               {{ form.cost.label(class="form__label") }}
               <span class="form__input--pound">
@@ -182,13 +183,13 @@ AB1 2CD") }}
 
           <div class="club__form__subitem">
             <div class="club__form__radio-and-text-group">
-              <input type="radio" id="new" class="form__radio" name="new_entry" value="new" onclick="showSubFormHideOther('new_entries', 'existing_dropdowns')" checked >
+              <input type="radio" id="new" class="form__radio" name="new_entry" value="new" onclick="showSubFormHideOther('new_entries', 'existing_dropdowns')" {% if club==None %} checked {% endif %} >
               <label for="new" class="form__label--nomargin">
                 New entry
               </label>
             </div>
 
-            <div class="club__form__subitem__subitem" id="new_entries">
+            <div class="club__form__subitem__subitem" id="new_entries" {% if club %} style="display:none;" {% endif %}>
               <div class="club__form big-top-margin">
                 <div class="club__form__radio-and-text-group">
                   <input type="radio" id="person" class="form__radio" name="type_of_staff" value="person" onclick="showSubFormHideOther('person_form', 'company_form')" checked>
@@ -231,15 +232,15 @@ AB1 2CD") }}
 
           <div class="club__form__subitem">
             <div class="club__form__radio-and-text-group">
-              <input type="radio" id="existing" class="form__radio" name="new_entry" value="existing" onclick="showSubFormHideOther('existing_dropdowns', 'new_entries')">
+              <input type="radio" id="existing" class="form__radio" name="new_entry" value="existing" onclick="showSubFormHideOther('existing_dropdowns', 'new_entries')" {% if club %} checked {% endif %}>
               <label for="existing" class="form__label--nomargin">
                 Staff or company already exists in the system
               </label>
             </div>
 
-            <div class="club__form__subitem__subitem big-top-margin" id="existing_dropdowns">
+            <div class="club__form__subitem__subitem big-top-margin" id="existing_dropdowns" {% if club %} style="display:block;" {% endif %}>
               <div class="club__form__radio-and-text-group">
-                <input type="radio" id="existing_staff" class="form__radio" name="existing_clubrunner" value="existing_staff" checked>
+                <input type="radio" id="existing_staff" class="form__radio" name="existing_clubrunner" value="existing_staff"  {% if (not club.ext_company_id) or (club == None) %} checked {% endif %}>
                 <label for="existing" class="form__label--nomargin">
                   <div class="staff-dropdown">
                     {{ form.staff.label(class="form__label") }}
@@ -250,7 +251,7 @@ AB1 2CD") }}
                   </div>
               </div>
               <div class="club__form__radio-and-text-group">
-                <input type="radio" id="existing_company" class="form__radio" name="existing_clubrunner" value="existing_company">
+                <input type="radio" id="existing_company" class="form__radio" name="existing_clubrunner" value="existing_company" {% if club.ext_company_id %} checked {% endif %}>
                 <div class="companies-dropdown">
                   {{ form.companies.label(class="form__label") }}
                   <div class="hide">

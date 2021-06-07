@@ -17,8 +17,11 @@ def create_club():
     school = School.query.first()
     # for validating datepickers:
     today = datetime.date.today()
-    one_year = str(datetime.datetime.now())[:10]
-    one_year = one_year[:3] + str(int(one_year[3]) + 1) + one_year[4:10]
+    one_year = str(today)
+    one_year = one_year[:3] + str(int(one_year[3]) + 1) + one_year[4:]
+    #one_year = ''.join(one_year)
+    #one_year = str(datetime.datetime.now())[:10]
+    #one_year = one_year[:3] + str(int(one_year[3]) + 1) + one_year[4:10]
     teachers = [contact.teacher_name for contact in ContactToBook.query.all()]
     emails = [contact.email for contact in ContactToBook.query.all()]
     phone_numbers = [contact.call for contact in ContactToBook.query.all()]
@@ -80,8 +83,6 @@ def create_club():
 
 
         location = form.location.data
-        print('Hello world!', file=sys.stderr)
-        print(location, file=sys.stdout)
         if location == 'at_school':
             at_school = True
             location = form.at_school_premises.data
@@ -238,6 +239,255 @@ def create_club():
         return redirect(url_for('clubs.club', club_id=club.id))
     return (render_template('admin/club_form.html', form=form, title="Create", school=school, today=today, one_year=one_year, teachers=teachers, emails=emails, phone_numbers=phone_numbers))
 
+# EDIT CLUB
+@clubs.route('/edit_club/<club_id>', methods=['GET', 'POST'])
+@login_required
+def edit_club(club_id):
+    form = CreateClub()
+    school = School.query.first()
+    club = Club.query.filter_by(id=club_id).first()
+    contact_to_book = ContactToBook.query.filter_by(id=club.contact_to_book_id).first()
+    sc = StaffClub.query.filter_by(club_id=club.id).first()
+
+    # for updating the days and year groups (so previously checked days that have been unchecked now are removed)
+    existing_days = ClubDay.query.filter_by(club_id=club.id).all()
+    existing_days = {day.name for day in existing_days}
+
+    existing_ygs = ClubYearGroup.query.filter_by(club_id=club.id).all()
+    existing_ygs = {yg.name for yg in existing_ygs}
+
+    # for validating datepickers:
+    start_date = club.start_date
+    one_year = str(start_date)
+    one_year = one_year[:3] + str(int(one_year[3]) + 1) + one_year[4:10]
+
+    # existing contacts
+    teachers = [contact.teacher_name for contact in ContactToBook.query.all()]
+    emails = [contact.email for contact in ContactToBook.query.all()]
+    phone_numbers = [contact.call for contact in ContactToBook.query.all()]
+
+    #school = School.query.first()
+    if form.validate_on_submit():
+
+        # SAVE PHOTO
+        if form.photo.data: #if they actually uploaded a photo
+            club_name = form.name.data
+            club_name = club_name.replace(' ', '') + '_' + str(datetime.datetime.now().date()) + '_' + str(datetime.datetime.now().time()).replace(':', '-')[-6:]
+
+            club.photo = add_photo(form.photo.data, club_name) # old picture is still in the system - decide if you want to delete it?
+
+
+        location = form.location.data
+        if location == 'at_school':
+            at_school = True
+            location = form.at_school_premises.data
+        else:
+            at_school = False
+            location = form.off_school_premises.data
+
+        free_boolean = form.is_free.data
+        if free_boolean == 'free':
+            is_free = True
+            cost = None
+        else:
+            is_free = False
+            cost = form.cost.data
+
+        drop_in = form.book.data == 'drop_in'
+
+
+        num_places = form.num_places.data
+
+        club = Club(name = form.name.data,
+                    start_date = form.start_date.data,
+                    end_date = form.end_date.data,
+                    start_time = form.start_time.data,
+                    end_time = form.end_time.data,
+                    location = location,
+                    at_school = at_school,
+                    is_free = is_free,
+                    num_of_places = num_places,
+                    drop_in = drop_in
+                    )
+
+        db.session.add(club)
+        db.session.commit()
+
+        #update database with days
+        new_days = set(form.days.data)
+        for d in new_days:
+            if d not in existing_days:
+                day = ClubDay(d, club.id)
+                db.session.add(day)
+
+        to_delete = existing_days - new_days
+        if to_delete:
+            for d in to_delete:
+                temp = ClubDay.query.filter_by(name=d, club_id=club.id).first()
+                db.session.delete(temp)
+        db.session.commit()
+
+        #update database with year groups
+        new_year_groups = set(form.year_groups.data)
+        for group in new_year_groups:
+            if group not in existing_ygs:
+                yg = ClubYearGroup(group, club.id)
+                db.session.add(yg)
+
+        to_delete = existing_ygs - new_year_groups
+        if to_delete:
+            for yg in to_delete:
+                temp = ClubYearGroup.filter_by(name=yg, club_id=club.id).first()
+                db.session.delete(temp)
+        db.session.commit()
+
+        booking_details_exist = False
+
+        # CONTACT TO BOOK
+        if not drop_in: # checks radio button for choosing how to book
+            if form.book.data == 'teacher':
+                teacher_name = form.teacher.data
+                if bool(ContactToBook.query.filter_by(teacher_name=teacher_name).first()):
+                    #name already exists in the system, just link to club
+                    booking_details_exist = True
+                    contact = ContactToBook.query.filter_by(teacher_name=teacher_name).first()
+                    club.contact_to_book_id = contact.id
+                    db.session.commit()
+            else:
+                teacher_name = None
+
+            if form.book.data == 'email':
+                email = form.email.data
+                if bool(ContactToBook.query.filter_by(email=email).first()):
+                    #email already exists in the system, just link to club
+                    booking_details_exist = True
+                    contact = ContactToBook.query.filter_by(email=email).first()
+                    club.contact_to_book_id = contact.id
+                    db.session.commit()
+            else:
+                email = None
+
+            if form.book.data =='call':
+                call = form.call.data
+                if bool(ContactToBook.query.filter_by(call=call).first()):
+                    #number already exists in the system, just link to club
+                    booking_details_exist = True
+                    contact = ContactToBook.query.filter_by(call=call).first()
+                    club.contact_to_book_id = contact.id
+                    db.session.commit()
+            else:
+                call = None
+
+            if not booking_details_exist:
+                #new entry, create new object/row
+                contact = ContactToBook(teacher_name = teacher_name,
+                                        email = email,
+                                        call = call)
+
+                db.session.add(contact)
+                db.session.commit()
+                club.contact_to_book_id = contact.id
+                db.session.commit()
+
+        # Add data about StaffMember or ExternalCompany
+        if form.new_entry.data == 'new':
+            # New entry to system, add to database
+            if form.type_of_staff.data == 'person':
+                staff_member = StaffMember(name = form.staff_name.data,
+                                           email = form.staff_email.data,
+                                           description = form.staff_description.data)
+                db.session.add(staff_member)
+                db.session.commit()
+
+                staff_club = StaffClub(club_id = club.id,
+                                       staffmember_id = staff_member.id)
+
+                db.session.add(staff_club)
+                db.session.commit()
+
+            else:
+                #company
+                company = ExternalCompany(name = form.company_name.data,
+                                          website = form.company_website.data,
+                                          email = form.company_email.data,
+                                          description = form.company_description.data)
+
+                db.session.add(company)
+                db.session.commit()
+
+                club.ext_company_id = company.id
+                db.session.commit()
+
+        else:
+            # Staff or company exists in system, link to clubs
+            if form.existing_clubrunner.data == 'existing_staff':
+                #staff
+                staff_member = form.staff.data
+                # check if club has existing staff member to change
+                existing_sc = StaffClub.query.filter_by(club_id=club.id).first()
+                staff_member = StaffMember.query.filter_by(name=staff_member).first()
+
+                if existing_sc:
+                    existing_sc.staffmember_id = staff_member.id
+                else:
+                    staff_club = StaffClub(club_id = club.id,
+                                           staffmember_id = staff_member.id)
+
+                    db.session.add(staff_club)
+                db.session.commit()
+            else:
+                #company
+                company = form.companies.data
+                company = ExternalCompany.query.filter_by(name=company).first()
+                club.ext_company_id = company.id
+                db.session.commit()
+
+
+        # ALL CLUB INFO NOT COMPULSORY
+        club.experience = form.experience.data
+        club.outfit = form.outfit.data
+        club.equipment = form.equipment.data
+        club.description = form.description.data
+
+        db.session.commit()
+        return redirect(url_for('clubs.club', club_id=club.id))
+    elif request.method == "GET":
+        # they are not yet submitting, they want to see the form, so we grab the current details and populate the form
+        form.name.data = club.name
+        form.start_date.data = club.start_date #consider adding these to html tag as value? Will be today and one_year for create club
+        form.end_date.data = club.end_date #consider adding these to html tag as value? Will be today and one_year for create club
+        form.start_time.data = club.start_time #consider adding these to html tag as value? Will be today and one_year for create club
+        form.end_time.data = club.end_time #consider adding these to html tag as value? Will be today and one_year for create club
+        if club.at_school:
+            form.at_school_premises.data = club.location
+        else:
+            form.off_school_premises.data = club.location
+        form.days.data = existing_days
+        form.year_groups.data = existing_ygs
+        form.experience.data = club.experience
+        form.equipment.data = club.equipment
+        form.outfit.data = club.outfit
+        form.num_places.data = club.num_of_places
+        if contact_to_book.teacher_name:
+            form.teacher.data = contact_to_book.teacher_name
+        elif contact_to_book.email:
+            form.email.data = contact_to_book.email
+        elif contact_to_book.call:
+            form.call.data = contact_to_book.call
+        form.cost.data = club.cost
+        form.description.data = club.description
+        if sc:
+            staffmember = StaffMember.query.filter_by(id=sc.staffmember_id).first()
+            form.staff.data = staffmember.name
+        if club.ext_company_id:
+            company = ExternalCompany.query.filter_by(id = club.ext_company_id).first()
+            form.companies.data = company.name
+
+
+
+
+    return (render_template('admin/club_form.html', form=form, title="Edit", school=school, today=start_date, one_year=one_year, teachers=teachers, emails=emails, phone_numbers=phone_numbers, club=club, contact_to_book=contact_to_book))
+
 
 
 # SINGLE CLUB OVERVIEW
@@ -383,9 +633,9 @@ def company(c_id, club_id=None):
         popup_club = None
     if form.validate_on_submit():
         if form.removeCompany.data:
-            for sc in scs:
-                db.session.delete(sc)
-            db.session.commit()
+            for club in clubs:
+                club.ext_company_id = None
+                club.published = False #if a company can no longer run the club, the club should be unpublished until a new company or staff is added.
 
             db.session.delete(c)
             db.session.commit()
