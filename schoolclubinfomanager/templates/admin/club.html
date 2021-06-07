@@ -11,7 +11,8 @@
       {{day.name}},
     {% endfor %} from {{club.start_date.strftime('%d/%m/%Y')}} to {{club.end_date.strftime('%d/%m/%Y')}}
    </p>
-  <p>{{club.start_time.strftime('%H:%M')}} - {{club.end_time.strftime('%H:%M')}}</p>
+  <p>{{club.start_time.strftime('%H:%M')}} - {{club.end_time.strftime('%H:%M')}}  {{club.location}} {{club.at_school}}</p>
+  <p></p>
   {% if club.photo %}
     <img src="{{ url_for('static', filename='img/club/'+club.photo)}}" height="200" alt="Club activities photo" class="photo--medium">
   {% endif %}
@@ -73,7 +74,7 @@
     <a href="{{ url_for('clubs.club', _anchor='popupclub', club_id=club.id)}}" class="btn--delete">
       delete club
     </a>
-    <a href="#" class="btn">
+    <a href="{{ url_for('clubs.edit_club', club_id=club.id)}}" class="btn">
       edit details
     </a>
   </div>
