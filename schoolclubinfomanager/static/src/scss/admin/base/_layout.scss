@@ -1,8 +1,8 @@
 .container {
   display: grid;
   grid-template-rows: [header-start] 17rem [header-end main-start] 1fr [main-end];
-  grid-template-columns: [left-margin-start] 1fr [left-margin-end nav-start] 20rem
-                         [nav-end main-start] 3fr [main-end right-margin-start] 1fr
+  grid-template-columns: [left-margin-start] minmax(0, 1fr) [left-margin-end nav-start] 20rem
+                         [nav-end main-start] minmax(60rem, 3fr) [main-end right-margin-start] minmax(0, 1fr)
                          [right-margin-end]
 }
 
@@ -58,4 +58,8 @@
   grid-column: main-start /main-end;
   margin: 2rem 0 2rem 4rem;
 
+}
+
+.full-width {
+  grid-column: 1/-1;
 }

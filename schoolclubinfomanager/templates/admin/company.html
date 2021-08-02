@@ -67,7 +67,7 @@
     <form method="POST" class="form">
       {{ form.hidden_tag() }}<!-- to make sure we can accept the form -->
      <a href="{{ url_for('clubs.company', c_id=c.id)}}" class="btn">Cancel</a>
-      {% set value = 'Remove ' + sm.name%}
+      {% set value = 'Remove ' + c.name%}
       {{ form.removeCompanyFromClub(class="btn--delete", value=value) }}
     </form>
   </div>

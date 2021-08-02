@@ -12,10 +12,10 @@
   // LABELS
   &__label {
     color: $color-grey-dark-3;
-    display: block;
+    //display: block;
     font-size: 1.2rem;
     font-weight: 700;
-    margin: .7rem 0 0rem .2rem;
+    margin: 0 0 0rem .2rem; //.7rem 0 0rem .2rem
 
     &--nomargin {
       @extend .form__label;
@@ -124,7 +124,7 @@
 
   // FILE input
   &__file {
-    margin: 2rem 0 4rem 0;
+    margin: 2rem 0rem 4rem 0;
     position: relative;
 
     &__label {
@@ -132,7 +132,7 @@
       border-radius: 2px;
       color: $color-light;
       font-weight: 500;
-      padding: 1rem 1.5rem 1rem 3rem;
+      padding: 1rem 0.4rem 1rem 2.7rem;
       position: relative;
       z-index: 10;
 
@@ -209,4 +209,10 @@
     width: 100%;
     //margin-top: 1rem;
   }
+}
+
+
+fieldset {
+  border: None;
+  margin-bottom: 2rem;
 }

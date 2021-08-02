@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="staffmember">
+<section class="staffmember">
 <h2>{{sm.id}}. {{sm.name}}</h2>
 <div class="staffmember__details">
 
@@ -10,7 +10,7 @@
   <p>{{sm.description}}</p>
 </div>
 
-<div class="staffmember__form">
+<section class="staffmember__form">
   <h3>Update details about {{sm.name}}</h3>
   <form method="POST" class="form">
     {{ form.hidden_tag() }}
@@ -19,17 +19,18 @@
     {{ form.description.label(class="form__label") }}{{ form.description(class="form__textarea") }}
     {{ form.submit_update(class="btn")}}
   </form>
-</div>
+</section>
 
-
+<!-- UPDATE STAFF MEMBER DETAILS FORM -->
+<section class="staffmember__clubs">
 <div class="staffmember__table">
   <h3>{{sm.name}} runs the following clubs</h3>
   {% if clubs %}
   <table class="table">
     <tr class="table__row">
       <th class="table__header">id</th>
-      <th class="table__header">Name</th>
-      <th class="table__header"></th>
+      <th class="table__header">Club</th>
+      <th class="table__header">Does {{sm.name}} still run this club?</th>
     </tr>
 
     {% for club in clubs %}
@@ -38,7 +39,7 @@
       <td class="table__cell">{{club.name}}</td>
       <td class="table__cell">
         <a href="{{ url_for('clubs.staffmember', _anchor='remove-from-club-popup', sm_id=sm.id, club_id=club.id)}}" class="btn--delete">
-          Remove {{sm.name}} from {{club.name}} - they no longer run this club
+          Remove {{sm.name}} from {{club.name}}
         </a>
       </td>
     </tr>
@@ -48,16 +49,19 @@
 {% else %}
 <p class="comment">{{sm.name}} is not currently linked to any clubs</p>
 {% endif %}
+</section>
 
-<div class="staffmember__delete-staff">
+<!-- REMOVE STAFF (DELETE) -->
+<section class="staffmember__delete-staff">
   <p>Delete {{sm.name}} from the system?</p>
       <a href="{{ url_for('clubs.staffmember', _anchor='remove-staff-popup', sm_id=sm.id)}}" class="btn--delete">
-        Remove staff member {{sm.name}}
+        Yes - Delete {{sm.name}}
       </a>
-</div>
+</section>
+
 {% if test %}{{test}}{% endif %}
 
-<!-- REMOVE CLUB FROM STAFF -->
+<!-- REMOVE CLUB FROM STAFF CONFIRMATION POPUP-->
 <div class="popup" id="remove-from-club-popup">
   <div class="popup__container">
     <p>Are you sure you want to remove {{sm.name}}{% if popup_club %} from {{popup_club.name}}{% endif %}</p>
@@ -78,20 +82,20 @@
   </div>
 </div>
 
-<!-- REMOVE STAFF (DELETE) -->
+<!-- REMOVE STAFF (DELETE) CONFIRMATION POPUP-->
 <div class="popup" id="remove-staff-popup">
   <div class="popup__container">
-    <p>Are you sure you want to remove staff member {{sm.name}}?</p>
+    <p>Are you sure you want to delete {{sm.name}} from the system?</p>
     <p>This action cannot be  undone once completed.</p>
 
     <form method="POST" class="form">
       {{ form.hidden_tag() }}<!-- to make sure we can accept the form -->
-     <a href="{{ url_for('clubs.staffmember', sm_id=sm.id)}}" class="btn">Cancel</a>
-      {% set value = 'Remove ' + sm.name %}
+      {% set value = 'Delete ' + sm.name %}
       {{ form.removeStaff(class="btn--delete", value=value) }}
+      <a href="{{ url_for('clubs.staffmember', sm_id=sm.id)}}" class="btn">Cancel</a>
     </form>
   </div>
 </div>
 
-</div>
+</section>
 {% endblock %}
