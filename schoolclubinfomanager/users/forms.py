@@ -30,7 +30,6 @@ class RegistrationForm(FlaskForm):
 class UpdateUserForm(FlaskForm):
     email = StringField('Email', validators=[Email()])
     name = StringField('Name')
-
     submit = SubmitField('Update details')
 
     def check_email(self, field):
@@ -38,5 +37,4 @@ class UpdateUserForm(FlaskForm):
             raise ValidationError('Your email has been registered already')
 
 class DeleteUserForm(FlaskForm):
-
     submit = SubmitField('Delete User')

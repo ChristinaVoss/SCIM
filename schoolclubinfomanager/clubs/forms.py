@@ -43,8 +43,8 @@ class CreateClub(FlaskForm):
     end_time = TimeField('End time*', format='%H:%M', validators=[DataRequired()])
     start_time = TimeField('Start time*', format='%H:%M', validators=[DataRequired()])
     location = RadioField('', choices=[('at_school', 'at_school'), ('off_school', 'off_school')])
-    at_school_premises = StringField('At school premises - fill in room name/number')
-    off_school_premises = TextAreaField('Off school premises - provide address')
+    at_school_premises = StringField('Please fill in room name/number')
+    off_school_premises = TextAreaField('Please provide address')
     days = MultiCheckboxField('Day(s) the club will be running*', choices=DAYS, validators=[DataRequired()])
     #category = RadioField('Category')
     # WHO CAN JOIN
@@ -55,11 +55,11 @@ class CreateClub(FlaskForm):
     num_places = StringField('How many spaces are there available?')
     # BOOKING AND COST
     book = RadioField("Drop in (no need to book)", choices=BOOKING)
-    teacher = StringField('Talk to teacher:')
-    email = StringField('Email:')
-    call = StringField('Call:')
+    teacher = StringField('Please provide name of teacher to contact:')
+    email = StringField('Please provide email to contact:')
+    call = StringField('Please provide number to contact:')
     is_free = RadioField('Free', choices=[('free', 'free'), ('paid', 'paid')])
-    cost = StringField('Paid:')
+    cost = StringField('Please enter cost per week:')
     # DESCRIPTION OF CLUB AND PHOTO
     photo = FileField('Upload photo', validators=[FileAllowed(['jpg', 'jpeg', 'png', 'svg']), Optional()])
     description = TextAreaField('Description of club and/or club activities*')
@@ -76,8 +76,8 @@ class CreateClub(FlaskForm):
     company_email = StringField('Email', validators=[Email(), Optional()])
     company_description = TextAreaField('Description of company')
     company_website = StringField('Company website', validators=[URL(), Optional()])
-    staff = SelectField('Choose from list of staff members in system', choices=STAFF, validators=[Optional()])
-    companies = SelectField('Choose from list of companies in system', choices=COMPANIES, validators=[Optional()])
+    staff = SelectField('Staff members - select one', choices=STAFF, validators=[Optional()])
+    companies = SelectField('Companies - select one', choices=COMPANIES, validators=[Optional()])
     # SUBMIT FORM
     submit = SubmitField('Save')
     # Not sure how to add more staff members yet (dynamically) - need to look up!

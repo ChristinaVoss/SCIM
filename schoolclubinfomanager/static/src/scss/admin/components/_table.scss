@@ -6,10 +6,8 @@
 
   &__header {
     padding: 1rem;
-
     background-color: $color-secondary;
     color: white;
-
   }
 
   &__cell {
@@ -19,7 +17,6 @@
 
   }
   &__row {
-
     &:nth-child(even) {
       background-color: $color-grey-light-1;
     }
@@ -28,5 +25,4 @@
       background-color: $color-grey-dark-1;
     }
   }
-
 }
