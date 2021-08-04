@@ -27,6 +27,10 @@
   }
 }
 
+.current {
+  background-color: $color-secondary;
+}
+
 .sidebar {
   grid-column: nav-start / nav-end;
   //grid-row: main-start / -1;
