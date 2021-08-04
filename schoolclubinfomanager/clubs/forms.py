@@ -67,8 +67,7 @@ class CreateClub(FlaskForm):
     #staff_dropdown = SelectField(u'Existing staff members')
     #companies_dropdown = SelectField(u'Existing companies')
     new_entry = RadioField('', choices=[('new', 'new'), ('existing', 'existing')])
-    type_of_staff = RadioField('', choices=[('person', 'person'), ('company', 'company')])
-    existing_clubrunner = RadioField('', choices=[('existing_staff', 'existing_staff'), ('existing_company', 'existing_company')])
+    type_of_staff = RadioField('', choices=[('person', 'person'), ('company', 'company')], validators=[Optional()])
     staff_name = StringField('Name of club staff member')
     staff_email = StringField('Email', validators=[Email(), Optional()])
     staff_description = TextAreaField('Description of new staff member')
@@ -76,6 +75,7 @@ class CreateClub(FlaskForm):
     company_email = StringField('Email', validators=[Email(), Optional()])
     company_description = TextAreaField('Description of company')
     company_website = StringField('Company website', validators=[URL(), Optional()])
+    existing_clubrunner = RadioField('', choices=[('existing_staff', 'existing_staff'), ('existing_company', 'existing_company')], validators=[Optional()])
     staff = SelectField('Staff members - select one', choices=STAFF, validators=[Optional()])
     companies = SelectField('Companies - select one', choices=COMPANIES, validators=[Optional()])
     # SUBMIT FORM
