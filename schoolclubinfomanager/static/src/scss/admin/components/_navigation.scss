@@ -3,6 +3,7 @@
   &,
   &__sub-menu {
     list-style: none;
+
   }
 
   // style "button" (list items)
@@ -62,6 +63,16 @@
 
   &__sub-menu {
     display: none;
+    padding-left: 2rem;
+
+    &__item {
+      color: red;
+      background-color: $color-grey-light-1;
+    }
+  }
+
+  &__checkbox:checked {
+    background-color: $color-grey-light-1;
   }
 
   &__checkbox:checked ~ &__sub-menu {
@@ -69,4 +80,8 @@
   }
 
 
+}
+
+#nav-manage-users {
+  background-color: $color-grey-light-1;
 }
