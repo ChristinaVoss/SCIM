@@ -45,7 +45,7 @@
     border: solid 1px orangered;
     color: orangered;
     font-size: 1rem;
-    padding: .2rem 1.1rem;
+    padding: .3rem 1.1rem;
 
 
 
@@ -55,6 +55,11 @@
       font-weight: 500;
       padding: .2rem .8rem;
     }
+  }
+
+  &--right {
+    width: auto !important;
+    float: right;
   }
 
 

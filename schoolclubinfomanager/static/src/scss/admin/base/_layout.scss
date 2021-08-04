@@ -6,6 +6,11 @@
                          [right-margin-end]
 }
 
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+}
+
 .header {
   grid-column: nav-start / main-end;
   background-color: $color-primary-dark;
@@ -63,3 +68,9 @@
 .full-width {
   grid-column: 1/-1;
 }
+
+.margin-top-medium {
+  margin-top: 4rem !important;
+}
+
+.margin-top-big { margin-top: 8rem !important; }

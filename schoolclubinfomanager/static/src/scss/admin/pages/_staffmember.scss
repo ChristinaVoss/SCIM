@@ -3,12 +3,13 @@
   &__form,
   &__table,
   &__delete-staff {
-    margin-top: 2rem;
+    //margin-top: 2rem;
   }
 
-  &__delete-staff {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(min-content, 1fr));
-    align-items: center;
-  }
+}
+
+.staff-or-comp__delete {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(min-content, 1fr));
+  align-items: center;
 }
