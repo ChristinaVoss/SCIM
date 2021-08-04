@@ -2,27 +2,27 @@
 
 {% block content %}
 <section class="staffmember">
-<h2>{{sm.id}}. {{sm.name}}</h2>
+<h2>{{sm.name}}</h2>
 <div class="staffmember__details">
 
   <p>{{sm.email}}</p>
   <br>
-  <p>{{sm.description}}</p>
+  <p class="description margin-top-medium">{{sm.description}}</p>
 </div>
 
-<section class="staffmember__form">
+<section class="staffmember__form  margin-top-medium">
   <h3>Update details about {{sm.name}}</h3>
   <form method="POST" class="form">
     {{ form.hidden_tag() }}
     {{ form.name.label(class="form__label") }}{{ form.name(class="form__input") }}
     {{ form.email.label(class="form__label") }}{{ form.email(class="form__input") }}
     {{ form.description.label(class="form__label") }}{{ form.description(class="form__textarea") }}
-    {{ form.submit_update(class="btn")}}
+    {{ form.submit_update(class="btn btn--right")}}
   </form>
 </section>
 
 <!-- UPDATE STAFF MEMBER DETAILS FORM -->
-<section class="staffmember__clubs">
+<section class="staffmember__clubs  margin-top-big">
 <div class="staffmember__table">
   <h3>{{sm.name}} runs the following clubs</h3>
   {% if clubs %}
@@ -52,7 +52,7 @@
 </section>
 
 <!-- REMOVE STAFF (DELETE) -->
-<section class="staffmember__delete-staff">
+<section class="staff-or-comp__delete  margin-top-medium">
   <p>Delete {{sm.name}} from the system?</p>
       <a href="{{ url_for('clubs.staffmember', _anchor='remove-staff-popup', sm_id=sm.id)}}" class="btn--delete">
         Yes - Delete {{sm.name}}

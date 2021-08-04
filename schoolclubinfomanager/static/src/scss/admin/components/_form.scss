@@ -5,8 +5,8 @@
 }
 
 .form {
-  background-color: $color-light;
-  padding: 2rem 2rem 3rem 2rem;
+  //background-color: $color-light;
+  //padding: 2rem 2rem 3rem 2rem;
   z-index: -10;
 
   // LABELS
@@ -25,14 +25,16 @@
 
   // INPUT (STANDARD)
   &__input {
-    border: none;
+    border: solid 1px $color-grey-dark-2;
     border-radius: 0.2rem;
+    //box-shadow: 0 0.1rem 0.6rem rgba(#000, .28);
     color: $color-grey-dark-3;
     font-family: $font-primary;
     font-size: 1.5rem;
-    margin-bottom: 1rem;
+    margin: .5rem 0 2rem 0;
     padding: 1rem 2rem;
     width: 100%;
+
 
 
     &::placeholder {
@@ -65,10 +67,12 @@
 
   // TEXTAREA
   &__textarea {
-    border: none;
+    border: solid 1px $color-grey-dark-2;
+    border-radius: 0.2rem;
+    //box-shadow: 0 0.1rem 0.6rem rgba(#000, .28);
     font-family: inherit;
     height: 10rem;
-    margin-bottom: 2rem;
+    margin: .5rem 0 2rem 0;
     padding: 1rem 2rem;
     width: 100%;
 

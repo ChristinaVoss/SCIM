@@ -6,8 +6,9 @@
 
   &__header {
     padding: 1rem;
-    background-color: $color-secondary;
+    background-color: $color-primary-dark;
     color: white;
+    border-radius: 2px 2px 0 0;
   }
 
   &__cell {
@@ -19,6 +20,10 @@
   &__row {
     &:nth-child(even) {
       background-color: $color-grey-light-1;
+    }
+
+    &:last-child {
+      border-radius: 0 0 2px 2px;
     }
 
     &:hover {
