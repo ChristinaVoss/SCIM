@@ -26,11 +26,10 @@ def create_club():
     emails = [contact.email for contact in ContactToBook.query.all()]
     phone_numbers = [contact.call for contact in ContactToBook.query.all()]
 
-    #school = School.query.first()
     if form.validate_on_submit():
-        '''
 
-        name = form.name.data
+
+        '''name = form.name.data
         start_date = form.start_date.data
         end_date = form.end_date.data
         start_time = form.start_time.data
@@ -43,6 +42,7 @@ def create_club():
         exp = form.experience.data
         outfit = form.outfit.data
         equipment = form.equipment.data
+        num_places = form.num_places.data
         book = form.book.data
         teacher = form.teacher.data
         email = form.email.data
@@ -64,12 +64,23 @@ def create_club():
         staff = form.staff.data
         companies = form.companies.data
 
+        #, name=name,photo=photo, pic=pic,
+        #
 
-        photo = form.photo.data
-        #staff=staff, companies=companies, in_system=in_system, comp_web=comp_web, comp_des=comp_des, comp_email=comp_email, comp_name=comp_name, staff_description=staff_description, staff_name=staff_name, staff_email=staff_email, type=type, new_entry=new_entry, photo=photo, description=description, is_free=is_free, cost=cost, book=book, teacher=teacher, email=email, call=call, exp=exp, outfit=outfit, equipment=equipment, ygs=ygs, days=days, name=name, start_date=start_date, end_date=end_date, start_time=start_time, end_time=end_time, at_school=at_school, location=location, off_school=off_school
-        return render_template('admin/test.html', school=school, photo=photo, pic=pic)
-    return (render_template('admin/club_form.html', form=form, title="Create", school=school, today=today, one_year=one_year))
-'''
+        #
+        return render_template('admin/test.html', school=school, name=name, start_date=start_date, end_date=end_date,
+                                                  start_time=start_time, end_time=end_time, at_school=at_school,
+                                                  location=location, off_school=off_school, days=days, exp=exp,
+                                                  outfit=outfit, equipment=equipment, ygs=ygs, num_places=num_places,
+                                                  book=book, teacher=teacher, call=call, email=email, is_free=is_free,
+                                                  cost=cost, photo=photo, description=description, type=type,
+                                                  new_entry=new_entry, staff_description=staff_description,
+                                                  staff_name=staff_name, staff_email=staff_email, comp_web=comp_web,
+                                                  comp_des=comp_des, comp_email=comp_email, comp_name=comp_name,
+                                                  staff=staff, companies=companies, in_system=in_system)
+    return (render_template('admin/club_form.html', form=form, title="Create", school=school, teachers=teachers,
+                                                    emails=emails, phone_numbers=phone_numbers))'''#, today=today, one_year=one_year
+
         # SAVE PHOTO
         if form.photo.data: #if they actually uploaded a photo
             club_name = form.name.data
@@ -90,13 +101,16 @@ def create_club():
             at_school = False
             location = form.off_school_premises.data
 
-        free_boolean = form.is_free.data
-        if free_boolean == 'free':
+        is_free = (form.is_free.data == "free")
+        cost = form.cost.data
+
+        '''if free_boolean == 'free':
             is_free = True
-            cost = None
+            cost = free_boolean#None
         else:
             is_free = False
-            cost = form.cost.data
+            cost = form.cost.data'''
+
 
         drop_in = form.book.data == 'drop_in'
 
@@ -234,6 +248,7 @@ def create_club():
         club.equipment = form.equipment.data
         club.description = form.description.data
         club.photo = pic
+        club.cost = cost
 
         db.session.commit()
         return redirect(url_for('clubs.club', club_id=club.id))
