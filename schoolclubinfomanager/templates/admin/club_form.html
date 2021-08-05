@@ -22,11 +22,11 @@
             <span class="club__form__grid__split-column">
               <div>
                 {{ form.start_date.label(class="form__label") }}
-                <input type="date" name="start_date" id="start_date" class="form__date-and-time" required><!-- min="{{ today }}" max="{{ one_year }}"  onchange="dateTimeEndValidation('start_date', 'end_date')"  -->
+                <input type="date" name="start_date" id="start_date" {% if club %} value="{{start_d}}" {% else %} value="{{today}}" {% endif %} class="form__date-and-time" required min="{{ today }}" max="{{ one_year }}"  onchange="dateTimeEndValidation('start_date', 'end_date')" ><!--  -->
               </div>
               <div>
                 {{ form.end_date.label(class="form__label") }}
-                <input type="date" name="end_date" id="end_date" class="form__date-and-time" required><!-- min=""  onchange="dateTimeEndValidation('start_date', 'end_date')" -->
+                <input type="date" name="end_date" id="end_date" {% if club %} value="{{end_d}}" min="start_d" max="{{one_year}}"{% endif %} class="form__date-and-time" required min=""  onchange="dateTimeEndValidation('start_date', 'end_date')"><!--  -->
               </div>
             </span>
           </fieldset>
@@ -37,11 +37,11 @@
             <span class="club__form__grid__split-column">
               <div>
                 {{ form.start_time.label(class="form__label") }}
-                <input type="time" name="start_time" id="start_time" class="form__date-and-time" required> <!-- min="06:00" max="23:00" onchange="dateTimeEndValidation('start_time', 'end_time')"  -->
+                <input type="time" name="start_time" id="start_time" {% if club %} value="{{start_t}}" {% endif %} class="form__date-and-time" required min="06:00" max="23:00" onchange="dateTimeEndValidation('start_time', 'end_time')" > <!--  -->
               </div>
               <div>
                 {{ form.end_time.label(class="form__label") }}
-                <input type="time" name="end_time" id="end_time" class="form__date-and-time"  required> <!-- min="" onchange="dateTimeEndValidation('start_time', 'end_time')" -->
+                <input type="time" name="end_time" id="end_time" {% if club %} value="{{end_t}}" {% endif %} class="form__date-and-time"  required min="" max="23:00" onchange="dateTimeEndValidation('start_time', 'end_time')"> <!--  -->
               </div>
             </span>
           </fieldset>
@@ -51,18 +51,18 @@
             <legend class="form__label">Club location*</legend>
 
             <div class="club__form__radio-and-text-group">
-              <input type="radio" id="at_school" class="form__radio" name="location" value="at_school"  onclick="showHide2('at_school_form', 'off_school_form')"> <!-- onclick="setFocus('at_school_input')"  {% if ((club) and (club.at_school)) or not club %}checked{% endif %} -->
+              <input type="radio" id="at_school" class="form__radio" name="location" value="at_school"  onclick="showHide2('at_school_form', 'off_school_form')" {% if (club) and (club.at_school) %}checked{% endif %}> <!-- onclick="setFocus('at_school_input')"   -->
               <label for="at_school" class="form__label">At school premises</label>
             </div>
             <div class="club__form__radio-and-text-group">
-              <input type="radio" id="off_school" class="form__radio" name="location" value="off_school"  onclick="showHide2('off_school_form', 'at_school_form')" > <!-- onclick="setFocus('off_school_input')"  {% if (club)  and (club.at_school == False) %}checked{% endif %} -->
+              <input type="radio" id="off_school" class="form__radio" name="location" value="off_school"  onclick="showHide2('off_school_form', 'at_school_form')" {% if (club)  and (club.at_school == False) %}checked{% endif %}> <!-- onclick="setFocus('off_school_input')"   -->
               <label for="off_school" class="form__label">Off school premises</label>
             </div>
-            <div class="hide" id="at_school_form">
+            <div id="at_school_form" {% if (club) and (club.at_school) %} class="" {% else %} class="hide" {% endif %}>
               {{ form.at_school_premises.label(class="form__label") }}
               {{ form.at_school_premises(class="form__input", id="at_school_input", onclick="checkRadio('at_school')", placeholder="Room 23b") }}
             </div>
-            <div class="hide" id="off_school_form">
+            <div id="off_school_form" {% if (club)  and (club.at_school == False) %} class="" {% else %} class="hide" {% endif %}>
               {{ form.off_school_premises.label(class="form__label") }}
               {{ form.off_school_premises(class="form__textarea", id="off_school_input",
               placeholder="Art center,
@@ -79,7 +79,7 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
           <div class="form__checkbox">
             {% for day in form.days %}
               <div class="form__checkbox__group">
-                  {{day(class="form__checkbox__field ")}}
+                  {{day(class="form__checkbox__field ", id="days-"+(loop.index - 1)|string)}}
                   {{day.label(class="form__checkbox__label")}}
               </div>
             {% endfor %}
@@ -134,7 +134,7 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
           <fieldset>
             <legend class="form__label">To book a place*</legend>
             <div class="club__form__radio-and-text-group">
-              <input type="radio" id="drop_in" name="book" class="form__radio" value="drop_in"  onclick="hide3('book_teacher', 'book_email', 'book_call')" {% if ((club) and (club.drop_in)) or not club %} checked {% endif %}>
+              <input type="radio" id="drop_in" name="book" class="form__radio" value="drop_in"  onclick="hide3('book_teacher', 'book_email', 'book_call')" {% if (club) and (club.drop_in) %} checked {% endif %}>
               <label for="drop_in">
                 {{ form.book.label(class="form__label--nomargin") }}
               </label>
@@ -151,7 +151,7 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
               <input type="radio" id="call" name="book" value="call" class="form__radio" onclick="showHide3('book_call', 'book_email', 'book_teacher')" {% if (contact_to_book)  and (contact_to_book.call != None) %} checked {% endif %}>
               <label for="call" class="form__label">Call</label>
             </div>
-            <div class="hide" id="book_teacher">
+            <div id="book_teacher" {% if (contact_to_book)  and (contact_to_book.teacher_name != None) %} class="" {% else %} class="hide" {% endif %}>
               {{ form.teacher.label(class="form__label") }}
               {{ form.teacher(class="form__input", id="teacher-input", onclick="checkRadio('teacher')", placeholder="Mr Smith", list="teachers") }}
               <datalist id="teachers">
@@ -162,7 +162,7 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
                 {% endfor %}
               </datalist>
             </div>
-            <div class="hide" id="book_email">
+            <div id="book_email" {% if (contact_to_book)  and (contact_to_book.email != None) %} class="" {% else %} class="hide"{% endif %}>
               {{ form.email.label(class="form__label") }}
               {{ form.email(class="form__input", id="email-input", onclick="checkRadio('email')", placeholder="smith@email.com", list="emails") }}
               <datalist id="emails">
@@ -173,7 +173,7 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
                 {% endfor %}
               </datalist>
             </div>
-            <div class="hide" id="book_call">
+            <div id="book_call" {% if (contact_to_book)  and (contact_to_book.call != None) %} class="" {% else %} class="hide" {% endif %}>
               {{ form.call.label(class="form__label") }}
               {{ form.call(class="form__input", id="call-input", onclick="checkRadio('call')",
                                               placeholder="01234567890", list="phone_numbers") }}
@@ -192,14 +192,14 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
           <fieldset>
             <legend class="form__label">How much will the club cost?*</legend>
             <label for="free" class="club__form__radio-and-text-group">
-              <input type="radio" id="free" name="is_free" value="free" class="form__radio" onclick="hide1('cost_input')" {% if ((club) and (club.is_free)) or not club %} checked {% endif %}>
+              <input type="radio" id="free" name="is_free" value="free" class="form__radio" onclick="hide1('cost_input')" {% if (club) and (club.is_free) %} checked {% endif %}>
               {{ form.is_free.label(class="form__label--nomargin") }}
             </label>
             <div class="club__form__radio-and-text-group">
               <input type="radio" id="paid" name="is_free" value="paid" class="form__radio"  onclick="show1('cost_input')" {% if (club)  and (club.is_free == False) %}checked{% endif %}>
               <label for="paid" class="form__label">Paid</label>
             </div>
-            <div class="hide" id="cost_input">
+            <div id="cost_input" {% if (club)  and (club.is_free == False) %} class="" {% else %} class="hide" {% endif %}>
               {{ form.cost.label(class="form__label") }}<br>
               <span class="form__input--pound">
                 {{ form.cost(class="form__input", id="paid-input", onclick="checkRadio('paid')", placeholder="3.50") }}
@@ -214,7 +214,7 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
     <!-- DESCRIPTION OF CLUB AND PHOTO -->
     <fieldset class="club__form__section">
       <legend class="club__form__subheading">Description of club and photo</legend>
-      <span class="club__form__grid__container">
+      <span class="club__form__grid__container set_height">
         <div>
           <div class="form__file">
             <label for="photo" class="form__file__label">
@@ -222,10 +222,14 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
             </label>
             <input type="file" name="photo" id="photo" class="form__file__input">
           </div>
+          {% if club and (club.photo) %}
+          <p class="form__label">Current image on file</p>
+          <img src="{{ url_for('static', filename='img/club/'+club.photo)}}" alt="{{club.name}} decorative picture" class="thumbnail end">
+          {% endif %}
         </div>
-        <div>
+        <div class="">
           {{ form.description.label(class="form__label") }}
-          {{ form.description(class="form__textarea") }}
+          {{ form.description(class="form__textarea tall") }}
         </div>
       </span>
     </fieldset>
@@ -245,7 +249,7 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
             </label>
           </div>
           <div class="club__form__radio-and-text-group right">
-            <input type="radio" id="existing" class="form__radio" name="new_entry" value="existing" onclick="showHide2('existing_dropdowns', 'new_entry_box')"> <!--   --> <!-- {% if club %} checked {% endif %} -->
+            <input type="radio" id="existing" class="form__radio" name="new_entry" value="existing" onclick="showHide2('existing_dropdowns', 'new_entry_box')" {% if club %} checked {% endif %} > <!--   --> <!-- -->
             <label for="existing" class="form__label--nomargin">
               Existing club running staff or company
             </label>
@@ -296,17 +300,17 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
           </fieldset>
 
         </div>
-        <div class="right hide" id="existing_dropdowns" {% if club %} style='display:block;' {% endif %}>
+        <div id="existing_dropdowns" {% if club %} class="right" {% else %} class="right hide" {% endif %}><!-- style='display:block;' -->
           <fieldset>
             <legend class="comment">Staff or company already exists in the system - choose which type to open list of options</legend>
             <div class="club__form__radio-and-text-group">
-              <input type="radio" id="existing_staff" class="form__radio" name="existing_clubrunner" value="existing_staff" onclick="showHide2('staff_dropdown', 'companies_dropdown')"> <!--  --> <!-- {% if not club or (not club.ext_company_id)  %} checked {% endif %} -->
+              <input type="radio" id="existing_staff" class="form__radio" name="existing_clubrunner" value="existing_staff" onclick="showHide2('staff_dropdown', 'companies_dropdown')" {% if club and (not club.ext_company_id) %} checked {% endif %}> <!--  --> <!--  -->
               <label for="existing_staff" class="form__label--nomargin">
                 Open list of club staff members
               </label>
             </div>
             <div class="club__form__radio-and-text-group">
-              <input type="radio" id="existing_company" class="form__radio" name="existing_clubrunner" value="existing_company" onclick="showHide2('companies_dropdown', 'staff_dropdown')"> <!--  --><!-- {% if club and club.ext_company_id %} checked {% endif %} -->
+              <input type="radio" id="existing_company" class="form__radio" name="existing_clubrunner" value="existing_company" onclick="showHide2('companies_dropdown', 'staff_dropdown')" {% if club and club.ext_company_id %} checked {% endif %}> <!--  --><!--  -->
               <label class="form__label">
                 Open list of club running companies
               </label>
@@ -314,21 +318,31 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
           </fieldset>
 
           <!-- staff list -->
-          <div class="staff-dropdown hide" id="staff_dropdown">
+          <div  id="staff_dropdown" {% if club and (not club.ext_company_id) %} class="staff-dropdown" {% else %} class="staff-dropdown hide" {% endif %}>
             {{ form.staff.label(class="form__label") }}
             <div class="hide">
               <ion-icon name="chevron-down-outline" id="chevron-down"></ion-icon>
             </div>
-            {{ form.staff(class="form__dropdown")}}
+            <!--{{ form.staff(class="form__dropdown")}}-->
+            <select name="staff" id="staff" class="form__dropdown">
+              {% for s in staff_list %}
+                <option value="{{s.name}}" {% if club and (s.name == sm) %}selected="selected"{% endif %}>{{s}}</option>
+              {% endfor %}
+            </select>
           </div>
 
           <!-- company list -->
-          <div class="companies-dropdown hide" id="companies_dropdown">
+          <div id="companies_dropdown" {% if club and club.ext_company_id %} class="companies-dropdown" {% else %} class="companies-dropdown hide" {% endif %}>
             {{ form.companies.label(class="form__label") }}
             <div class="hide">
               <ion-icon name="chevron-down-outline" id="chevron-down"></ion-icon>
             </div>
-            {{ form.companies(class="form__dropdown")}}
+            <select name="companies" id="companies" class="form__dropdown">
+              {% for c in company_list %}
+                <option value="{{c.name}}" {% if club and (c.name == comp) %}selected="selected"{% endif %}>{{c}}</option>
+              {% endfor %}
+            </select>
+            <!--{{ form.companies(class="form__dropdown")}}-->
           </div>
 
         </div>
@@ -339,7 +353,7 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
 
 
     <div class="club__form__item--submit">
-      {{ form.submit(class="btn") }}
+      {{ form.submit(class="btn", onclick="validateForm('days', 'year_groups')") }}
     </div>
   </form>
 </section>
@@ -394,6 +408,29 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
     start = document.getElementById(start_id);
     min_end = start.value;
     document.getElementById(end_id).setAttribute("min", min_end);
+  }
+
+  function validateCheckboxes(name) {
+    // This function forces the users to check at least on day and one year group. You can insteda choose to alert the user when they publish the clubs that information is missing.
+    //https://stackoverflow.com/questions/11787665/making-sure-at-least-one-checkbox-is-checked
+    var checkboxs=document.getElementsByName(name);
+    var okay=false;
+    for(var i=0,l=checkboxs.length;i<l;i++)
+    {
+        if(checkboxs[i].checked)
+        {
+            okay=true;
+            break;
+        }
+    }
+    id = name + '-0'
+    if (okay) {document.getElementById(id).required = false;}
+    else {document.getElementById(id).required = true;}//
+  }
+
+  function validateForm(name1, name2) {
+    validateCheckboxes(name1);
+    validateCheckboxes(name2);
   }
 
 </script>

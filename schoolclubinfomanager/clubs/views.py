@@ -26,6 +26,9 @@ def create_club():
     emails = [contact.email for contact in ContactToBook.query.all()]
     phone_numbers = [contact.call for contact in ContactToBook.query.all()]
 
+    staff_list = StaffMember.query.all()
+    company_list = ExternalCompany.query.all()
+
     if form.validate_on_submit():
 
 
@@ -252,7 +255,7 @@ def create_club():
 
         db.session.commit()
         return redirect(url_for('clubs.club', club_id=club.id))
-    return (render_template('admin/club_form.html', form=form, title="Create", school=school, today=today, one_year=one_year, teachers=teachers, emails=emails, phone_numbers=phone_numbers))
+    return (render_template('admin/club_form.html', form=form, title="Create", school=school, today=today, one_year=one_year, teachers=teachers, emails=emails, phone_numbers=phone_numbers, staff_list=staff_list, company_list=company_list))
 
 # EDIT CLUB
 @clubs.route('/edit_club/<club_id>', methods=['GET', 'POST'])
@@ -280,6 +283,18 @@ def edit_club(club_id):
     teachers = [contact.teacher_name for contact in ContactToBook.query.all()]
     emails = [contact.email for contact in ContactToBook.query.all()]
     phone_numbers = [contact.call for contact in ContactToBook.query.all()]
+
+    staff_list = StaffMember.query.all()
+    company_list = ExternalCompany.query.all()
+
+    # variables needed in some cases
+    sm = None
+    comp = None
+    start_d = None
+    end_d = None
+    start_t = None
+    end_t = None
+
 
     #school = School.query.first()
     if form.validate_on_submit():
@@ -313,19 +328,17 @@ def edit_club(club_id):
 
         num_places = form.num_places.data
 
-        club = Club(name = form.name.data,
-                    start_date = form.start_date.data,
-                    end_date = form.end_date.data,
-                    start_time = form.start_time.data,
-                    end_time = form.end_time.data,
-                    location = location,
-                    at_school = at_school,
-                    is_free = is_free,
-                    num_of_places = num_places,
-                    drop_in = drop_in
-                    )
+        club.name = form.name.data
+        club.start_date = form.start_date.data
+        club.end_date = form.end_date.data
+        club.start_time = form.start_time.data
+        club.end_time = form.end_time.data
+        club.location = location
+        club.at_school = at_school
+        club.is_free = is_free
+        club.num_of_places = num_places
+        club.drop_in = drop_in
 
-        db.session.add(club)
         db.session.commit()
 
         #update database with days
@@ -343,6 +356,10 @@ def edit_club(club_id):
         db.session.commit()
 
         #update database with year groups
+        '''to_delete = ClubYearGroup.query.filter_by(club_id=club.id).all()
+        for yg in to_delete:
+            db.session.delete(yg)'''
+
         new_year_groups = set(form.year_groups.data)
         for group in new_year_groups:
             if group not in existing_ygs:
@@ -352,8 +369,9 @@ def edit_club(club_id):
         to_delete = existing_ygs - new_year_groups
         if to_delete:
             for yg in to_delete:
-                temp = ClubYearGroup.filter_by(name=yg, club_id=club.id).first()
+                temp = ClubYearGroup.query.filter_by(name=yg, club_id=club.id).first()
                 db.session.delete(temp)
+
         db.session.commit()
 
         booking_details_exist = False
@@ -435,23 +453,30 @@ def edit_club(club_id):
 
         else:
             # Staff or company exists in system, link to clubs
+
+            # check if club has existing staff member to change
+            existing_sc = StaffClub.query.filter_by(club_id=club.id).first()
             if form.existing_clubrunner.data == 'existing_staff':
                 #staff
                 staff_member = form.staff.data
-                # check if club has existing staff member to change
-                existing_sc = StaffClub.query.filter_by(club_id=club.id).first()
+
                 staff_member = StaffMember.query.filter_by(name=staff_member).first()
+                club.ext_company_id = None #make sure club is only linked to staff or a company, not both
 
                 if existing_sc:
                     existing_sc.staffmember_id = staff_member.id
                 else:
-                    staff_club = StaffClub(club_id = club.id,
+                    if staff_member:#FIX THIS -- SOME VALIDATION TO ENSURE REMOVED STAFF ARE NOT STILL LINKED TO CLUBS!
+                        staff_club = StaffClub(club_id = club.id,
                                            staffmember_id = staff_member.id)
 
-                    db.session.add(staff_club)
+                        db.session.add(staff_club)
                 db.session.commit()
             else:
                 #company
+                if existing_sc:
+                    #make sure club is only linked to staff or a company, not both
+                    db.session.delete(existing_sc)
                 company = form.companies.data
                 company = ExternalCompany.query.filter_by(name=company).first()
                 club.ext_company_id = company.id
@@ -469,10 +494,10 @@ def edit_club(club_id):
     elif request.method == "GET":
         # they are not yet submitting, they want to see the form, so we grab the current details and populate the form
         form.name.data = club.name
-        form.start_date.data = club.start_date #consider adding these to html tag as value? Will be today and one_year for create club
-        form.end_date.data = club.end_date #consider adding these to html tag as value? Will be today and one_year for create club
-        form.start_time.data = club.start_time #consider adding these to html tag as value? Will be today and one_year for create club
-        form.end_time.data = club.end_time #consider adding these to html tag as value? Will be today and one_year for create club
+        start_d = club.start_date.date()
+        end_d = club.end_date.date()
+        start_t = club.start_time #consider adding these to html tag as value? Will be today and one_year for create club
+        end_t = club.end_time #consider adding these to html tag as value? Will be today and one_year for create club
         if club.at_school:
             form.at_school_premises.data = club.location
         else:
@@ -483,25 +508,41 @@ def edit_club(club_id):
         form.equipment.data = club.equipment
         form.outfit.data = club.outfit
         form.num_places.data = club.num_of_places
-        if contact_to_book.teacher_name:
-            form.teacher.data = contact_to_book.teacher_name
-        elif contact_to_book.email:
-            form.email.data = contact_to_book.email
-        elif contact_to_book.call:
-            form.call.data = contact_to_book.call
+        if contact_to_book:
+            if contact_to_book.teacher_name:
+                form.teacher.data = contact_to_book.teacher_name
+            elif contact_to_book.email:
+                form.email.data = contact_to_book.email
+            elif contact_to_book.call:
+                form.call.data = contact_to_book.call
         form.cost.data = club.cost
         form.description.data = club.description
-        if sc:
+        '''if sc:
             staffmember = StaffMember.query.filter_by(id=sc.staffmember_id).first()
             form.staff.data = staffmember.name
         if club.ext_company_id:
             company = ExternalCompany.query.filter_by(id = club.ext_company_id).first()
-            form.companies.data = company.name
+            form.companies.data = company.name'''
+
+        if sc:
+            staffmember = StaffMember.query.filter_by(id=sc.staffmember_id).first()
+            sm = staffmember.name
+
+        if club.ext_company_id:
+            company = ExternalCompany.query.filter_by(id = club.ext_company_id).first()
+            comp = company.name
 
 
 
 
-    return (render_template('admin/club_form.html', form=form, title="Edit", school=school, today=start_date, one_year=one_year, teachers=teachers, emails=emails, phone_numbers=phone_numbers, club=club, contact_to_book=contact_to_book))
+
+    return (render_template('admin/club_form.html', form=form, title="Edit",
+                                school=school, today=start_date, one_year=one_year,
+                                teachers=teachers, emails=emails, phone_numbers=phone_numbers,
+                                club=club, contact_to_book=contact_to_book,
+                                staff_list=staff_list, company_list=company_list,
+                                sm=sm, comp=comp, start_d=start_d, end_d=end_d, start_t=start_t,
+                                end_t=end_t))
 
 
 
@@ -656,12 +697,13 @@ def company(c_id, club_id=None):
             db.session.commit()
 
             return redirect(url_for('clubs.list_staff_and_companies'))
-        '''if form.removeCompanyFromClub.data:
-            db.session.delete()
+        if form.removeCompanyFromClub.data:
+            if popup_club:
+                popup_club.ext_company_id = None
             db.session.commit()
             # user has pressed "Remove <company> from <club> - They no longer run this club" button,
             # so delete link to club and return to their overview"
-            return redirect(url_for('clubs.staffmember', _anchor="close-remove-from-club", c_id=c.id))'''
+            return redirect(url_for('clubs.company', _anchor="close-remove-from-club", c_id=c.id))
         if form.name.data:
             c.name = form.name.data
         if form.email.data:
