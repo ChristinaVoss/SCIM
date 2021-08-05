@@ -42,7 +42,7 @@ class CreateClub(FlaskForm):
     end_date = DateField('End date (this term)*', validators=[DataRequired()])
     end_time = TimeField('End time*', format='%H:%M', validators=[DataRequired()])
     start_time = TimeField('Start time*', format='%H:%M', validators=[DataRequired()])
-    location = RadioField('', choices=[('at_school', 'at_school'), ('off_school', 'off_school')])
+    location = RadioField('', choices=[('at_school', 'at_school'), ('off_school', 'off_school')], validators=[DataRequired()])
     at_school_premises = StringField('Please fill in room name/number')
     off_school_premises = TextAreaField('Please provide address')
     days = MultiCheckboxField('Day(s) the club will be running*', choices=DAYS, validators=[DataRequired()])
@@ -76,8 +76,8 @@ class CreateClub(FlaskForm):
     company_description = TextAreaField('Description of company')
     company_website = StringField('Company website', validators=[URL(), Optional()])
     existing_clubrunner = RadioField('', choices=[('existing_staff', 'existing_staff'), ('existing_company', 'existing_company')], validators=[Optional()])
-    staff = SelectField('Staff members - select one', choices=STAFF, validators=[Optional()])
-    companies = SelectField('Companies - select one', choices=COMPANIES, validators=[Optional()])
+    staff = SelectField('Staff members - select one', choices=STAFF, validators=[Optional()]) #
+    companies = SelectField('Companies - select one', choices=COMPANIES, validators=[Optional()])#
     # SUBMIT FORM
     submit = SubmitField('Save')
     # Not sure how to add more staff members yet (dynamically) - need to look up!
