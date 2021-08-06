@@ -49,20 +49,19 @@ def logout():
 
 
 # LIST USERS
-#@users.route('/list_users/<user>', defaults={'user': None})
 @users.route('/list_users')
 @users.route('/list_users/<user>', methods=["GET", "POST"])
 @login_required
 def list_users(user=None):
     form = DeleteUserForm()
     users = User.query.all()
-    school = School.query.first() # base tempalte needs this variable
+    school = School.query.first() # base template needs this variable
     user = User.query.filter_by(id=user).first()
     if form.validate_on_submit():
         db.session.delete(user)
         db.session.commit()
-        # user has pressed "Delete user button,
-        # so delete user and return to list"
+        # user has pressed "Delete user" button,
+        # so delete user and return to list
         return redirect(url_for('users.list_users', _anchor="close-delete-user"))
     return render_template('admin/list_users.html', users=users, school=school, form=form, user=user)
 
@@ -76,8 +75,6 @@ def user_account():
 
         current_user.name = form.name.data
         current_user.email = form.email.data
-
-
         db.session.commit()
         return redirect(url_for('users.user_account'))
     elif request.method == "GET":

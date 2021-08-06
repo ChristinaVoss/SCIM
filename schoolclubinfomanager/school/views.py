@@ -12,6 +12,7 @@ school = Blueprint('school', __name__)
 @login_required
 def setup_step1():
     form = SchoolSetupStep1()
+
     #school = School.query.first()
     if form.validate_on_submit():
         # first setup step collects core school information
@@ -42,7 +43,7 @@ def setup_step1():
 
         db.session.commit()
         return redirect(url_for('school.setup_step2', school=school.id))
-    return (render_template('admin/school_details_step1.html', form=form, title="Set up"))
+    return (render_template('admin/school_details_step1.html', form=form, title="Set up", step_state1="active", step_state2="", line_state=""))
 
 
 # SETUP STEP 2
@@ -51,6 +52,7 @@ def setup_step1():
 def setup_step2(school):
     form = SchoolSetupStep2()
     school = School.query.filter_by(id=school).first()
+
     if form.validate_on_submit():
         # this setup step collects information on colours and looks for parent side banner
 
@@ -62,7 +64,7 @@ def setup_step2(school):
 
         db.session.commit()
         return redirect(url_for('school.school_account'))
-    return (render_template('admin/school_details_step2.html', form=form, school=school, title="Set up"))
+    return (render_template('admin/school_details_step2.html', form=form, school=school, title="Set up", step_state1="active", step_state2="active", line_state="active"))
 
 
 # HOME
@@ -129,7 +131,7 @@ def edit_step1():
         form.school_website.data = school.website
         form.year_groups.data = existing_yg
 
-    return (render_template('admin/school_details_step1.html', form=form, title="Edit", school=school))
+    return (render_template('admin/school_details_step1.html', form=form, title="Edit", school=school, step_state1="active", step_state2="", line_state=""))
 
 # EDIT SCHOOL DETAILS STEP 2
 @school.route('/edit-school-details-step2/<school>', methods=['GET', 'POST'])
@@ -151,4 +153,4 @@ def edit_step2(school):
         form.banner_colour.data = school.banner_colour
         form.font_colour.data = school.font_colour
         form.font.data = school.font
-    return (render_template('admin/school_details_step2.html', form=form, school=school, title="Edit"))
+    return (render_template('admin/school_details_step2.html', form=form, school=school, title="Edit", step_state1="active", step_state2="active", line_state="active"))

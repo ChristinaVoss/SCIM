@@ -5,6 +5,7 @@ body {
 
 p {
   font-size: 1.6rem;
+  color: $color-grey-dark-3;
 }
 
 h2 {
@@ -16,12 +17,31 @@ h2 {
 h3 {
   font-size: 2rem;
   font-weight: 400;
+  margin-bottom: .5rem;
+}
+a:link {
+  text-decoration: none;
+}
+
+.link {
+  color: $color-grey-dark-3;
+  text-decoration: none;
+  font-size: 2rem;
 }
 
 .comment {
   font-size: 1.3rem;
   font-style: italic;
   margin-bottom: 2rem;
+}
+
+.description {
+  padding: 2rem;
+  font-family: "Baskerville", cursive;
+  font-size: 3rem;
+  font-style: italic;
+  border-left: solid 2px $color-primary-dark;
+
 }
 
 .header {

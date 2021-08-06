@@ -1,68 +1,44 @@
 
-<div class="sidebar">
+<nav class="sidebar">
   <ul class="nav">
-    <li class="nav__item">
+    <li  {% if request.path == '/school_account' %}class="current" {% else %} class="nav__item" {% endif %}>
       <ion-icon name="home-sharp" class="nav__icon"></ion-icon>
       <a href="{{ url_for('school.school_account')}}" class="nav__link">School account details</a>
     </li>
     <li class="nav__item">
       <ion-icon name="people-sharp" class="nav__icon"></ion-icon>
 
-      <input type="checkbox" class="nav__checkbox" id="navi-toggle">
+      <input type="checkbox" class="nav__checkbox" id="navi-toggle"
+            {% if (request.path == '/user_account') or (request.path == '/list_users')%} checked id="nav-manage-users" {% endif %}>
       <label for="navi-toggle" class="nav__label">Manage admin users</label>
       <ion-icon name="chevron-down-sharp" class="nav__icon nav__icon--drop"></ion-icon>
 
-
       <ul class="nav__sub-menu">
-        <li class="nav__item nav__sub-menu__item">
+        <li {% if request.path == '/user_account' %}class="current" {% else %} class="nav__item nav__sub-menu__item" {% endif %}>
           <ion-icon name="person-sharp" class="nav__icon"></ion-icon>
           <a href="{{ url_for('users.user_account')}}" class="nav__link">Your account details</a>
         </li>
-        <li class="nav__item nav__sub-menu__item">
+        <li {% if request.path == '/#' %}class="current" {% else %} class="nav__item nav__sub-menu__item" {% endif %}>
           <ion-icon name="person-add-sharp" class="nav__icon"></ion-icon>
           <a href="#" class="nav__link">New user token</a>
         </li>
-        <li class="nav__item nav__sub-menu__item">
+        <li {% if request.path == '/list_users' %}class="current" {% else %} class="nav__item nav__sub-menu__item" {% endif %}>
           <ion-icon name="list-sharp" class="nav__icon"></ion-icon>
-          <a href="{{ url_for('users.list_users')}}" class="nav__link">List and manage users</a>
+          <a href="{{ url_for('users.list_users')}}" class="nav__link">List users</a>
         </li>
       </ul>
-
     </li>
-    <li class="nav__item">
+    <li {% if request.path == '/create_club' %}class="current" {% else %} class="nav__item" {% endif %}>
       <ion-icon name="add-sharp" class="nav__icon"></ion-icon>
-      <a href="#" class="nav__link">Create new club</a>
+      <a href="{{ url_for('clubs.create_club')}}" class="nav__link">Create new club</a>
     </li>
-    <li class="nav__item">
+    <li {% if request.path == '/list_clubs/' %}class="current" {% else %} class="nav__item" {% endif %}>
       <ion-icon name="list-sharp" class="nav__icon"></ion-icon>
-      <a href="#" class="nav__link">List clubs</a>
+      <a href="{{ url_for('clubs.list_clubs')}}" class="nav__link">List clubs</a>
     </li>
-    <li class="nav__item">
-      <ion-icon name="create-sharp" class="nav__icon"></ion-icon>
-      <a href="#" class="nav__link">Update club status</a>
-    </li>
-    <li class="nav__item">
-      <ion-icon name="trash-sharp" class="nav__icon"></ion-icon>
-      <a href="#" class="nav__link">Delete club</a>
-    </li>
-
-    <li class="nav__item">
+    <li {% if request.path == '/list_staff_and_companies/' %}class="current" {% else %} class="nav__item" {% endif %}>
       <ion-icon name="id-card-sharp" class="nav__icon"></ion-icon>
-      <input type="checkbox" class="nav__checkbox" id="navi-toggle2">
-      <label for="navi-toggle2" class="nav__label">Manage club staff</label>
-      <ion-icon name="chevron-down-sharp" class="nav__icon nav__icon--drop"></ion-icon>
-
-      <ul class="nav__sub-menu">
-        <li class="nav__item nav__sub-menu__item">
-          <ion-icon name="people-circle-sharp" class="nav__icon"></ion-icon>
-          <a href="#" class="nav__link">Staff members</a>
-        </li>
-        <li class="nav__item nav__sub-menu__item">
-          <ion-icon name="business-sharp" class="nav__icon"></ion-icon>
-          <a href="#" class="nav__link">Companies</a>
-        </li>
-      </ul>
-
+      <a href="{{ url_for('clubs.list_staff_and_companies', _anchor='tab1')}}" class="nav__link">Manage staff</a>
     </li>
   </ul>
-</div>
+</nav>

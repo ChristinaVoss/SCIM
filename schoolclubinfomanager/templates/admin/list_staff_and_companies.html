@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Staff and companies running the clubs</h2>
+<!-- tab solution from https://stackoverflow.com/questions/6906724/is-it-possible-to-have-tabs-without-javascript -->
+
+<div class="tabs">
+  <div class="tabs__left" id="left-tab" onclick="selectTab('left-tab', 'right-tab')">
+    <a href="#tab1"><h3>Staff members</h3></a>
+  </div>
+  <div class="tabs__right" id="right-tab" onclick="selectTab('right-tab', 'left-tab')">
+    <a href="#tab2"><h3>Companies</h3></a>
+  </div>
+</div>
+
+<div class="tabs__container">
+  <section class="tabs__content" id="tab1">
+    <!-- Staff table -->
+    <table class="table">
+      <tr class="table__row">
+        <th class="table__header">id</th>
+        <th class="table__header">Name</th>
+        <th class="table__header">Email</th>
+        <th class="table__header">Clubs</th>
+        <th class="table__header"></th>
+      </tr>
+      {% for sm in staffmembers %}
+      <tr class="table__row">
+        <td class="table__cell">{{sm.id}}</td>
+        <td class="table__cell">{{sm.name}}</td>
+        <td class="table__cell">{{sm.email}}</td>
+        <td class="table__cell">
+          {% for sc in scs %}
+            {% if sc.staffmember_id == sm.id %}
+              {% for club in clubs %}
+                {% if club.id == sc.club_id %}
+                  {{club.name}}<br>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          {% endfor %}
+        </td>
+        <td class="table__cell">
+          <a href="{{ url_for('clubs.staffmember',sm_id=sm.id)}}" class="btn--fullwidth">
+            edit
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+
+
+    </table>
+  </section>
+  <section class="tabs__content" id="tab2">
+    <!-- companies table -->
+    <table class="table">
+      <tr class="table__row">
+        <th class="table__header">id</th>
+        <th class="table__header">Name</th>
+        <th class="table__header">Email</th>
+        <th class="table__header">Clubs</th>
+        <th class="table__header"></th>
+      </tr>
+      {% for c in companies %}
+      <tr class="table__row">
+        <td class="table__cell">{{c.id}}</td>
+        <td class="table__cell">{{c.name}}</td>
+        <td class="table__cell">{{c.email}}</td>
+        <td class="table__cell">
+
+              {% for club in clubs %}
+                {% if club.ext_company_id == c.id %}
+                  {{club.name}}<br>
+                {% endif %}
+              {% endfor %}
+
+        </td>
+        <td class="table__cell">
+          <a href="{{ url_for('clubs.company',c_id=c.id)}}" class="btn">
+            edit
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+
+
+    </table>
+  </section>
+</div>
+
+<script type="text/javascript">
+  // function to highlight the currently selected tab
+  function selectTab(id1, id2) {
+    document.getElementById(id1).style.backgroundColor = "#19456b";
+    document.getElementById(id2).style.backgroundColor = "#ccc";
+  }
+</script>
+
+
+{% endblock %}

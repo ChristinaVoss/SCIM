@@ -3,27 +3,28 @@
   <head>
     <meta charset="utf-8">
     <title>SCIM</title>
-    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.js"></script>-->
+    <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700;900&display=swap" rel="stylesheet">
     {% assets "asset_css" %}
-    <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}" media="screen"/>
     {% endassets %}
 
+    <!-- ICONS -->
     <script type="module" src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule="" src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.js"></script>
-
+    <script nomodule="" src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.js"></script>
   </head>
   <body>
-    <div class="container">
-      <!-- first child of container -->
+    <div class="container"><!-- container holds entire page, used for CSS grid -->
+      <!-- first child of container holds the header -->
       <header class="header">
       {% if school.name %}
+        <!-- user has finished set up already and given database the school name -->
         <h1 class="header__title">
           School Club Information Manager <br>for {{school.name}}
         </h1>
       {% else %}
+        <!-- first use of product - it knows nothing about the school -->
         <h1 class="header__title">
           Welcome to the <br>School Club information Manager
         </h1>
@@ -33,7 +34,7 @@
         <a href="{{ url_for('users.logout')}}" class="header__link link">Log out</a>
       {% endif %}
     </header>
-    <!-- second child of container (sidebar or user_authentication) depending on whether user is logged in-->
+    <!-- second child of container (holds sidebar or user_authentication) depending on whether user is logged in-->
       {% if current_user.is_authenticated %}
       <!-- user is logged in -->
         {% include "admin/navigation.html" %}
@@ -45,12 +46,14 @@
           {% endblock %}
         </div>
       {% endif %}
-      <!-- third child of container -->
-      <div class="main-content">
+      <!-- third child of container holds main content-->
+      <main class="main-content">
+        <p id="test_current"></p>
         {% block content %}
           <!-- page specific content goes here -->
         {% endblock %}
-      </div>
+      </main>
     </div>
+
   </body>
 </html>
