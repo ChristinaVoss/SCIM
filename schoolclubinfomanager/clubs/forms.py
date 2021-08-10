@@ -23,7 +23,7 @@ BOOKING = [('drop_in', 'drop_in'),
            ('email', 'email'),
            ('call', 'call')]
 
-YEAR_GROUPS = sorted([(yg.name, yg.name) for yg in YearGroup.query.all()])
+YEAR_GROUPS = sorted([(yg.name, "Year group " + yg.name) for yg in YearGroup.query.all()])
 STAFF = [('Choose staff', 'Choose staff')] + sorted([(s.name, s.name) for s in StaffMember.query.all()])
 COMPANIES = [('Choose company', 'Choose company')] + sorted([(c.name, c.name) for c in ExternalCompany.query.all()])
 

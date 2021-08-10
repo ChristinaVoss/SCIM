@@ -142,6 +142,10 @@
       position: relative;
       z-index: 10;
 
+      @media only screen and (max-width: $bp-medium) {
+        //padding: 1rem 1rem 1rem 2.8rem;
+      }
+
       &:hover {
         background-color: $color-grey-dark-2;
       }
@@ -175,6 +179,9 @@
 
   // CHECKBOX container
   &__checkbox {
+
+
+
     display: grid;
     grid-gap: 2rem;
     margin: 1rem 0;
@@ -192,6 +199,17 @@
     &__field {
       height: 2rem;
       width: 2rem;
+
+      @media only screen and (max-width: $bp-small) {
+        opacity: 0;
+        width: 1px;
+
+        &:checked + .form__checkbox__label{
+          color: #fff;
+          background-color: $color-primary;
+        }
+
+      }
     }
 
     &__label {
@@ -199,6 +217,12 @@
       font-size: 1.2rem;
       font-weight: 700;
       margin-right: -.5rem;
+
+      @media only screen and (max-width: $bp-small) {
+        border: 1px solid $color-primary-dark;
+        border-radius: 2rem;
+        padding: 1rem 2rem;
+      }
 
     }
   }
@@ -208,6 +232,24 @@
   &__radio{
     width: 2rem;
     height: 2rem;
+
+    @media only screen and (max-width: $bp-small) {
+      //opacity: 0;
+      //width: 1px;
+      //margin-left: 0;
+
+      &:checked + .form__radio__label{
+        color: #fff;
+        background-color: $color-primary;
+      }
+
+      &__label {
+        border: 1px solid $color-primary-dark;
+        border-radius: 2rem;
+        padding: 1rem 2rem;
+      }
+
+    }
   }
 
   // SUBMIT button

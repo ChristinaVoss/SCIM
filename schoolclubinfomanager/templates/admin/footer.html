@@ -1,0 +1,11 @@
+<footer class="footer">
+  {% if current_user.is_authenticated %}
+  <div class="footer__item footer__account">
+    <ion-icon name="person-sharp" class="nav__icon"></ion-icon>
+    <a href="{{ url_for('users.user_account')}}" class="nav__link">Your account details</a>
+  </div>
+  <div class="footer__item footer__logout">
+    <a href="{{ url_for('users.logout')}}" class="header__link link">Log out</a>
+  </div>
+  {% endif %}
+</footer>

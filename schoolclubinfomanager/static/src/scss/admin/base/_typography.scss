@@ -49,6 +49,19 @@ a:link {
     padding: 2.2rem 0 2.2rem 0;
     color: $color-light;
     font-size: 4rem;
+
+    &--small {
+      display: none;
+
+      @media only screen and (max-width: $bp-small) {
+        display: block;
+        color: $color-light;
+        font-size: 2rem;
+        padding: 1rem;
+        
+
+      }
+    }
   }
 
   &__link {
