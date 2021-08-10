@@ -6,6 +6,13 @@
   padding: 1rem 0;
   border-bottom: 1px solid $color-grey-dark-1;
 
+  &--small > *{
+    @media only screen and (max-width: $bp-small) {
+      display: block;
+      margin-bottom: 1rem;
+    }
+  }
+
   &__header {
     background-color: $color-secondary;
     color: #fff;
@@ -22,20 +29,14 @@
   }
 
   &__submit {
-    //position: absolute;
     overflow: hidden;
 
     display: grid;
     &--top {
-      //position: relative;
-      //top: 0;
-      //left: 0;
       grid-row: 1/2;
       grid-column: 1/2;
-      //z-index: 20;
       width: 100%;
       overflow: hidden;
-      //: 20%
     }
 
     &--bottom {

@@ -21,11 +21,11 @@
             <legend class="comment no-margin full-width">Enter dates the club will run</legend>
             <span class="club__form__grid__split-column">
               <div>
-                {{ form.start_date.label(class="form__label") }}
+                {{ form.start_date.label(class="form__label") }}<br>
                 <input type="date" name="start_date" id="start_date" {% if club %} value="{{start_d}}" {% else %} value="{{today}}" {% endif %} class="form__date-and-time" required min="{{ today }}" max="{{ one_year }}"  onchange="dateTimeEndValidation('start_date', 'end_date')" ><!--  -->
               </div>
               <div>
-                {{ form.end_date.label(class="form__label") }}
+                {{ form.end_date.label(class="form__label") }}<br>
                 <input type="date" name="end_date" id="end_date" {% if club %} value="{{end_d}}" min="start_d" max="{{one_year}}"{% endif %} class="form__date-and-time" required min=""  onchange="dateTimeEndValidation('start_date', 'end_date')"><!--  -->
               </div>
             </span>
@@ -36,11 +36,11 @@
             <legend class="comment no-margin">What time will the club be on?</legend>
             <span class="club__form__grid__split-column">
               <div>
-                {{ form.start_time.label(class="form__label") }}
+                {{ form.start_time.label(class="form__label") }}<br>
                 <input type="time" name="start_time" id="start_time" {% if club %} value="{{start_t}}" {% endif %} class="form__date-and-time" required min="06:00" max="23:00" onchange="dateTimeEndValidation('start_time', 'end_time')" > <!--  -->
               </div>
               <div>
-                {{ form.end_time.label(class="form__label") }}
+                {{ form.end_time.label(class="form__label") }}<br>
                 <input type="time" name="end_time" id="end_time" {% if club %} value="{{end_t}}" {% endif %} class="form__date-and-time"  required min="" max="23:00" onchange="dateTimeEndValidation('start_time', 'end_time')"> <!--  -->
               </div>
             </span>
@@ -49,15 +49,16 @@
           <!-- Location -->
           <fieldset>
             <legend class="form__label">Club location*</legend>
-
-            <div class="club__form__radio-and-text-group">
+            <span class="club__small-screen-grid">
+            <div class="club__form__radio-and-text-group form__radio__label">
               <input type="radio" id="at_school" class="form__radio" name="location" value="at_school"  onclick="showHide2('at_school_form', 'off_school_form')" {% if (club) and (club.at_school) %}checked{% endif %}> <!-- onclick="setFocus('at_school_input')"   -->
               <label for="at_school" class="form__label">At school premises</label>
             </div>
-            <div class="club__form__radio-and-text-group">
+            <div class="club__form__radio-and-text-group  form__radio__label">
               <input type="radio" id="off_school" class="form__radio" name="location" value="off_school"  onclick="showHide2('off_school_form', 'at_school_form')" {% if (club)  and (club.at_school == False) %}checked{% endif %}> <!-- onclick="setFocus('off_school_input')"   -->
               <label for="off_school" class="form__label">Off school premises</label>
             </div>
+            </span>
             <div id="at_school_form" {% if (club) and (club.at_school) %} class="" {% else %} class="hide" {% endif %}>
               {{ form.at_school_premises.label(class="form__label") }}
               {{ form.at_school_premises(class="form__input", id="at_school_input", onclick="checkRadio('at_school')", placeholder="Room 23b") }}
@@ -76,7 +77,7 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
         <!-- Days -->
         <fieldset>
           <legend for="" class="form__label">Day(s) the club will be running*</legend>
-          <div class="form__checkbox">
+          <div class="form__checkbox club__small-screen-grid">
             {% for day in form.days %}
               <div class="form__checkbox__group">
                   {{day(class="form__checkbox__field ", id="days-"+(loop.index - 1)|string)}}
@@ -96,11 +97,11 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
           <!-- Year groups -->
           <fieldset class="club__form__item">
             <legend for="" class="form__label">Year group(s) this club will be available to*</legend>
-            <div class="form__checkbox">
+            <div class="form__checkbox club__small-screen-grid">
               {% for yg in form.year_groups %}
                 <div class="form__checkbox__group">
                   {{yg(class="form__checkbox__field")}}
-                  <span class="form__checkbox__label">Year Group </span>{{yg.label(class="form__checkbox__label")}}
+                  {{yg.label(class="form__checkbox__label")}}
                 </div>
               {% endfor %}
             </div>
@@ -133,21 +134,21 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
           <!-- To book a place -->
           <fieldset>
             <legend class="form__label">To book a place*</legend>
-            <div class="club__form__radio-and-text-group">
-              <input type="radio" id="drop_in" name="book" class="form__radio" value="drop_in"  onclick="hide3('book_teacher', 'book_email', 'book_call')" {% if (club) and (club.drop_in) %} checked {% endif %}>
-              <label for="drop_in">
+            <div class="club__form__radio-and-text-group form__radio__label">
+              <input type="radio" id="book" name="book" class="form__radio" value="drop_in"  onclick="hide3('book_teacher', 'book_email', 'book_call')" {% if (club) and (club.drop_in) %} checked {% endif %}><!-- id="drop_in" -->
+              <!--<label for="drop_in">-->
                 {{ form.book.label(class="form__label--nomargin") }}
-              </label>
+              <!--</label>-->
             </div>
-            <div class="club__form__radio-and-text-group">
+            <div class="club__form__radio-and-text-group form__radio__label">
               <input type="radio" id="teacher" name="book" value="teacher" class="form__radio" onclick="showHide3('book_teacher', 'book_email', 'book_call')" {% if (contact_to_book)  and (contact_to_book.teacher_name != None) %} checked {% endif %}>
-              <label for="teacher" class="form__label">Talk to a teacher</label>
+              <label for="teacher" class="form__label ">Talk to a teacher</label>
             </div>
-            <div class="club__form__radio-and-text-group">
+            <div class="club__form__radio-and-text-group form__radio__label">
               <input type="radio" id="email" name="book" value="email" class="form__radio" onclick="showHide3('book_email', 'book_teacher', 'book_call')" {% if (contact_to_book)  and (contact_to_book.email != None) %} checked {% endif %}>
               <label for="email" class="form__label">Email</label>
             </div>
-            <div class="club__form__radio-and-text-group">
+            <div class="club__form__radio-and-text-group form__radio__label">
               <input type="radio" id="call" name="book" value="call" class="form__radio" onclick="showHide3('book_call', 'book_email', 'book_teacher')" {% if (contact_to_book)  and (contact_to_book.call != None) %} checked {% endif %}>
               <label for="call" class="form__label">Call</label>
             </div>
@@ -191,14 +192,16 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
           <!-- Cost -->
           <fieldset>
             <legend class="form__label">How much will the club cost?*</legend>
-            <label for="free" class="club__form__radio-and-text-group">
-              <input type="radio" id="free" name="is_free" value="free" class="form__radio" onclick="hide1('cost_input')" {% if (club) and (club.is_free) %} checked {% endif %}>
+            <span class="club__small-screen-grid">
+            <label for="free" class="club__form__radio-and-text-group form__radio__label">
+              <input type="radio" id="is_free" name="is_free" value="free" class="form__radio" onclick="hide1('cost_input')" {% if (club) and (club.is_free) %} checked {% endif %}><!-- id="free"-->
               {{ form.is_free.label(class="form__label--nomargin") }}
             </label>
-            <div class="club__form__radio-and-text-group">
+            <div class="club__form__radio-and-text-group form__radio__label">
               <input type="radio" id="paid" name="is_free" value="paid" class="form__radio"  onclick="show1('cost_input')" {% if (club)  and (club.is_free == False) %}checked{% endif %}>
-              <label for="paid" class="form__label">Paid</label>
+              <label for="paid" class="form__label ">Paid</label>
             </div>
+            </span>
             <div id="cost_input" {% if (club)  and (club.is_free == False) %} class="" {% else %} class="hide" {% endif %}>
               {{ form.cost.label(class="form__label") }}<br>
               <span class="form__input--pound">
@@ -241,16 +244,16 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
 
       <fieldset>
         <legend class="comment">Enter details about the staff that will run the club</legend>
-        <span class="club__form__grid__container">
-          <div class="club__form__radio-and-text-group left">
+        <span class="club__form__grid__container club__small-screen-grid">
+          <div class="club__form__radio-and-text-group left form__radio__label">
             <input type="radio" id="new" class="form__radio" name="new_entry" value="new" onclick="showHide2('new_entry_box', 'existing_dropdowns')" > <!-- {% if not club %} checked {% endif %} -->
-            <label for="new" class="form__label--nomargin">
+            <label for="new" class="form__label--nomargin ">
               New entry
             </label>
           </div>
-          <div class="club__form__radio-and-text-group right">
+          <div class="club__form__radio-and-text-group right form__radio__label">
             <input type="radio" id="existing" class="form__radio" name="new_entry" value="existing" onclick="showHide2('existing_dropdowns', 'new_entry_box')" {% if club %} checked {% endif %} > <!--   --> <!-- -->
-            <label for="existing" class="form__label--nomargin">
+            <label for="existing" class="form__label--nomargin ">
               Existing club running staff or company
             </label>
           </div>
@@ -261,15 +264,15 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
           <fieldset>
             <legend class="comment">Is the new entry a person or company?</legend>
             <span class="club__form__grid__split-column">
-              <div class="club__form__radio-and-text-group left">
+              <div class="club__form__radio-and-text-group left form__radio__label">
                 <input type="radio" id="person" class="form__radio" name="type_of_staff" value="person" onclick="showHide2('person_form', 'company_form')" > <!-- checked -->
-                <label for="person" class="form__label">
+                <label for="person" class="form__label ">
                   Person
                 </label>
               </div>
-              <div class="club__form__radio-and-text-group right">
+              <div class="club__form__radio-and-text-group right form__radio__label">
                 <input type="radio" id="company" class="form__radio" name="type_of_staff" value="company" onclick="showHide2('company_form', 'person_form')">
-                <label for="company" class="form__label">
+                <label for="company" class="form__label ">
                   Company
                 </label>
               </div>
@@ -303,15 +306,15 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
         <div id="existing_dropdowns" {% if club %} class="right" {% else %} class="right hide" {% endif %}><!-- style='display:block;' -->
           <fieldset>
             <legend class="comment">Staff or company already exists in the system - choose which type to open list of options</legend>
-            <div class="club__form__radio-and-text-group">
+            <div class="club__form__radio-and-text-group form__radio__label">
               <input type="radio" id="existing_staff" class="form__radio" name="existing_clubrunner" value="existing_staff" onclick="showHide2('staff_dropdown', 'companies_dropdown')" {% if club and (not club.ext_company_id) %} checked {% endif %}> <!--  --> <!--  -->
-              <label for="existing_staff" class="form__label--nomargin">
+              <label for="existing_staff" class="form__label--nomargin ">
                 Open list of club staff members
               </label>
             </div>
-            <div class="club__form__radio-and-text-group">
+            <div class="club__form__radio-and-text-group form__radio__label">
               <input type="radio" id="existing_company" class="form__radio" name="existing_clubrunner" value="existing_company" onclick="showHide2('companies_dropdown', 'staff_dropdown')" {% if club and club.ext_company_id %} checked {% endif %}> <!--  --><!--  -->
-              <label class="form__label">
+              <label class="form__label " for="existing_company">
                 Open list of club running companies
               </label>
             </div>

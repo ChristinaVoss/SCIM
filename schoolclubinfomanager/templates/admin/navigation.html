@@ -1,17 +1,24 @@
 
 <nav class="sidebar">
-  <ul class="nav">
+  <!-- large screen navigation -->
+  <ul class="nav medium_up"><!-- medium_up-->
     <li  {% if request.path == '/school_account' %}class="current" {% else %} class="nav__item" {% endif %}>
       <ion-icon name="home-sharp" class="nav__icon"></ion-icon>
       <a href="{{ url_for('school.school_account')}}" class="nav__link">School account details</a>
     </li>
-    <li class="nav__item">
+    <li class="nav__item medium_up">
       <ion-icon name="people-sharp" class="nav__icon"></ion-icon>
 
       <input type="checkbox" class="nav__checkbox" id="navi-toggle"
             {% if (request.path == '/user_account') or (request.path == '/list_users')%} checked id="nav-manage-users" {% endif %}>
-      <label for="navi-toggle" class="nav__label">Manage admin users</label>
-      <ion-icon name="chevron-down-sharp" class="nav__icon nav__icon--drop"></ion-icon>
+      <label for="navi-toggle" class="nav__label chevron">Manage admin users
+      {% if (request.path == '/user_account') or (request.path == '/list_users')%}
+        <!--<ion-icon name="chevron-up-sharp" class="nav__icon nav__icon--drop"></ion-icon>-->
+      {% else %}
+        <!--<ion-icon name="chevron-down-sharp" class="nav__icon nav__icon--drop"></ion-icon>-->
+      {% endif %}
+      </label>
+
 
       <ul class="nav__sub-menu">
         <li {% if request.path == '/user_account' %}class="current" {% else %} class="nav__item nav__sub-menu__item" {% endif %}>
@@ -41,4 +48,5 @@
       <a href="{{ url_for('clubs.list_staff_and_companies', _anchor='tab1')}}" class="nav__link">Manage staff</a>
     </li>
   </ul>
+
 </nav>

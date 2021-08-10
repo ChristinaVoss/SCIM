@@ -17,6 +17,12 @@ $color-grey-dark-3: #333;
 $font-primary: 'Helvetica Neue', sans-serif;
 
 //RESPONSIVE BREAKPOINTS
+$bp-large: 62.5em; // 1000px
+$bp-medium: 51.56em; //825px
+$bp-small: 41.56em;//665px
+$bp-tiny: 32.81em;
+
+
 
 *,
 *::before,
@@ -29,4 +35,9 @@ $font-primary: 'Helvetica Neue', sans-serif;
 html {
   box-sizing: border-box;
   font-size: 62.5%; //10px/16px = 62.5% -> 1rem = 10px
+
+  @media only screen and (max-width: $bp-small) {
+    font-size: 50%; //8px
+  }
+
 }

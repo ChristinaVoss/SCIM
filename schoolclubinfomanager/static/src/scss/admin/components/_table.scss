@@ -4,6 +4,10 @@
   text-align: left;
   width: 100%;
 
+  @media only screen and (max-width: $bp-small) {
+    font-size: 1.3rem;
+  }
+
   &__header {
     padding: 1rem;
     background-color: $color-primary-dark;

@@ -5,7 +5,7 @@
 <div class="setup">
   <h2 class="setup__title">{{title}} school account details</h2>
   <p class="setup__comment"><sup>*</sup> Mandatory fields</p>
-  
+
 
 
   <form action="" method="POST"  class="form setup__form" enctype="multipart/form-data">
@@ -21,7 +21,7 @@
 
     <!--{{ form.logo.label }} {{ form.name(class="setup__file-field")}}-->
     <label for="" class="form__label">Year groups you offer clubs to</label>
-    <div class="form__checkbox">
+    <div class="form__checkbox club__small-screen-grid">
 
     {% for yg in form.year_groups %}
         <div class="form__checkbox__group">

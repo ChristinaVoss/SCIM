@@ -1,51 +1,56 @@
 .nav {
   //remove bullet list dots on main and sub menu items:
-  &,
-  &__sub-menu {
-    list-style: none;
 
+  &,
+  &__sub-menu,
+  &--small {
+    list-style: none;
+  }
+
+  @media only screen and (max-width: $bp-large) {
+    display: grid;
+    grid-template-columns: repeat(5, max-content);
+    align-items: start;
+    justify-content: space-around;
   }
 
   // style "button" (list items)
   &__item {
-    //padding: 1rem 1rem 1rem 2rem;
     width: 100%;
+    padding-left: 2rem;
+
+    @media only screen and (max-width: $bp-large) {
+      display: grid;
+      grid-template-columns: max-content max-content;
+      grid-gap: .5rem;
+      align-items: center;
+      justify-content: center;
+      padding-left:0;
+    }
 
     &:first-child {
-      margin-top: 1rem;
-    }
+      padding-top: 1rem;
 
+      @media only screen and (max-width: $bp-large) {
+        padding-top:0;
+      }
+    }
+    // highlight with lighter colour when hovered over
     &:hover,
-    &:hover &__link {
-      background-color: $color-grey-light-1;
-
-    }
+    &:hover &__link { background-color: $color-grey-light-1; }
   }
 
-  &__icon {
-    margin-left: 2rem;
-
-    &--drop {
-      margin: 0;
-    }
-  }
+  &nav__icon--drop { margin: 0; }
 
   &__label,
   &__link {
     display: inline-block;
 
-    &:hover {
-      font-weight: 700;
-    }
+    &:hover { font-weight: 700; }
   }
 
-  &__label {
-    padding: 1rem 0;
-  }
-
-  &__link {
-    padding: 1rem 1rem 1rem 0;
-  }
+  &__label { padding: 1rem 0; }
+  &__link { padding: 1rem 1rem 1rem 0; }
 
   &__icon,
   &__link,
@@ -57,31 +62,175 @@
   }
 
   // toggle for hiding/showing submenus
-  &__checkbox {
-    display: none;
-  }
+  &__checkbox { display: none; }
 
   &__sub-menu {
     display: none;
     padding-left: 2rem;
+    width: 17rem;
+
+    @media only screen and (max-width: $bp-large) {
+      grid-column: 2/3;
+      padding-left: 0;
+    }
 
     &__item {
-      color: red;
       background-color: $color-grey-light-1;
+      justify-content: start;
     }
   }
-
-  &__checkbox:checked {
-    background-color: $color-grey-light-1;
-  }
-
-  &__checkbox:checked ~ &__sub-menu {
-    display: block;
-  }
-
-
+  // when Manage users is clicked (checked), display the submenu
+  &__checkbox:checked { background-color: $color-grey-light-1; }
+  &__checkbox:checked ~ &__sub-menu { display: block; }
+}
+// highlight current page
+.current {
+  background-color: $color-secondary;
+  height: 3.8rem;
+  padding-left: 2rem;
 }
 
 #nav-manage-users {
   background-color: $color-grey-light-1;
+}
+
+// small screen navigation
+.nav--small,
+.hamburger {
+  display: none;
+}
+
+@media only screen and (max-width: $bp-small) {
+  .hamburger {
+    display: block;
+
+    //remove visible checkbox
+    &__checkbox {
+      display: none;
+    }
+
+    //show background and navigation when hamburger is clicked
+    &__checkbox:checked ~ .nav--small__background {
+      height: 100vh;
+      //opacity: 1;
+    }
+
+    &__checkbox:checked ~ .nav--small {
+      opacity: 1;
+      width: 100%;
+      height: auto;
+      display: grid;
+    }
+
+    //style button that holds hamburger
+    &__button {
+      background-color: #fff;
+      height: 4rem;
+      width: 4rem;
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      border-radius: 50%;
+      z-index: 2000;
+      //box-shadow: 0 1rem 3rem rgba(#000, -1);
+      text-align: center;
+      cursor: pointer;
+    }
+
+    // hamburger icon
+    &__icon {
+      position: relative;
+      margin-top: 2rem;
+
+      &,
+      &::before,
+      &::after{
+        width: 2.5rem;
+        height: 2px;
+        display: inline-block;
+        background-color: $color-primary-dark;
+      }
+
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        transition: all .2s;
+      }
+
+      &::before { top: -.8rem; }
+      &::after { top: .8rem; }
+
+    }
+    // 'animate' (move) the top and bottom line when hovering
+    &__button:hover &__icon::before { top: -1rem; }
+    &__button:hover &__icon::after { top: 1rem; }
+
+    // remove middle line when clicked:
+    &__checkbox:checked + &__button &__icon {
+      background-color: transparent;
+    }
+
+    // rotate top and bottom line (::before and ::after)
+    &__checkbox:checked + &__button &__icon::before {
+      top: 0;
+      transform: rotate(135deg);
+    }
+
+    &__checkbox:checked + &__button &__icon::after {
+      top: 0;
+      transform: rotate(-135deg);
+    }
+  }
+
+  // The actual navigation menu
+  .nav--small {
+    //display: grid;
+    grid-gap: 2rem;
+    z-index: 1500;
+    position: fixed;
+    //menu is not clicked, so hide navigation:
+    opacity: 0;
+    height: 1px;
+    display:none;
+
+    // background behind navigation
+    &__background {
+      height: 0; // hides the nav when not selected
+      width: 100vw;
+      margin-left: -5px;
+      background-color: $color-grey-light-1;
+      top: 6rem;
+      z-index: 1000;
+      position: fixed;
+    }
+    // each navigation link item
+    &__item {
+      display: grid;
+      grid-template-columns: min-content max-content;
+      grid-gap: .5rem;
+      align-items: center;
+      margin-left: 2rem;
+      margin-right: 2rem;
+      font-size: 1.6rem;
+      padding: 1rem;
+      border-bottom: 2px solid $color-grey-dark-1;
+      color: $color-grey-dark-3;
+
+      &:first-child {
+        margin-top: 2rem;
+      }
+
+      &:hover {
+        font-weight: bold;
+      }
+    }
+
+    &__link {
+      color: inherit;
+    }
+
+
+  }
 }
