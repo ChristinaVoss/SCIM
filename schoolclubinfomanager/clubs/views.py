@@ -717,3 +717,14 @@ def company(c_id, club_id=None):
         return redirect(url_for('clubs.company', c_id=c.id))
 
     return render_template('admin/company.html',school=school, c=c, clubs=clubs, form=form, popup_club=popup_club)
+
+######################################################
+################### PARENT SIDE ######################
+######################################################
+
+
+# View all clubs (parent side)
+@clubs.route('/clubs', methods=['GET', 'POST'])
+def school_clubs():
+    school = School.query.first()
+    return render_template('parent/base.html', school=school)
