@@ -1,5 +1,6 @@
 from flask import render_template, url_for, redirect, request, Blueprint, session
 from flask_login import login_user, current_user, logout_user, login_required
+from sorted_months_weekdays import Weekday_Sorted_Week
 from schoolclubinfomanager import db
 from schoolclubinfomanager.models import School, YearGroup, Club, ClubDay, ClubYearGroup, ContactToBook, StaffClub, StaffMember, ExternalCompany
 from schoolclubinfomanager.clubs.forms import CreateClub, Publish, DeleteClub, EditStaffDetails, EditCompanyDetails
@@ -727,4 +728,53 @@ def company(c_id, club_id=None):
 @clubs.route('/clubs', methods=['GET', 'POST'])
 def school_clubs():
     school = School.query.first()
-    return render_template('parent/base.html', school=school)
+    clubs = Club.query.all()
+    club_info_grouped = []
+    for club in clubs:
+        if club.published:
+            days = ClubDay.query.filter_by(club_id=club.id).all()
+            ygs = ClubYearGroup.query.filter_by(club_id=club.id).all()
+            sc = StaffClub.query.filter_by(club_id=club.id).first()
+            book = ContactToBook.query.filter_by(id=club.contact_to_book_id).first()
+
+            if sc:
+                # club is run by individual staff and not a company. (should I check for all instead of first?)
+                staff_member = StaffMember.query.filter_by(id=sc.staffmember_id).first()
+            else:
+                staff_member = None
+            if club.ext_company_id:
+                ext_c = ExternalCompany.query.filter_by(id=club.ext_company_id).first()
+            else:
+                ext_c = None
+
+            year_groups = []
+            for yg in ygs:
+                year_groups.append(int(yg.name))
+            # if there is more than one year group connected to the club:
+            if len(year_groups) > 1:
+                # check if the year groups are consequtive:
+                if (sorted(year_groups) == list(range(min(year_groups), max(year_groups)+1))): #https://www.geeksforgeeks.org/python-check-if-list-contains-consecutive-numbers/
+                    ygs = str(year_groups[0]) + '-' + str(year_groups[-1])
+                else:
+                    #not consequtive, just sort and store as string
+                    temp = sorted(year_groups)
+                    temp2 = [str(x) for x in temp]
+                    ygs = ", ".join(temp2)
+            else:
+                #single year group, just store name
+                ygs = ygs[0].name
+
+            # Sort weekday names
+            temp = [day.name for day in days]
+            days = Weekday_Sorted_Week(temp)
+
+            club_info_grouped.append((club, days, ygs, staff_member, book, ext_c))
+    '''
+    club = Club.query.filter_by(id=club_id).first()
+    days = ClubDay.query.filter_by(club_id=club.id).all()
+    ygs = ClubYearGroup.query.filter_by(club_id=club.id).all()
+    sc = StaffClub.query.filter_by(club_id=club.id).first()
+    book = ContactToBook.query.filter_by(id=club.contact_to_book_id).first()
+    '''
+
+    return render_template('parent/cards.html', school=school, clubs=club_info_grouped)
