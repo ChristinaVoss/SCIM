@@ -8,6 +8,9 @@
     border-radius: 1.6rem;
     color: $color-grey-dark-2;
     background-color: #fff;
+    -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
+  break-inside: avoid;
 
     p {
       font-size: 1.2rem;
@@ -83,5 +86,36 @@
        text-align: center;
        margin: 1rem 0;
      }
+     // single card popup
+     &__single {
+       width: 35rem;
+       text-align: left;
+
+
+       h4, p { font-size: 1.4rem;}
+
+       .club__card__title {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+
+         a {
+           font-size: 3rem;
+           font-weight: bold;
+           color: inherit;
+
+           &:hover {
+             font-size: 3.2rem;
+             color: $color-grey-dark-3;
+           }
+         }
+       }
+     }
   }
+}
+
+
+
+#single_card_popup {
+  background-color: rgba(200, 200, 200, 0.95);
 }

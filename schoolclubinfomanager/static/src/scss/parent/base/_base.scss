@@ -42,7 +42,7 @@
     grid-column: left-margin-start / right-margin-end;
     grid-row: footer-start / footer-end;
     display: grid;
-    grid-template-columns: max-content max-content;
+    grid-template-columns: repeat(3, max-content);
     grid-gap: 2rem;
     justify-content: center;
     align-items: center;
@@ -50,6 +50,17 @@
 
     &__link {
       color: inherit;
+
+      &:hover {
+        font-weight: 400;
+      }
     }
   }
+}
+
+.split_two {
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  justify-content: space-between;
+  align-items: start;
 }
