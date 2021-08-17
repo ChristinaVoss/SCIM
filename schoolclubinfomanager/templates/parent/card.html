@@ -1,19 +1,16 @@
-{% extends "parent/base.html" %}
-
-{% block parent_content %}
-<div class="club__card__container">
-{% for club in clubs %}
-
-{% set days = club[1] %}
-{% set ygs  = club[2] %}
-{% set staff_member = club[3] %}
-{% set book = club[4] %}
-{% set ext_c = club[5] %}
-{% set club = club[0] %}
-
-  <a href="{{url_for('clubs.school_clubs', _anchor='single_card_popup', club_id=club.id)}}" class="club__card">
+{% if popup_club %}
+<div class="popup" id="single_card_popup">
+  <div class="popup__container club__card club__card__single">
     <div class="club__card__title club__card__section">
-      <h2>{{club.name}}</h2>
+
+      {% set club = popup_club %}
+      {% set days = popup_days %}
+      {% set ygs  = popup_ygs %}
+      {% set staff_member = popup_staff_member %}
+      {% set book = popup_book %}
+      {% set ext_c = popup_ext_c %}
+
+      <h2>{{club.name}}</h2><a href="{{url_for('clubs.school_clubs')}}">&#215;</a>
     </div>
     <p  class="club__card__split">
       <span>
@@ -120,16 +117,7 @@
       <p class="club__card__booking">Drop in club - no need to book</p>
     {% endif %}
 
-  </a>
-
-
-
-{% endfor %}
+  </div>
 </div>
 
-{% include "parent/card.html" %}
-
-<script>
-
-</script>
-{% endblock %}
+{% endif %}

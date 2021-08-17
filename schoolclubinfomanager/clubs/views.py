@@ -726,10 +726,64 @@ def company(c_id, club_id=None):
 
 # View all clubs (parent side)
 @clubs.route('/clubs', methods=['GET', 'POST'])
-def school_clubs():
+@clubs.route('/clubs/<club_id>', methods=['GET', 'POST'])
+def school_clubs(club_id=None):
     school = School.query.first()
     clubs = Club.query.all()
     club_info_grouped = []
+
+    # POPUP CLUB CARD
+    if club_id:
+        popup_club = Club.query.filter_by(id=club_id).first()
+        popup_days = ClubDay.query.filter_by(club_id=popup_club.id).all()
+        popup_ygs = ClubYearGroup.query.filter_by(club_id=popup_club.id).all()
+        popup_sc = StaffClub.query.filter_by(club_id=popup_club.id).first()
+        popup_book = ContactToBook.query.filter_by(id=popup_club.contact_to_book_id).first()
+
+        if popup_sc:
+            # club is run by individual staff and not a company. (should I check for all instead of first?)
+            popup_staff_member = StaffMember.query.filter_by(id=popup_sc.staffmember_id).first()
+        else:
+            popup_staff_member = None
+        if popup_club.ext_company_id:
+            popup_ext_c = ExternalCompany.query.filter_by(id=popup_club.ext_company_id).first()
+        else:
+            popup_ext_c = None
+
+        popup_year_groups = []
+        for yg in popup_ygs:
+            popup_year_groups.append(int(yg.name))
+        # if there is more than one year group connected to the club:
+        if len(popup_year_groups) > 1:
+            # check if the year groups are consequtive:
+            if (sorted(popup_year_groups) == list(range(min(popup_year_groups), max(popup_year_groups)+1))): #https://www.geeksforgeeks.org/python-check-if-list-contains-consecutive-numbers/
+                popup_ygs = str(popup_year_groups[0]) + '-' + str(popup_year_groups[-1])
+            else:
+                #not consequtive, just sort and store as string
+                temp = sorted(popup_year_groups)
+                temp2 = [str(x) for x in temp]
+                popup_ygs = ", ".join(temp2)
+        else:
+            #single year group, just store name
+            popup_ygs = popup_ygs[0].name
+
+        # Sort weekday names
+        temp = [day.name for day in popup_days]
+        popup_days = Weekday_Sorted_Week(temp)
+
+        #return render_template('parent/cards.html', school=school, clubs=club_info_grouped, popup_club=popup_club, popup_days=popup_days, popup_ygs=popup_ygs, popup_staff_member=popup_staff_member, popup_book=popup_book, popup_ext_c=popup_ext_c)
+    else:
+        popup_club = None
+        popup_days = None
+        popup_ygs = None
+        popup_sc = None
+        popup_book = None
+        popup_staff_member = None
+        popup_ext_c = None
+
+
+
+    # NOT POPUP - LIST ALL PUBLISHED CLUBS
     for club in clubs:
         if club.published:
             days = ClubDay.query.filter_by(club_id=club.id).all()
@@ -777,4 +831,4 @@ def school_clubs():
     book = ContactToBook.query.filter_by(id=club.contact_to_book_id).first()
     '''
 
-    return render_template('parent/cards.html', school=school, clubs=club_info_grouped)
+    return render_template('parent/cards.html', school=school, clubs=club_info_grouped, popup_club=popup_club, popup_days=popup_days, popup_ygs=popup_ygs, popup_staff_member=popup_staff_member, popup_book=popup_book, popup_ext_c=popup_ext_c)

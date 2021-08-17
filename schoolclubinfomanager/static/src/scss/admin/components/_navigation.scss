@@ -46,7 +46,7 @@
   &__link {
     display: inline-block;
 
-    &:hover { font-weight: 700; }
+    &:hover { font-weight: 500; }
   }
 
   &__label { padding: 1rem 0; }
@@ -66,7 +66,7 @@
 
   &__sub-menu {
     display: none;
-    padding-left: 2rem;
+    //padding-left: 0rem;
     width: 17rem;
 
     @media only screen and (max-width: $bp-large) {
