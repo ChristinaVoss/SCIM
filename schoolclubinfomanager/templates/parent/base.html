@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>SCIM</title>
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700;900&display=swap" rel="stylesheet">
+    <!-- CSS from Scss -->
+    {% assets "asset_css" %}
+    <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}" media="screen"/>
+    {% endassets %}
+
+
+  </head>
+  <body>
+    <div class="parent__container"><!-- container holds entire page, used for CSS grid -->
+      <!-- first child of container holds the header -->
+      <header class="parent__header" style="background-color:{{school.banner_colour}};">
+        {% if school.name %}
+          <h1 class="parent__header__title" style="font-family:{{school.font}};color:{{school.font_colour}};">Clubs for {{school.name}}</h1>
+          <div class="parent__header__link-container">
+            <a href="#" class="parent__header__link" style="color:{{school.font_color}};">Return to school website</a>
+            {% if school.logo %}
+              <img src="{{ url_for('static', filename='img/'+school.logo)}}" alt="school logo" class="logo--small">
+            {% endif %}
+          </div>
+
+        {% endif %}
+
+      </header>
+      <!-- second child of container holds main content-->
+      <main class="parent__main">
+        {% block parent_content %}
+          <!-- page specific content goes here -->
+        {% endblock %}
+      </main>
+      <footer class="parent__footer" style="background-color:{{school.banner_colour}};">
+        <a href="#" class="parent__footer__link" style="color:{{school.font_colour}};">Terms & Conditions</a>
+        <a href="#" class="parent__footer__link" style="color:{{school.font_colour}};">Privacy</a>
+        <a href="{{ url_for('school.school_account')}}" class="parent__footer__link" style="color:{{school.font_colour}};">Admin</a>
+
+
+      </footer>
+    </div>
+  </body>
+</html>
