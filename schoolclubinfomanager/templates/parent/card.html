@@ -10,7 +10,10 @@
       {% set book = popup_book %}
       {% set ext_c = popup_ext_c %}
 
-      <h2>{{club.name}}</h2><a href="{{url_for('clubs.school_clubs')}}">&#215;</a>
+      <h2>{{club.name}}</h2>
+      <a {% if request.path == '/timetable/'+club.id|string %}href="{{url_for('clubs.timetable')}}" {% else %} href="{{url_for('clubs.school_clubs')}}" {% endif %}>
+        &#215;
+      </a>
     </div>
     <p  class="club__card__split">
       <span>

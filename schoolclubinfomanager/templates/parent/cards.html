@@ -1,6 +1,16 @@
 {% extends "parent/base.html" %}
 
 {% block parent_content %}
+
+<div class="tabs club__card__tabs">
+  <div class="tabs__left table__timetable__tabs__other" >
+    <a href="{{url_for('clubs.timetable')}}"><h3 style="color:{{school.banner_colour}};">Timetable</h3></a>
+  </div>
+  <div class="tabs__right table__timetable__tabs__current" style="background-color:{{school.banner_colour}};">
+    <a href="#"><h3>Details</h3></a>
+  </div>
+</div>
+
 <div class="club__card__container">
 {% for club in clubs %}
 

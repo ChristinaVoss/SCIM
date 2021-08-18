@@ -13,6 +13,15 @@
     background-color: $color-primary-dark;
     color: white;
     //border-radius: 2px 2px 0 0;
+
+    &--side {
+      background-color: $color-primary-dark;
+      color: white;
+      transform: rotate(180deg);
+      writing-mode: vertical-rl;
+      text-align: center;
+      padding: 1rem;
+    }
   }
 
   &__cell {
@@ -33,5 +42,9 @@
     &:hover {
       background-color: $color-grey-dark-1;
     }
+  }
+
+  &__timetable {
+    
   }
 }
