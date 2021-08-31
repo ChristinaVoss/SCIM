@@ -43,6 +43,7 @@
     align-items: center;
 
 
+
     &__title {
       padding-left: 1rem;
 
@@ -54,6 +55,13 @@
       color: $color-light;
       padding: 0 1rem;
 
+    }
+  }
+
+  @media only screen and (max-width: $bp-small) {
+    .btn {
+      float: right;
+      margin: 2rem 0;
     }
   }
 }

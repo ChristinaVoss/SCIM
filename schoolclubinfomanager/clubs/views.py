@@ -3,7 +3,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from sorted_months_weekdays import Weekday_Sorted_Week
 from schoolclubinfomanager import db
 from schoolclubinfomanager.models import School, YearGroup, Club, ClubDay, ClubYearGroup, ContactToBook, StaffClub, StaffMember, ExternalCompany
-from schoolclubinfomanager.clubs.forms import CreateClub, Publish, DeleteClub, EditStaffDetails, EditCompanyDetails
+from schoolclubinfomanager.clubs.forms import CreateClub, Publish, DeleteClub, EditStaffDetails, EditCompanyDetails, ChooseDay
 from schoolclubinfomanager.clubs.picture_handler import add_photo
 import datetime
 import sys
@@ -291,10 +291,10 @@ def edit_club(club_id):
     # variables needed in some cases
     sm = None
     comp = None
-    start_d = None
-    end_d = None
-    start_t = None
-    end_t = None
+    start_d = club.start_date.date()
+    end_d = club.end_date.date()
+    start_t = club.start_time
+    end_t = club.end_time
 
 
     #school = School.query.first()
@@ -339,6 +339,7 @@ def edit_club(club_id):
         club.is_free = is_free
         club.num_of_places = num_places
         club.drop_in = drop_in
+        club.cost = cost
 
         db.session.commit()
 
@@ -836,13 +837,26 @@ def school_clubs(club_id=None):
 
 # View all clubs (parent side)
 @clubs.route('/timetable', methods=['GET', 'POST'])
-@clubs.route('/timetable/<club_id>', methods=['GET', 'POST'])
-def timetable(club_id=None):
+@clubs.route('/timetable/<x>', methods=['GET', 'POST'])# x as mixed variable for either weekday or club_id, as Flask gets confused by different routes with same number arguments
+def timetable(x=None):
     school = School.query.first()
     clubs = Club.query.all()
+    form = ChooseDay()
+    today = datetime.datetime.now()
+
+    # SMALL SCREEN TIMETABLE
+    if x and x.isnumeric():
+        club_id = x
+        weekday = None
+    elif x and not x.isnumeric():
+        club_id = None
+        weekday = x
+    else:
+        club_id = None
+        weekday = None
 
     # POPUP CLUB CARD
-    if club_id:
+    if club_id and club_id.isnumeric():
         popup_club = Club.query.filter_by(id=club_id).first()
         popup_days = ClubDay.query.filter_by(club_id=popup_club.id).all()
         popup_ygs = ClubYearGroup.query.filter_by(club_id=popup_club.id).all()
@@ -890,7 +904,8 @@ def timetable(club_id=None):
         popup_staff_member = None
         popup_ext_c = None
 
-    # timetable variables
+    # TIMETABLE variables
+    # first find out wether the timetable should include weekend days (are there clubs in weekend?)
     weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 
     saturday = ClubDay.query.filter_by(name="Saturday").all()
@@ -899,7 +914,9 @@ def timetable(club_id=None):
         weekdays.append("Saturday")
         weekdays.append("Sunday")
 
+    # create dictionary to hold clubs, separated by days for the timetable columns
     timetable_clubs = {}
+    timeofday = {}
 
     for d in weekdays:
         timetable_clubs[d] = ClubDay.query.filter_by(name=d).all()
@@ -909,10 +926,18 @@ def timetable(club_id=None):
             temp = Club.query.filter_by(id=day_club.club_id).first()
             temp_ygs = ClubYearGroup.query.filter_by(club_id=temp.id).all()
             f_ygs = format_yeargroups(temp_ygs)
-            day_clubs.append((temp, f_ygs))#(temp.name, temp.start_time.strftime("%H:%M"))
+            day_clubs.append((temp, f_ygs))
 
         day_clubs.sort(key=lambda c: c[0].start_time)
         timetable_clubs[d] = day_clubs
+        # create set of clubs starting hours, and check if there are clubs for each time of day
+        hours = {c[0].start_time.hour for c in day_clubs}
+        morning = not hours.isdisjoint(range(6,9))
+        lunch = not hours.isdisjoint(range(9,15))
+        after_school = not hours.isdisjoint(range(15,24))
+        timeofday[d] = (morning, lunch, after_school)
+
+
 
     #return render_template('parent/cards.html', school=school, clubs=club_info_grouped, popup_club=popup_club, popup_days=popup_days, popup_ygs=popup_ygs, popup_staff_member=popup_staff_member, popup_book=popup_book, popup_ext_c=popup_ext_c)
-    return render_template('parent/timetable.html', school=school, popup_club=popup_club, popup_days=popup_days, popup_ygs=popup_ygs, popup_staff_member=popup_staff_member, popup_book=popup_book, popup_ext_c=popup_ext_c, timetable_clubs=timetable_clubs, weekdays=weekdays)#monday_clubs=monday_clubs, friday_clubs=f_clubs
+    return render_template('parent/timetable.html', school=school, form=form, popup_club=popup_club, popup_days=popup_days, popup_ygs=popup_ygs, popup_staff_member=popup_staff_member, popup_book=popup_book, popup_ext_c=popup_ext_c, timetable_clubs=timetable_clubs, weekdays=weekdays, weekday=weekday, timeofday=timeofday, today=today)#monday_clubs=monday_clubs, friday_clubs=f_clubs

@@ -2,6 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
     <title>SCIM</title>
     <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -11,16 +12,20 @@
     <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}" media="screen"/>
     {% endassets %}
 
+    <!-- ICONS -->
+    <script type="module" src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule="" src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.js"></script>
+
 
   </head>
   <body>
-    <div class="parent__container"><!-- container holds entire page, used for CSS grid -->
+    <div class="parent__container" {% if not request.path == '/clubs' %} id="small-timetable" {% endif %}><!-- container holds entire page, used for CSS grid -->
       <!-- first child of container holds the header -->
       <header class="parent__header" style="background-color:{{school.banner_colour}};">
         {% if school.name %}
           <h1 class="parent__header__title" style="font-family:{{school.font}};color:{{school.font_colour}};">Clubs for {{school.name}}</h1>
           <div class="parent__header__link-container">
-            <a href="#" class="parent__header__link" style="color:{{school.font_color}};">Return to school website</a>
+            <a href="#" class="parent__header__link medium_up" style="color:{{school.font_color}};">Return to school website</a>
             {% if school.logo %}
               <img src="{{ url_for('static', filename='img/'+school.logo)}}" alt="school logo" class="logo--small">
             {% endif %}
@@ -31,14 +36,36 @@
       </header>
       <!-- second child of container holds main content-->
       <main class="parent__main">
+        <div class="small_screen">
+          <span class="club__card__split filter-menu--small">
+            <span class="filter-menu--small__group">Filter & sort<ion-icon name="options-outline"></ion-icon></span>
+
+
+              {% if request.path == '/clubs' %}
+                <a class="filter-menu--small__group" href="{{url_for('clubs.timetable')}}">Change view
+                  <ion-icon name="calendar-outline"></ion-icon>
+                </a>
+              {% else %}
+              <a class="filter-menu--small__group" href="{{url_for('clubs.school_clubs')}}">Change view
+                <ion-icon name="newspaper-outline"></ion-icon>
+              </a>
+              {% endif %}
+
+        </span>
+        </div>
         {% block parent_content %}
           <!-- page specific content goes here -->
         {% endblock %}
       </main>
+
       <footer class="parent__footer" style="background-color:{{school.banner_colour}};">
-        <a href="#" class="parent__footer__link" style="color:{{school.font_colour}};">Terms & Conditions</a>
-        <a href="#" class="parent__footer__link" style="color:{{school.font_colour}};">Privacy</a>
-        <a href="{{ url_for('school.school_account')}}" class="parent__footer__link" style="color:{{school.font_colour}};">Admin</a>
+        <a href="#" class="parent__header__link small_screen" style="color:{{school.font_color}};">Return to school website</a>
+        <span class="parent__footer__links">
+          <a href="#" class="parent__footer__link medium_up" style="color:{{school.font_colour}};">Terms & Conditions</a>
+          <a href="#" class="parent__footer__link small_screen" style="color:{{school.font_colour}};">Ts & Cs</a>
+          <a href="#" class="parent__footer__link" style="color:{{school.font_colour}};">Privacy</a>
+          <a href="{{ url_for('school.school_account')}}" class="parent__footer__link" style="color:{{school.font_colour}};">Admin</a>
+        </span>
 
 
       </footer>

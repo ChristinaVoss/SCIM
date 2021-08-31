@@ -2,7 +2,7 @@
   &__card {
     //https://codepen.io/dudleystorey/pen/yqrhw?editors=1100
     padding: 1rem;
-    //box-shadow: 0 1rem 3rem rgba(#111, .1);
+
     display: inline-block;
     margin: 1.5rem 1rem;
     border-radius: 1.6rem;
@@ -11,13 +11,42 @@
     -webkit-column-break-inside: avoid;
     page-break-inside: avoid;
     break-inside: avoid;
+    cursor: zoom-in;
+
+    @media only screen and (max-width: $bp-small) {
+      margin: 1rem;
+
+    }
+
+    &:hover {
+      border: solid 2px $color-secondary;
+      //box-shadow: 0 1rem 3rem rgba(#111, .2);
+
+
+      p, h4 {
+        //font-size: 1.3rem;
+      }
+    }
+
+    &__header {
+      font-size: 2rem;
+      margin: 1rem 0 -2rem 1.3rem;
+      font-weight: 700;
+      color: darken($color-grey-dark-3, 2);
+    }
 
     &__tabs {
       text-transform: uppercase;
       margin-top: 8rem;
 
-      h3 {
+      h2 {
+        font-size: 2rem;
         font-weight: bold;
+
+        &:hover {
+          font-size: 2.3rem;
+          text-decoration: underline;
+        }
       }
     }
 
@@ -34,10 +63,21 @@
       justify-content: space-between;
     }
 
+    &__three {
+      display:grid;
+      grid-template-columns: max-content min-content max-content;
+      justify-content: space-between;
+    }
+
     &__circle-section {
       display: grid;
       grid-template-columns: repeat(3, max-content);
       justify-content: space-between;
+
+      @media only screen and (max-width: $bp-small) {
+        grid-template-columns: repeat(3, min-content);
+        align-items: end;
+      }
     }
 
     &__circle {
@@ -53,6 +93,13 @@
       font-weight: 700;
       margin: .5rem 0;
 
+      @media only screen and (max-width: $bp-small) {
+        width: 4rem;
+        height: 4rem;
+        font-size: 1.6rem !important;
+        padding-top: .8rem;
+      }
+
       &__group {
         text-align: center;
       }
@@ -62,6 +109,11 @@
     &__container {
       columns: auto 25rem;
       margin: 2rem 0;
+
+      @media only screen and (max-width: $bp-small) {
+        columns: 2 8rem;
+
+      }
 
     }
 
@@ -75,10 +127,6 @@
        margin-bottom: .6rem;
      }
 
-     &__subheading {
-
-     }
-
      &__photo {
        width: 100%;
        margin: .6rem 0;
@@ -87,26 +135,60 @@
      }
 
      &__booking {
-       background-color: $color-secondary;
+       background-color: darken($color-secondary, 4);
        padding: .6rem 1.5rem;
        border-radius: 15rem;
-       color: #fff;
-       font-weight: 500;
+       color: #fff !important;
+       font-weight: 500 !important;
        text-align: center;
        margin: 1rem 0;
+
+
+
      }
      // single card popup
      &__single {
        width: 35rem;
        text-align: left;
+       cursor: default;
 
+       &:hover {
+         border: none;
+       }
 
-       h4, p { font-size: 1.4rem;}
+       .club__card__circle {
+         line-height: normal;
+         width: 6rem;
+         height: 6rem;
+         font-size: 2.3rem !important;
+         padding-top: 1.2rem;
+
+         &-section {
+           margin-top: -1rem;
+         }
+
+       }
+       .club__card__section {
+         margin-bottom: 1rem;
+         padding-bottom: 1rem;
+       }
+
+       h4, p {
+         font-size: 1.7rem;
+         line-height: 2rem;
+       }
+       
+       h4 { margin: 1rem 0 .5rem 0;}
 
        .club__card__title {
          display: flex;
          justify-content: space-between;
          align-items: center;
+
+         h2 {
+           font-size: 3rem;
+         }
+
 
          a {
            font-size: 3rem;
@@ -114,14 +196,17 @@
            color: inherit;
 
            &:hover {
-             font-size: 3.2rem;
+             font-size: 3.4rem;
              color: $color-grey-dark-3;
+             transform: translateY(-.5rem);
+             margin-bottom: -.3rem;;
            }
          }
        }
      }
   }
 }
+
 
 
 

@@ -20,6 +20,11 @@
   background-color: $color-primary-dark;
   display: grid;
 
+  @media only screen and (max-width: $bp-small) {
+    grid-column: left-margin-start / right-margin-end;
+
+  }
+
   &__title {
     align-self: center;
     text-align: center;
@@ -130,6 +135,13 @@
 // Do not show on screens smaller than medium
 .medium_up {
   @media only screen and (max-width: $bp-small) {
+    display: none !important;
+  }
+}
+
+//only show on small screens
+.small_screen {
+  @media only screen and (min-width: $bp-small) {
     display: none !important;
   }
 }
