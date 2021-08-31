@@ -23,7 +23,11 @@
 
   <h4>Year Groups</h4>
   <p>{%for yg in ygs%}
+      {% if loop.last %}
         {{yg.name}}
+      {% else %}
+       {{yg.name}},
+      {% endif %}
      {% endfor %}
   </p>
 

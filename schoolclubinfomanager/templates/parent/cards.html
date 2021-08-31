@@ -2,14 +2,18 @@
 
 {% block parent_content %}
 
-<div class="tabs club__card__tabs">
+<div class="tabs club__card__tabs medium_up">
   <div class="tabs__left table__timetable__tabs__other" >
-    <a href="{{url_for('clubs.timetable')}}"><h3 style="color:{{school.banner_colour}};">Timetable</h3></a>
+    <a href="{{url_for('clubs.timetable')}}" style="border-color: {{school.banner_colour}};"><h2 style="color:{{school.banner_colour}};">Timetable</h2></a>
   </div>
   <div class="tabs__right table__timetable__tabs__current" style="background-color:{{school.banner_colour}};">
-    <a href="#"><h3>Details</h3></a>
+    <a href="#"><h2>Details</h2></a>
   </div>
 </div>
+<div class="small_screen">
+  <h2 class="club__card__header ">Details (tap club to expand)</h2>
+</div>
+
 
 <div class="club__card__container">
 {% for club in clubs %}
@@ -23,7 +27,7 @@
 
   <a href="{{url_for('clubs.school_clubs', _anchor='single_card_popup', club_id=club.id)}}" class="club__card">
     <div class="club__card__title club__card__section">
-      <h2>{{club.name}}</h2>
+      <h3>{{club.name}}</h3>
     </div>
     <p  class="club__card__split">
       <span>
@@ -41,8 +45,8 @@
 
       </span><span>{{club.start_time.strftime('%H:%M')}} - {{club.end_time.strftime('%H:%M')}}</span>
      </p>
-    <p class="club__card__split"><span>Starts {{club.start_date.strftime('%d/%m/%Y')}}      </span><span>Last date {{club.end_date.strftime('%d/%m/%Y')}}</span></p>
-    <p></p>
+    <p class="club__card__split medium_up"><span>Starts {{club.start_date.strftime('%d/%m/%Y')}}      </span><span>Last date {{club.end_date.strftime('%d/%m/%Y')}}</span></p>
+    <p class="club__card__three small_screen"><span>{{club.start_date.strftime('%d/%m/%Y')}}      </span><span>-</span><span>{{club.end_date.strftime('%d/%m/%Y')}}</span></p>
     {% if club.photo %}
       <img src="{{ url_for('static', filename='img/club/'+club.photo)}}" height="200" alt="Club activities photo" class="club__card__photo">
     {% endif %}

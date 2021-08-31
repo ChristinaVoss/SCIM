@@ -1,19 +1,12 @@
-<p>{{club}}</p><br><br>
+<form class="timetable__small__weekdays"  method="POST">
+  {{ form.hidden_tag()}}
+  {% for day in weekdays %}
 
+    {% set day_id = "day_" + day %}
 
-{% set days = club[1] %}
-{% set ygs  = club[2] %}
-{% set staff_member = club[3] %}
-{% set book = club[4] %}
-{% set ext_c = club[5] %}
-{% set club = club[0] %}
+    <label for="{{'day_'+ day}}" class="timetable__small__weekdays__day" >{{day[0]}}</label>
 
-<p>
-  club: {{club}}<br>
-  days: {{days}}<br>
-  ygs: {{ygs}}<br>
-  staff_member: {{staff_member.id}}<br>
-  book: {{book}}<br>
-  ext_c: {{ext_c}}<br><br>
-  ===========================================<br><br>
-</p>
+      {{ form.submit_day(class="hide", value=day, id=day_id)}}
+
+  {% endfor %}
+</form>

@@ -1,13 +1,21 @@
+html {
+  height: 100%;
+}
 .parent {
 
   &__container {
     display: grid;
     grid-template-rows: [header-start] 4rem [header-end main-start] 1fr [main-end footer-start] 4rem [footer-end];
-    grid-template-columns: [left-margin-start] minmax(0, 1fr) [left-margin-end main-start] minmax(50rem, 80%)
+    grid-template-columns: [left-margin-start] minmax(0, 1fr) [left-margin-end main-start] minmax(40rem, 80%)
                            [main-end right-margin-start] minmax(0, 1fr)[right-margin-end];
 
 
     background-color: $color-grey-light-2;
+
+    @media only screen and (max-width: $bp-small) {
+      grid-template-columns: [left-margin-start] minmax(0, 1fr) [left-margin-end main-start] minmax(40rem, 95%)
+                             [main-end right-margin-start] minmax(0, 1fr)[right-margin-end];
+    }
   }
 
   &__header {
@@ -18,12 +26,25 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 2rem;
+    height: 4rem;
+
+    &__title {
+      @media only screen and (max-width: $bp-small) {
+        font-size: 1.6rem;
+      }
+    }
 
     &__link {
       text-decoration: none;
       text-transform: uppercase;
       color: $color-light;
-      padding: 0 1rem;
+      margin: 0 1rem;
+
+      &:hover {
+        font-weight: 400;
+        border-bottom: solid 1px #fff;
+        padding-bottom: .3rem;
+      }
 
       &-container {
         display: grid;
@@ -35,26 +56,69 @@
 
   &__main {
     grid-column: main-start / main-end;
+    min-height: calc(100vh - 8rem); // 4rem header + 4rem footer = 8rem
 
   }
 
   &__footer {
     grid-column: left-margin-start / right-margin-end;
     grid-row: footer-start / footer-end;
-    display: grid;
-    grid-template-columns: repeat(3, max-content);
-    grid-gap: 2rem;
-    justify-content: center;
-    align-items: center;
+
     font-size: 1.2rem;
+    padding: 1.2rem 4rem;
+    height: 4rem;
+
+    @media only screen and (max-width: $bp-small) {
+      display: grid;
+      grid-template-columns: repeat(2, max-content);
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.4rem;
+
+
+    }
+
+    &__links {
+      display: grid;
+      grid-template-columns: repeat(3, max-content);
+      grid-gap: 2rem;
+      justify-content: center;
+      align-items: center;
+    }
 
     &__link {
       color: inherit;
 
       &:hover {
         font-weight: 400;
+
       }
     }
+  }
+}
+
+
+.filter-menu {
+  &--small {
+    margin: 2rem 1.3rem 1rem 1.3rem;
+    font-size: 1.6rem;
+    text-transform: uppercase;
+    font-weight: 400;
+
+
+    &__group {
+      display: grid;
+      grid-template-columns: max-content min-content;
+      grid-gap: 1rem;
+      align-items: center;
+      color: inherit;
+
+      ion-icon {
+        font-size: 3rem;
+      }
+    }
+
+
   }
 }
 
