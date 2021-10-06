@@ -17,12 +17,11 @@ $color-grey-dark-3: #333;
 $font-primary: 'Helvetica Neue', sans-serif;
 
 //RESPONSIVE BREAKPOINTS
+$bp-xlarge: 90em; //1440px
 $bp-large: 62.5em; // 1000px
 $bp-medium: 51.56em; //825px
-$bp-small: 41.56em;//665px
-$bp-tiny: 32.81em;
-
-
+$bp-small: 41.56em; //665px
+$bp-tiny: 32.81em; //525px
 
 *,
 *::before,
@@ -40,4 +39,7 @@ html {
     font-size: 50%; //8px
   }
 
+  @media (orientation: portrait) {
+    transform: rotateZ(1turn);
+  }
 }

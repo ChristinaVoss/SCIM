@@ -1,7 +1,7 @@
 
 <nav class="sidebar">
   <!-- large screen navigation -->
-  <ul class="nav medium_up"><!-- medium_up-->
+  <ul class="nav medium_up">
     <li  {% if request.path == '/school_account' %}class="current" {% else %} class="nav__item" {% endif %}>
       <ion-icon name="home-sharp" class="nav__icon"></ion-icon>
       <a href="{{ url_for('school.school_account')}}" class="nav__link">School account details</a>
@@ -18,7 +18,6 @@
         <!--<ion-icon name="chevron-down-sharp" class="nav__icon nav__icon--drop"></ion-icon>-->
       {% endif %}
       </label>
-
 
       <ul class="nav__sub-menu">
         <li {% if request.path == '/user_account' %}class="current" {% else %} class="nav__item nav__sub-menu__item" {% endif %}>
@@ -48,5 +47,4 @@
       <a href="{{ url_for('clubs.list_staff_and_companies', _anchor='tab1')}}" class="nav__link">Manage staff</a>
     </li>
   </ul>
-
 </nav>

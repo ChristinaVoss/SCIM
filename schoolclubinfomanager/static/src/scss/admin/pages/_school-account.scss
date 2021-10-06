@@ -1,5 +1,4 @@
 .school-account {
-
   &__header {
     display: grid;
     grid-template-columns: max-content max-content;
@@ -17,43 +16,36 @@
     }
   }
 
-  &__details {
-    margin: 4rem 0;
-  }
+  &__details { margin: 4rem 0; }
 
   &__item {
     font-weight: 400;
     margin-bottom: 1rem;
 
-    &--value {
-      font-weight:300;
-    }
+    &--value { font-weight:300; }
   }
 
-  &__subheading {
-    margin-top: 2rem;
-    //margin-bottom: .2rem;
-  }
-
-
+  &__subheading { margin-top: 2rem; }
 
   &__banner {
     display: grid;
     grid-template-columns: minmax(max-content, 80%) max-content 1fr;
     align-items: center;
 
-
-    &__title {
-      padding-left: 1rem;
-
-    }
+    &__title { padding-left: 1rem; }
 
     &__link {
       text-decoration: none;
       text-transform: uppercase;
       color: $color-light;
       padding: 0 1rem;
+    }
+  }
 
+  @media only screen and (max-width: $bp-small) {
+    .btn {
+      float: right;
+      margin: 2rem 0;
     }
   }
 }

@@ -2,28 +2,33 @@
 
 {% block parent_content %}
 
-<div class="tabs club__card__tabs">
+<div class="tabs club__card__tabs medium_up">
   <div class="tabs__left table__timetable__tabs__other" >
-    <a href="{{url_for('clubs.timetable')}}"><h3 style="color:{{school.banner_colour}};">Timetable</h3></a>
+    <a href="{{url_for('clubs.timetable')}}" style="border-color: {{school.banner_colour}};">
+      <h2 style="color:{{school.banner_colour}};">Timetable</h2>
+    </a>
   </div>
   <div class="tabs__right table__timetable__tabs__current" style="background-color:{{school.banner_colour}};">
-    <a href="#"><h3>Details</h3></a>
+    <a href="#"><h2>Details</h2></a>
   </div>
+</div>
+<div class="small_screen">
+  <h2 class="club__card__header ">Details (tap club to expand)</h2>
 </div>
 
 <div class="club__card__container">
 {% for club in clubs %}
 
-{% set days = club[1] %}
-{% set ygs  = club[2] %}
-{% set staff_member = club[3] %}
-{% set book = club[4] %}
-{% set ext_c = club[5] %}
-{% set club = club[0] %}
+  {% set days = club[1] %}
+  {% set ygs  = club[2] %}
+  {% set staff_member = club[3] %}
+  {% set book = club[4] %}
+  {% set ext_c = club[5] %}
+  {% set club = club[0] %}
 
   <a href="{{url_for('clubs.school_clubs', _anchor='single_card_popup', club_id=club.id)}}" class="club__card">
     <div class="club__card__title club__card__section">
-      <h2>{{club.name}}</h2>
+      <h3>{{club.name}}</h3>
     </div>
     <p  class="club__card__split">
       <span>
@@ -41,10 +46,20 @@
 
       </span><span>{{club.start_time.strftime('%H:%M')}} - {{club.end_time.strftime('%H:%M')}}</span>
      </p>
-    <p class="club__card__split"><span>Starts {{club.start_date.strftime('%d/%m/%Y')}}      </span><span>Last date {{club.end_date.strftime('%d/%m/%Y')}}</span></p>
-    <p></p>
+    <p class="club__card__split medium_up">
+      <span>Starts {{club.start_date.strftime('%d/%m/%Y')}}</span>
+      <span>Last date {{club.end_date.strftime('%d/%m/%Y')}}</span>
+    </p>
+    <p class="club__card__three small_screen">
+      <span>{{club.start_date.strftime('%d/%m/%Y')}} </span>
+      <span>-</span>
+      <span>{{club.end_date.strftime('%d/%m/%Y')}}</span>
+    </p>
     {% if club.photo %}
-      <img src="{{ url_for('static', filename='img/club/'+club.photo)}}" height="200" alt="Club activities photo" class="club__card__photo">
+      <img src="{{ url_for('static', filename='img/club/'+club.photo)}}"
+           height="200"
+           alt="Club activities photo"
+           class="club__card__photo">
     {% endif %}
 
     <div class="club__card__section">
@@ -54,10 +69,7 @@
     <div class="club__card__section club__card__circle-section">
       <span class="club__card__circle__group">
         <h4 class="club__card__subheading">Year Groups</h4>
-        <p class="club__card__circle">
-              {{ygs}}
-
-        </p>
+        <p class="club__card__circle">{{ygs}}</p>
       </span>
       <span class="club__card__circle__group">
         <h4 class="club__card__subheading">Cost</h4>
@@ -97,7 +109,6 @@
 </div>
 {% endif %}
 
-
     {% if staff_member.name %}
       {% set running_the_club = staff_member.name %}
       {% set running_description = staff_member.description %}
@@ -113,12 +124,10 @@
       <h4 class="club__card__subheading ">This club is run by {{running_the_club }}</h4>
       <p>{{running_description}}</p>
     </div>
-
     {% endif %}
 
     <h4 class="club__card__subheading">Club location</h4>
     <p>{{club.location}}</p>
-
 
     {% if book.teacher_name %}
       <p class="club__card__booking">Talk to {{book.teacher_name}} to book</p>
@@ -129,17 +138,11 @@
     {% else %}
       <p class="club__card__booking">Drop in club - no need to book</p>
     {% endif %}
-
   </a>
-
-
 
 {% endfor %}
 </div>
 
 {% include "parent/card.html" %}
 
-<script>
-
-</script>
 {% endblock %}

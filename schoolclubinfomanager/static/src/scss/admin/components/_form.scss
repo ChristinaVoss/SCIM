@@ -5,17 +5,14 @@
 }
 
 .form {
-  //background-color: $color-light;
-  //padding: 2rem 2rem 3rem 2rem;
   z-index: -10;
 
   // LABELS
   &__label {
     color: $color-grey-dark-3;
-    //display: block;
     font-size: 1.2rem;
     font-weight: 700;
-    margin: 0 0 0rem .2rem; //.7rem 0 0rem .2rem
+    margin: 0 0 0rem .2rem;
 
     &--nomargin {
       @extend .form__label;
@@ -27,7 +24,6 @@
   &__input {
     border: solid 1px $color-grey-dark-2;
     border-radius: 0.2rem;
-    //box-shadow: 0 0.1rem 0.6rem rgba(#000, .28);
     color: $color-grey-dark-3;
     font-family: $font-primary;
     font-size: 1.5rem;
@@ -35,11 +31,7 @@
     padding: 1rem 2rem;
     width: 100%;
 
-
-
-    &::placeholder {
-      color: $color-grey-dark-1;
-    }
+    &::placeholder { color: $color-grey-dark-1; }
 
     &--pound {
       position: relative;
@@ -54,9 +46,7 @@
         color: $color-grey-dark-3;
       }
       // input field inside the --pound div
-      input {
-        padding-left: 1.8rem;
-      }
+      input { padding-left: 1.8rem; }
     }
 
     &--number {
@@ -69,7 +59,6 @@
   &__textarea {
     border: solid 1px $color-grey-dark-2;
     border-radius: 0.2rem;
-    //box-shadow: 0 0.1rem 0.6rem rgba(#000, .28);
     font-family: inherit;
     height: 10rem;
     margin: .5rem 0 2rem 0;
@@ -80,8 +69,6 @@
       color: $color-grey-dark-1;
       font-family: $font-primary;
     }
-
-
   }
 
   // DATE AND TIME
@@ -90,16 +77,11 @@
     padding: 1rem 0 1rem 1rem;
     width: 14rem;
     font-size: 1.3rem;
-    color: $color-grey-dark-1; // why aren't they all???
+    color: $color-grey-dark-1;
 
+    &:in-range { color: $color-grey-dark-2; }
 
-    &:in-range {
-      color: $color-grey-dark-2;
-    }
-
-    &:hover {
-      background-color: $color-grey-light-2;
-    }
+    &:hover { background-color: $color-grey-light-2; }
   }
 
   // COLOUR INPUT
@@ -115,18 +97,14 @@
   font-size: 1.5rem;
   border: 1px solid $color-grey-dark-2;
   height: 3.5rem;
-  -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none;
   background: url("../../img/svg/chevron-down-outline.svg") 96% / 2rem no-repeat #fff;
 
-  &:hover {
-    font-weight: 500;
-    background: url("../../img/svg/chevron-down-outline.svg") 96% / 2.2rem no-repeat $color-grey-light-2;
+    &:hover {
+      font-weight: 500;
+      background: url("../../img/svg/chevron-down-outline.svg") 96% / 2.2rem no-repeat $color-grey-light-2;
+    }
   }
-
-  }
-
 
   // FILE input
   &__file {
@@ -138,26 +116,20 @@
       border-radius: 2px;
       color: $color-light;
       font-weight: 500;
-      padding: 1rem 1.2rem 1rem 3.2rem;
+      padding: 1rem 1.3rem 1rem 3.2rem;
       position: relative;
       z-index: 10;
 
-      @media only screen and (max-width: $bp-medium) {
-        //padding: 1rem 1rem 1rem 2.8rem;
+      @media only screen and (max-width: $bp-small) {
+        padding-right: 1.7rem;
       }
 
       &:hover {
         background-color: $color-grey-dark-2;
       }
-
-      //When clicked https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-within
-      &:focus-within {
-        font-weight: 700;
-      }
-
-
     }
-    // is effectively placed behind the label, so that the chosen filename is shown, but the button is hidden
+    // the actual input field is effectively placed behind the label,
+    // so that the chosen filename is shown, but the button is hidden
     &__input {
       position: absolute;
       z-index: 1;
@@ -173,28 +145,20 @@
       position: absolute;
       left: 1rem;
     }
-
-
   }
 
   // CHECKBOX container
   &__checkbox {
-
-
-
     display: grid;
     grid-gap: 2rem;
     margin: 1rem 0;
-
 
     &__group {
       display: grid;
       grid-template-columns: min-content max-content 1fr;
       align-items: center;
       grid-gap: 1rem;
-
     }
-
 
     &__field {
       height: 2rem;
@@ -208,7 +172,6 @@
           color: #fff;
           background-color: $color-primary;
         }
-
       }
     }
 
@@ -223,10 +186,8 @@
         border-radius: 2rem;
         padding: 1rem 2rem;
       }
-
     }
   }
-
 
   // RADIO BUTTON STYLING
   &__radio{
@@ -234,9 +195,6 @@
     height: 2rem;
 
     @media only screen and (max-width: $bp-small) {
-      //opacity: 0;
-      //width: 1px;
-      //margin-left: 0;
 
       &:checked + .form__radio__label{
         color: #fff;
@@ -248,21 +206,14 @@
         border-radius: 2rem;
         padding: 1rem 2rem;
       }
-
     }
   }
 
   // SUBMIT button
-  .btn {
-    width: 100%;
-    //margin-top: 1rem;
-  }
+  .btn { width: 100%; }
 }
 
-.tall {
-  height: 85%;
-  //margin-bottom: 2rem;
-}
+.tall { height: 85%; }
 
 fieldset {
   border: None;

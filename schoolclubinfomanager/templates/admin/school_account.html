@@ -15,30 +15,31 @@
     </span>
   </p>
   <p class="school-account__item">Number of clubs on offer:
-    <span class="school-account__item--value">0</span><!-- UPDATE WITH DYMANIC VALUE WHEN CLUBS EXIST! -->
+    <span class="school-account__item--value">0</span><!-- UPDATE WITH DYNAMIC VALUE WHEN CLUBS EXIST! -->
   </p>
   <p class="school-account__item">School website:
     <span class="school-account__item--value">{{ school.website}}</span>
   </p>
 </div>
   <h3 class="school-account__subheading">Parent side banner</h3>
-  <span class="split_two">
+  <div class="split_two">
     <p class="comment">
       What the banner will look like on the parent side application,
       based on your choices. <br>You can edit this at any time, using the
       edit button at the top of the page.
     </p>
-    <a href="{{url_for('clubs.school_clubs')}}" class="btn">Go to parent app</a>
-  </span>
+    <a href="{{url_for('clubs.school_clubs')}}" class="btn medium_up">Go to parent app</a>
+  </div>
 
   <div class="school-account__banner" style="background-color:{{school.banner_colour}};">
     <p class="school-account__banner__title" style="font-family:{{school.font}};color:{{school.font_colour}};">Clubs for {{school.name}}</p>
 
-    <a href="#" class="school-account__banner__link" style="color:{{school.font_color}};">Return to school website</a>
+    <a href="#" class="school-account__banner__link medium_up" style="color:{{school.font_color}};">Return to school website</a>
     {% if school.logo %}
     <img src="{{ url_for('static', filename='img/'+school.logo)}}" alt="school logo" class="logo--small">
     {% endif %}
   </div>
+  <a href="{{url_for('clubs.school_clubs')}}" class="btn small_screen">Go to parent app</a>
 
 
 </div>

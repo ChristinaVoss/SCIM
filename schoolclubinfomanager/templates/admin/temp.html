@@ -1,19 +1,81 @@
-<p>{{club}}</p><br><br>
+<form class="timetable__small__weekdays"  method="POST">
+  {{ form.hidden_tag()}}
+  {% for day in weekdays %}
+
+    {% set day_id = "day_" + day %}
+
+    <label for="{{'day_'+ day}}" class="timetable__small__weekdays__day" >{{day[0]}}</label>
+
+      {{ form.submit_day(class="hide", value=day, id=day_id)}}
+
+  {% endfor %}
+</form>
 
 
-{% set days = club[1] %}
-{% set ygs  = club[2] %}
-{% set staff_member = club[3] %}
-{% set book = club[4] %}
-{% set ext_c = club[5] %}
-{% set club = club[0] %}
 
-<p>
-  club: {{club}}<br>
-  days: {{days}}<br>
-  ygs: {{ygs}}<br>
-  staff_member: {{staff_member.id}}<br>
-  book: {{book}}<br>
-  ext_c: {{ext_c}}<br><br>
-  ===========================================<br><br>
-</p>
+
+
+<!--from clubs/views.py -->
+
+
+        '''name = form.name.data
+        start_date = form.start_date.data
+        end_date = form.end_date.data
+        start_time = form.start_time.data
+        end_time = form.end_time.data
+        location = form.location.data
+        at_school = form.at_school_premises.data
+        off_school = form.off_school_premises.data
+        days = form.days.data
+        ygs = form.year_groups.data
+        exp = form.experience.data
+        outfit = form.outfit.data
+        equipment = form.equipment.data
+        num_places = form.num_places.data
+        book = form.book.data
+        teacher = form.teacher.data
+        email = form.email.data
+        call = form.call.data
+        is_free = form.is_free.data
+        cost = form.cost.data
+        photo = form.photo.data
+        description = form.description.data
+        new_entry = form.new_entry.data
+        type = form.type_of_staff.data
+        staff_name = form.staff_name.data
+        staff_email = form.staff_email.data
+        staff_description = form.staff_description.data
+        comp_name = form.company_name.data
+        comp_email = form.company_email.data
+        comp_des = form.company_description.data
+        comp_web = form.company_website.data
+        in_system = form.existing_clubrunner.data
+        staff = form.staff.data
+        companies = form.companies.data
+
+        #, name=name,photo=photo, pic=pic,
+        #
+
+        #
+        return render_template('admin/test.html', school=school, name=name, start_date=start_date, end_date=end_date,
+                                                  start_time=start_time, end_time=end_time, at_school=at_school,
+                                                  location=location, off_school=off_school, days=days, exp=exp,
+                                                  outfit=outfit, equipment=equipment, ygs=ygs, num_places=num_places,
+                                                  book=book, teacher=teacher, call=call, email=email, is_free=is_free,
+                                                  cost=cost, photo=photo, description=description, type=type,
+                                                  new_entry=new_entry, staff_description=staff_description,
+                                                  staff_name=staff_name, staff_email=staff_email, comp_web=comp_web,
+                                                  comp_des=comp_des, comp_email=comp_email, comp_name=comp_name,
+                                                  staff=staff, companies=companies, in_system=in_system)
+    return (render_template('admin/club_form.html', form=form, title="Create", school=school, teachers=teachers,
+                                                    emails=emails, phone_numbers=phone_numbers))'''#, today=today, one_year=one_year
+
+
+
+
+                                                        '''if free_boolean == 'free':
+                                                            is_free = True
+                                                            cost = free_boolean#None
+                                                        else:
+                                                            is_free = False
+                                                            cost = form.cost.data'''
