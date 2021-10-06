@@ -20,9 +20,6 @@ def create_club():
     today = datetime.date.today()
     one_year = str(today)
     one_year = one_year[:3] + str(int(one_year[3]) + 1) + one_year[4:]
-    #one_year = ''.join(one_year)
-    #one_year = str(datetime.datetime.now())[:10]
-    #one_year = one_year[:3] + str(int(one_year[3]) + 1) + one_year[4:10]
     teachers = [contact.teacher_name for contact in ContactToBook.query.all()]
     emails = [contact.email for contact in ContactToBook.query.all()]
     phone_numbers = [contact.call for contact in ContactToBook.query.all()]
@@ -32,70 +29,14 @@ def create_club():
 
     if form.validate_on_submit():
 
-
-        '''name = form.name.data
-        start_date = form.start_date.data
-        end_date = form.end_date.data
-        start_time = form.start_time.data
-        end_time = form.end_time.data
-        location = form.location.data
-        at_school = form.at_school_premises.data
-        off_school = form.off_school_premises.data
-        days = form.days.data
-        ygs = form.year_groups.data
-        exp = form.experience.data
-        outfit = form.outfit.data
-        equipment = form.equipment.data
-        num_places = form.num_places.data
-        book = form.book.data
-        teacher = form.teacher.data
-        email = form.email.data
-        call = form.call.data
-        is_free = form.is_free.data
-        cost = form.cost.data
-        photo = form.photo.data
-        description = form.description.data
-        new_entry = form.new_entry.data
-        type = form.type_of_staff.data
-        staff_name = form.staff_name.data
-        staff_email = form.staff_email.data
-        staff_description = form.staff_description.data
-        comp_name = form.company_name.data
-        comp_email = form.company_email.data
-        comp_des = form.company_description.data
-        comp_web = form.company_website.data
-        in_system = form.existing_clubrunner.data
-        staff = form.staff.data
-        companies = form.companies.data
-
-        #, name=name,photo=photo, pic=pic,
-        #
-
-        #
-        return render_template('admin/test.html', school=school, name=name, start_date=start_date, end_date=end_date,
-                                                  start_time=start_time, end_time=end_time, at_school=at_school,
-                                                  location=location, off_school=off_school, days=days, exp=exp,
-                                                  outfit=outfit, equipment=equipment, ygs=ygs, num_places=num_places,
-                                                  book=book, teacher=teacher, call=call, email=email, is_free=is_free,
-                                                  cost=cost, photo=photo, description=description, type=type,
-                                                  new_entry=new_entry, staff_description=staff_description,
-                                                  staff_name=staff_name, staff_email=staff_email, comp_web=comp_web,
-                                                  comp_des=comp_des, comp_email=comp_email, comp_name=comp_name,
-                                                  staff=staff, companies=companies, in_system=in_system)
-    return (render_template('admin/club_form.html', form=form, title="Create", school=school, teachers=teachers,
-                                                    emails=emails, phone_numbers=phone_numbers))'''#, today=today, one_year=one_year
-
         # SAVE PHOTO
         if form.photo.data: #if they actually uploaded a photo
             club_name = form.name.data
             club_name = club_name.replace(' ', '') + '_' + str(datetime.datetime.now().date()) + '_' + str(datetime.datetime.now().time()).replace(':', '-')[-6:]
-
             pic = add_photo(form.photo.data, club_name)
 
         else:
             pic = None
-
-
 
         location = form.location.data
         if location == 'at_school':
@@ -107,18 +48,7 @@ def create_club():
 
         is_free = (form.is_free.data == "free")
         cost = form.cost.data
-
-        '''if free_boolean == 'free':
-            is_free = True
-            cost = free_boolean#None
-        else:
-            is_free = False
-            cost = form.cost.data'''
-
-
         drop_in = form.book.data == 'drop_in'
-
-
         num_places = form.num_places.data
 
         club = Club(name = form.name.data,
@@ -296,17 +226,13 @@ def edit_club(club_id):
     start_t = club.start_time
     end_t = club.end_time
 
-
-    #school = School.query.first()
     if form.validate_on_submit():
 
         # SAVE PHOTO
         if form.photo.data: #if they actually uploaded a photo
             club_name = form.name.data
             club_name = club_name.replace(' ', '') + '_' + str(datetime.datetime.now().date()) + '_' + str(datetime.datetime.now().time()).replace(':', '-')[-6:]
-
             club.photo = add_photo(form.photo.data, club_name) # old picture is still in the system - decide if you want to delete it?
-
 
         location = form.location.data
         if location == 'at_school':
@@ -325,8 +251,6 @@ def edit_club(club_id):
             cost = form.cost.data
 
         drop_in = form.book.data == 'drop_in'
-
-
         num_places = form.num_places.data
 
         club.name = form.name.data
@@ -533,10 +457,6 @@ def edit_club(club_id):
         if club.ext_company_id:
             company = ExternalCompany.query.filter_by(id = club.ext_company_id).first()
             comp = company.name
-
-
-
-
 
     return (render_template('admin/club_form.html', form=form, title="Edit",
                                 school=school, today=start_date, one_year=one_year,
@@ -793,7 +713,6 @@ def school_clubs(club_id=None):
         temp = [day.name for day in popup_days]
         popup_days = Weekday_Sorted_Week(temp)
 
-        #return render_template('parent/cards.html', school=school, clubs=club_info_grouped, popup_club=popup_club, popup_days=popup_days, popup_ygs=popup_ygs, popup_staff_member=popup_staff_member, popup_book=popup_book, popup_ext_c=popup_ext_c)
     else:
         popup_club = None
         popup_days = None
@@ -831,8 +750,7 @@ def school_clubs(club_id=None):
 
             club_info_grouped.append((club, days, ygs, staff_member, book, ext_c))
 
-    #return render_template('parent/cards.html', school=school, clubs=club_info_grouped, popup_club=popup_club, popup_days=popup_days, popup_ygs=popup_ygs, popup_staff_member=popup_staff_member, popup_book=popup_book, popup_ext_c=popup_ext_c)
-    return render_template('parent/cards.html', school=school, clubs=club_info_grouped, popup_club=popup_club, popup_days=popup_days, popup_ygs=popup_ygs, popup_staff_member=popup_staff_member, popup_book=popup_book, popup_ext_c=popup_ext_c)#monday_clubs=monday_clubs, friday_clubs=f_clubs
+    return render_template('parent/cards.html', school=school, clubs=club_info_grouped, popup_club=popup_club, popup_days=popup_days, popup_ygs=popup_ygs, popup_staff_member=popup_staff_member, popup_book=popup_book, popup_ext_c=popup_ext_c)
 
 
 # View all clubs (parent side)
@@ -894,7 +812,6 @@ def timetable(x=None):
         temp = [day.name for day in popup_days]
         popup_days = Weekday_Sorted_Week(temp)
 
-        #return render_template('parent/cards.html', school=school, clubs=club_info_grouped, popup_club=popup_club, popup_days=popup_days, popup_ygs=popup_ygs, popup_staff_member=popup_staff_member, popup_book=popup_book, popup_ext_c=popup_ext_c)
     else:
         popup_club = None
         popup_days = None
@@ -937,7 +854,4 @@ def timetable(x=None):
         after_school = not hours.isdisjoint(range(15,24))
         timeofday[d] = (morning, lunch, after_school)
 
-
-
-    #return render_template('parent/cards.html', school=school, clubs=club_info_grouped, popup_club=popup_club, popup_days=popup_days, popup_ygs=popup_ygs, popup_staff_member=popup_staff_member, popup_book=popup_book, popup_ext_c=popup_ext_c)
-    return render_template('parent/timetable.html', school=school, form=form, popup_club=popup_club, popup_days=popup_days, popup_ygs=popup_ygs, popup_staff_member=popup_staff_member, popup_book=popup_book, popup_ext_c=popup_ext_c, timetable_clubs=timetable_clubs, weekdays=weekdays, weekday=weekday, timeofday=timeofday, today=today)#monday_clubs=monday_clubs, friday_clubs=f_clubs
+    return render_template('parent/timetable.html', school=school, form=form, popup_club=popup_club, popup_days=popup_days, popup_ygs=popup_ygs, popup_staff_member=popup_staff_member, popup_book=popup_book, popup_ext_c=popup_ext_c, timetable_clubs=timetable_clubs, weekdays=weekdays, weekday=weekday, timeofday=timeofday, today=today)

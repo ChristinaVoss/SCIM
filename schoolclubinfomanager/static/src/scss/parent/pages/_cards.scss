@@ -15,18 +15,9 @@
 
     @media only screen and (max-width: $bp-small) {
       margin: 1rem;
-
     }
 
-    &:hover {
-      border: solid 2px $color-secondary;
-      //box-shadow: 0 1rem 3rem rgba(#111, .2);
-
-
-      p, h4 {
-        //font-size: 1.3rem;
-      }
-    }
+    &:hover { border: solid 2px $color-secondary; }
 
     &__header {
       font-size: 2rem;
@@ -100,11 +91,8 @@
         padding-top: .8rem;
       }
 
-      &__group {
-        text-align: center;
-      }
+      &__group { text-align: center; }
     }
-
 
     &__container {
       columns: auto 25rem;
@@ -112,14 +100,10 @@
 
       @media only screen and (max-width: $bp-small) {
         columns: 2 8rem;
-
       }
-
     }
 
-     &__title h2{
-       font-size: 1.8rem;
-     }
+     &__title h2{ font-size: 1.8rem; }
 
      &__section {
        border-bottom: 1px solid $color-grey-dark-1;
@@ -143,8 +127,6 @@
        text-align: center;
        margin: 1rem 0;
 
-
-
      }
      // single card popup
      &__single {
@@ -152,9 +134,7 @@
        text-align: left;
        cursor: default;
 
-       &:hover {
-         border: none;
-       }
+       &:hover { border: none; }
 
        .club__card__circle {
          line-height: normal;
@@ -163,9 +143,7 @@
          font-size: 2.3rem !important;
          padding-top: 1.2rem;
 
-         &-section {
-           margin-top: -1rem;
-         }
+         &-section { margin-top: -1rem; }
 
        }
        .club__card__section {
@@ -177,7 +155,7 @@
          font-size: 1.7rem;
          line-height: 2rem;
        }
-       
+
        h4 { margin: 1rem 0 .5rem 0;}
 
        .club__card__title {
@@ -185,10 +163,7 @@
          justify-content: space-between;
          align-items: center;
 
-         h2 {
-           font-size: 3rem;
-         }
-
+         h2 { font-size: 3rem; }
 
          a {
            font-size: 3rem;
@@ -207,9 +182,4 @@
   }
 }
 
-
-
-
-#single_card_popup {
-  background-color: rgba(200, 200, 200, 0.95);
-}
+#single_card_popup { background-color: rgba(200, 200, 200, 0.95); }

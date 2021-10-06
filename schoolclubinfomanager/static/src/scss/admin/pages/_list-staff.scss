@@ -13,13 +13,10 @@
     a {
       text-decoration: none;
       color: #fff;
-      //font-weight: 700;
     }
   }
 
-  &__left {
-    background-color: $color-primary-dark;
-  }
+  &__left { background-color: $color-primary-dark; }
 }
 .tabs__content { display: none; }
 

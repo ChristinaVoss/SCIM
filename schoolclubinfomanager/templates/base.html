@@ -17,17 +17,21 @@
 
   </head>
   <body>
-    <div class="container"><!-- container holds entire page, used for CSS grid -->
-      <!-- first child of container holds the header -->
+    <!-- "container" holds entire page, used for CSS grid -->
+    <div class="container">
+      <!-- CSS grid first child (holds all header content) -->
       <header class="header small-screen-grid">
       {% if school.name %}
-        <!-- user has finished set up already and given database the school name -->
-        <h1 class="header__title medium_up"><!-- header title for medium screens and bigger -->
+        <!-- user has finished setup before and provided database with the school name -->
+        <!-- header title for medium screens and bigger -->
+        <h1 class="header__title medium_up">
           School Club Information Manager <br>for {{school.name}}
         </h1>
-        <h1 class="header__title--small">SCIM | {{school.name}}</h1><!-- header title for small screens -->
+        <!-- header title for small screens -->
+        <h1 class="header__title--small">SCIM | {{school.name}}</h1>
         {% if current_user.is_authenticated %}
-        <nav class="hamburger"><!-- small screen navigation -->
+        <!-- small screen navigation -->
+        <nav class="hamburger">
           <input type="checkbox" class="hamburger__checkbox" id="hamburger__toggle">
           <label for="hamburger__toggle" class="hamburger__button">
             <span class="hamburger__icon">&nbsp;</span>
@@ -36,37 +40,38 @@
         </nav>
         {% endif %}
       {% else %}
-        <!-- first use of product - it knows nothing about the school - desktop only (product is being setup/installed) -->
+        <!-- first use of product - it knows nothing about the school
+             - desktop only (product is being setup/installed) -->
         <h1 class="header__title">
           Welcome to the <br>School Club information Manager
         </h1>
       {% endif %}
 
       {% if current_user.is_authenticated %}
+       <!-- user is logged in, provide logout link -->
         <a href="{{ url_for('users.logout')}}" class="header__link link medium_up">Log out</a>
       {% endif %}
     </header>
-    <!-- second child of container (holds sidebar or user_authentication) depending on whether user is logged in-->
+    <!-- CSS grid second child (holds either sidebar or user_authentication) -->
       {% if current_user.is_authenticated %}
-      <!-- user is logged in -->
+        <!-- user is logged in, show large screen navigation -->
         {% include "admin/navigation.html" %}
-
       {% else %}
+      <!-- user needs to log in, show authentication -->
         <div class="user_authentication">
-
           {% block authentication %}
           {% endblock %}
         </div>
       {% endif %}
-      <!-- third child of container holds main content-->
+      <!-- CSS grid third child (holds main content)-->
       <main class="main-content">
         <p id="test_current"></p>
         {% block content %}
-          <!-- page specific content goes here -->
+          <!-- all page specific content goes here -->
         {% endblock %}
       </main>
+      <!-- CSS grid fourth child (holds the footer)-->
       {% include "admin/footer.html" %}
     </div>
-
   </body>
 </html>

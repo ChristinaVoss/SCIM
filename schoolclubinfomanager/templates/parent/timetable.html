@@ -1,7 +1,5 @@
 {% extends "parent/base.html" %}
-
 {% block parent_content %}
-
 
 {% set times = ["Morning", "Lunch", "After school"] %}
 <div class="small_screen">
@@ -9,7 +7,7 @@
 
     <div class="timetable__small__weekdays">
       {% for day in weekdays %}
-        <a {% if (not weekday and day == today.strftime('%A')) or day == weekday %} id="current_day" {% endif %} class="timetable__small__weekdays__day" href="{{url_for('clubs.timetable', x=day)}}">{{day[0]}}</a>
+        <a {% if (not weekday and day == today.strftime('%A')) or day == weekday %} id="current_day" {% endif %} title="{{day}}" class="timetable__small__weekdays__day" href="{{url_for('clubs.timetable', x=day)}}">{{day[0]}}</a>
       {% endfor %}
     </div>
     {% if not weekday %} {% set weekday = today.strftime('%A') %}{% endif %}
@@ -63,43 +61,46 @@
       <p class="timetable__small__noclubs">There are no clubs running on {{weekday}}s</p>
     {% endif %}
 
-
-
-
-
-
-
 </div>
-<table class="table table__timetable medium_up">
+<table class="table table__timetable medium_up"
+       summary="Timetable showing what clubs are on what days.
+                Top row holds an empty header and two header tabs,
+                the first is the title to this page (timetable),
+                the second hold a link to a page with more detailed information
+                about each club. The second row lists weekdays. To find which
+                clubs are on a specific day, choose a weekday and read down
+                that column. The leftmost column on row 3 to 5 holds the headers
+                that divides clubs into Morning, Lunch and After School.">
   <tr class="table__timetable__tabs" >
-    <th class="table__header--empty"></th>
+    <td class="table__header--empty"></td>
     {% set num_days = weekdays|length %}
     {% if num_days % 2 == 0 %}
       {% set tab1, tab2 = num_days/2, num_days/2 %}
     {% else %}
       {% set tab1, tab2 = num_days/2, ((num_days/2)+1) %}
     {% endif %}
-    <th class="table__timetable__tabs__current medium_up" colspan="{{tab1}}" style="background-color:{{school.banner_colour}};">Timetable</th>
-    <th class="table__timetable__tabs__other medium_up" colspan="{{tab2}}" >
+    <td class="table__timetable__tabs__current medium_up" colspan="{{tab1}}" style="background-color:{{school.banner_colour}};">Timetable</td>
+    <td class="table__timetable__tabs__other medium_up" colspan="{{tab2}}" >
       <a href="{{url_for('clubs.school_clubs')}}" style="color:{{school.banner_colour}};">
         Details
       </a>
-    </th>
+    </td>
   </tr>
 
   <tr class="table__row">
-    <th class="table__header--empty"></th>
+    <td class="table__header--empty"></td>
     {% for d in weekdays %}
-      <th class="table__header" style="background-color:{{school.banner_colour}};">{{ d }}</th>
+      <th scope="col" id="{{d}}" class="table__header" style="background-color:{{school.banner_colour}};">{{ d }}</th>
     {% endfor %}
   </tr>
 
 {% for time in times %}
-  <tr class="table__row">
-    <th class="table__header--side">{{time}}</th>
-    {% for wd in weekdays %}
 
-    <td class="table__cell">
+  <tr class="table__row">
+    <th scope="row" id="{{time}}" class="table__header--side">{{time}}</th>
+    {% for wd in weekdays %}
+      <td class="table__cell" headers="{{wd}} {{time}}">
+
       {% for club in timetable_clubs[wd] %}
         {% if time == "Morning" %}
           {% set min_hour, max_hour = 6, 9 %}
@@ -110,7 +111,7 @@
         {% endif %}
 
         {% if (club[0].start_time.hour >= min_hour) and (club[0].start_time.hour < max_hour) %}
-        <a href="{{url_for('clubs.timetable', _anchor='single_card_popup', club_id=club[0].id)}}" class="c lub__card">
+        <a href="{{url_for('clubs.timetable', _anchor='single_card_popup', club_id=club[0].id)}}">
           <div class="table__timetable__card">
             <div class="table__timetable__times">
               <p>{{club[0].start_time.strftime("%H:%M")}}</p>
