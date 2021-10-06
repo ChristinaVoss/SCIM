@@ -23,8 +23,6 @@ $bp-medium: 51.56em; //825px
 $bp-small: 41.56em; //665px
 $bp-tiny: 32.81em; //525px
 
-
-
 *,
 *::before,
 *::after {
@@ -43,19 +41,5 @@ html {
 
   @media (orientation: portrait) {
     transform: rotateZ(1turn);
-  }
-
-
-}
-
-@media screen and (min-width: 320px) and (max-width: 767px) and (orientation: landscape) {
-  html {
-    //transform: rotate(-90deg);
-    //transform-origin: left top;
-    //width: 100vh;
-    //overflow-x: hidden;
-    //position: absolute;
-    //top: 100%;
-    //left: 0;
   }
 }

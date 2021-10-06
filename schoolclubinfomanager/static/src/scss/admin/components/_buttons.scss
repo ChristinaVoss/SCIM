@@ -1,6 +1,5 @@
 .btn {
 
-
   &,
   &:link,
   &:visited {
@@ -17,9 +16,7 @@
     text-transform: uppercase;
   }
 
-  &:hover {
-    font-weight: 700;
-  }
+  &:hover { font-weight: 700; }
 
   &--outline {
     @extend .btn;
@@ -47,8 +44,6 @@
     font-size: 1rem;
     padding: .3rem 1.1rem;
 
-
-
     &:hover {
       background-color: orangered;
       color: white;
@@ -61,8 +56,6 @@
     width: auto !important;
     float: right;
   }
-
-
 
   &--back {
     @extend .btn;
@@ -82,7 +75,6 @@
     background-color: $color-grey-dark-2;
     margin-top: 0;
     padding: .9rem 2rem;
-    //height: 3rem;
   }
 }
 
@@ -90,14 +82,9 @@
   text-decoration: none;
   font-size: 1.6rem;
   border-bottom: solid 1px;
-  //padding-bottom: .2rem;
 
   &:hover {
     font-size: 1.5rem;
     font-weight: 400;
-  }
-
-  &-small {
-
   }
 }

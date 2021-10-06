@@ -3,8 +3,7 @@
   &__form { margin-top: 3rem;}
 
   &__back-next {
-    display: grid;
-    grid-template-columns: repeat(2, min-content);
+    display: flex;
     justify-content: space-between;
   }
 
@@ -17,8 +16,7 @@
   .btn { width:auto; }
 
   &__col-align {
-    display: grid;
-    grid-template-columns: repeat(3, min-content);
+    display: flex;
     align-items: stretch;
 
     &__name {
@@ -102,32 +100,18 @@
   .setup__col-align {
     align-items: center;
 
-    &__name {
-      height: 3rem;
-    }
+    &__name { height: 3rem; }
   }
 
-  .btn--col-input {
-    height: 3rem;
-  }
+  .btn--col-input { height: 3rem; }
 }
 
 @supports (-moz-appearance:none) {
   .setup__col-align {
     align-items: stretch;
 
-    &__name {
-      height: auto;
-    }
+    &__name { height: auto; }
   }
 
-  .btn--col-input {
-    height: auto;
-  }
-
-}
-
-/* Style only for Internet Explorer */
-@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-
+  .btn--col-input { height: auto; }
 }

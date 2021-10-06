@@ -92,6 +92,10 @@
             <legend class="comment no-margin">What time will the club be on?</legend>
             <span class="club__form__grid__split-column">
               <div>
+                <dl>
+                 {{ check_field(form.start_time, class="form__date-and-time", id="start_time", type="time", value=start_t, min="06:00", max="23:00") }}
+               </dl>
+               <!--
                 {{ form.start_time.label(class="form__label") }}<br>
                 <input type="time" name="start_time" id="start_time"
                        {% if club %} value="{{start_t}}"
@@ -106,7 +110,11 @@
                        oninput="this.setCustomValidity('')"> <!--  -->
               </div>
               <div>
-                {{ form.end_time.label(class="form__label") }}<br>
+
+                <dl>
+                 {{ check_field(form.end_time, class="form__date-and-time", id="end_time", type="time", value=end_t) }}
+               </dl>
+                <!-- {{ form.end_time.label(class="form__label") }}<br>
                 <input type="time" name="end_time" id="end_time"
                        {% if club %} value="{{end_t}}"
                        {% endif %}
@@ -117,8 +125,8 @@
                        onchange="dateTimeEndValidation('start_time', 'end_time')"
 
                        oninvalid="this.setCustomValidity('Enter an end time for the club - it must be later than the start time.')"
-                       oninput="this.setCustomValidity('')"> <!--  -->
-              </div>
+                       oninput="this.setCustomValidity('')">
+              </div> -->
             </span>
           </fieldset>
 

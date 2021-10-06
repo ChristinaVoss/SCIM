@@ -9,7 +9,6 @@ html {
     grid-template-columns: [left-margin-start] minmax(0, 1fr) [left-margin-end main-start] minmax(40rem, 80%)
                            [main-end right-margin-start] minmax(0, 1fr)[right-margin-end];
 
-
     background-color: $color-grey-light-2;
 
     @media only screen and (max-width: $bp-small) {
@@ -63,7 +62,6 @@ html {
   &__footer {
     grid-column: left-margin-start / right-margin-end;
     grid-row: footer-start / footer-end;
-
     font-size: 1.2rem;
     padding: 1.2rem 4rem;
     height: 4rem;
@@ -74,8 +72,6 @@ html {
       justify-content: space-between;
       align-items: center;
       font-size: 1.4rem;
-
-
     }
 
     &__links {
@@ -89,14 +85,10 @@ html {
     &__link {
       color: inherit;
 
-      &:hover {
-        font-weight: 400;
-
-      }
+      &:hover { font-weight: 400; }
     }
   }
 }
-
 
 .filter-menu {
   &--small {
@@ -113,12 +105,8 @@ html {
       align-items: center;
       color: inherit;
 
-      ion-icon {
-        font-size: 3rem;
-      }
+      ion-icon { font-size: 3rem; }
     }
-
-
   }
 }
 

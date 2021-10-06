@@ -1,13 +1,3 @@
-.staffmember {
-  &__details,
-  &__form,
-  &__table,
-  &__delete-staff {
-    //margin-top: 2rem;
-  }
-
-}
-
 .staff-or-comp__delete {
   display: grid;
   grid-template-columns: repeat(2, minmax(min-content, 1fr));

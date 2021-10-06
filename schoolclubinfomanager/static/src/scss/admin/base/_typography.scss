@@ -11,7 +11,6 @@ p {
 h2 {
   font-size: 3rem;
   font-weight: 400;
-  //margin-bottom: 2rem;
 }
 
 h3 {
@@ -19,9 +18,8 @@ h3 {
   font-weight: 400;
   margin-bottom: .5rem;
 }
-a:link {
-  text-decoration: none;
-}
+
+a:link { text-decoration: none; }
 
 .link {
   color: $color-grey-dark-3;
@@ -58,8 +56,6 @@ a:link {
         color: $color-light;
         font-size: 2rem;
         padding: 1rem;
-        
-
       }
     }
   }
