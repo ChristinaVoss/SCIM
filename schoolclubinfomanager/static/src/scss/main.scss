@@ -2,13 +2,22 @@
 @import "admin/base/layout";
 @import "admin/base/typography";
 
-
 @import "admin/components/buttons";
 @import "admin/components/form";
 @import "admin/components/navigation";
 @import "admin/components/popup";
 @import "admin/components/table";
 
+@import "admin/pages/club";
+@import "admin/pages/club-form";
+@import "admin/pages/list-clubs";
+@import "admin/pages/list-staff";
 @import "admin/pages/list-users";
 @import "admin/pages/school-account";
 @import "admin/pages/school_details_step2";
+@import "admin/pages/staffmember";
+
+@import "parent/base/base";
+
+@import "parent/pages/cards";
+@import "parent/pages/timetable";

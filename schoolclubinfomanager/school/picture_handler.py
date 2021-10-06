@@ -13,5 +13,4 @@ def add_logo(pic_upload, school_name):
     #open image supplied by user and save it
     pic = Image.open(pic_upload)
     pic.save(filepath)
-
     return storage_filename

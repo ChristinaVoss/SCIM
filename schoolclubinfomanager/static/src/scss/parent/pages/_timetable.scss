@@ -1,0 +1,186 @@
+.table__timetable {
+  margin: 8rem 0;
+
+  &__tabs {
+    font-size: 2rem;
+    text-transform: uppercase;
+
+    &__current,
+    &__other { font-weight: 700; }
+
+    &__current {
+      color: #fff;
+      padding: 1rem;
+      border-radius: 1rem 1rem 0 0;
+    }
+
+    &__other {
+      padding: 1rem;
+      border-radius: 1rem 1rem 0 0;
+      background-color: $color-grey-dark-1 !important;
+
+      &:hover { background-color: $color-secondary; }
+
+      a {
+        display: block;
+
+        &:hover { font-size: 2.3rem; }
+      }
+    }
+  }
+
+  tr,
+  tr:nth-child(even) {
+    &:hover { background-color: $color-grey-light-1; }
+  }
+
+  td {
+    vertical-align: top;
+    background-color: #fff;
+  }
+
+  h4 { color: $color-grey-dark-3; }
+
+  &__card {
+    padding: .5rem;
+    border: 1px solid $color-grey-dark-1;
+    background-color: #fff;
+    border-radius: .5rem;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+
+    display: grid;
+    grid-template-columns: min-content 1fr;
+
+    @media only screen and (min-width: $bp-small) and (max-width: $bp-xlarge) {
+      // wider card, only use on large screens and full-width small screens
+      display: block;
+    }
+
+    &:hover { border: 2px solid $color-secondary; }
+  }
+
+  .table__header {
+    text-align: center;
+
+    &:first-child { max-width: 2rem; }
+
+    &--side {
+      border-radius: 0 1rem 1rem 0;
+      background-color: $color-secondary;
+      text-transform: uppercase;
+    }
+
+    &--empty { background-color: $color-grey-light-2; }
+  }
+
+  p { font-size: inherit; }
+
+  &__times {
+    text-align: center;
+    margin-right: .7rem;
+    align-self: center;
+    font-weight: 400;
+
+    @media only screen and (min-width: $bp-small) and (max-width: $bp-xlarge) {
+      // wider card, only use on large screens and full-width small screens
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  &__main-content {
+    padding-left: .7rem;
+    border-left: 2px solid $color-secondary;
+
+    @media only screen and (min-width: $bp-small) and (max-width: $bp-xlarge) {
+      // wider card, only use on large screens and full-width small screens
+      padding-left: 0;
+      border-left: None;
+    }
+  }
+
+  &__split {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  &__places {
+    background-color: $color-grey-dark-2;
+    color: #fff !important;
+    font-weight: 400;
+    border-radius: 1rem;
+    padding: .2rem .7rem;
+    margin: .5rem;
+    margin-left: 0;
+  }
+
+  &__cost { padding-bottom: .4rem; }
+}
+
+.timetable__small {
+  &__weekdays {
+    margin: 4rem 1rem 2rem 1rem;
+    display: flex;
+    justify-content: space-between;
+
+    &__day {
+      font-size: 2rem;
+      font-weight: 400;
+      color: inherit;
+      background-color: $color-grey-dark-1;
+      height: 5rem;
+      width: 5rem;
+      border-radius: 50%;
+      text-align: center;
+      padding-top: 1.2rem;
+    }
+  }
+
+  &__card {
+    p,h4 {
+      font-size: 1.6rem;
+      color: $color-grey-dark-2;
+    }
+  }
+
+  &__places { padding: .3rem .8rem; }
+
+  &__timeofday {
+    display: block;
+    width: 100%;
+    background-color: $color-secondary;
+    color: #fff;
+    font-weight: 400;
+    text-transform: uppercase;
+    padding: .5rem 0 .5rem 2rem;
+    border-radius: 4px 4px 0 0;
+  }
+
+  &__noclubs {
+    font-size: 2rem;
+    margin: 1rem 0 2rem 1.3rem;
+    font-weight: 700;
+    color: darken($color-grey-dark-3, 2);
+  }
+}
+
+#current_day {
+  background-color: $color-secondary;
+  color: #fff;
+  font-weight: 700;
+}
+
+#small-timetable {
+  @media only screen and (max-width: $bp-xlarge) {
+    grid-template-columns: [left-margin-start] minmax(0, 1fr) [left-margin-end main-start] minmax(40rem, 95%)
+                           [main-end right-margin-start] minmax(0, 1fr)[right-margin-end];
+  }
+
+  @media only screen and (max-width: $bp-small) {
+    background-color: #fff;
+  }
+}

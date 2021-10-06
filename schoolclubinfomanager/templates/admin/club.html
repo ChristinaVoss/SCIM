@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="club-overview">
+  <div class="club-overview__header">
+    <h2>{{club.name}}</h2>
+  </div>
+  <p>
+    {% for day in days %}
+      {{day.name}},
+    {% endfor %} from {{club.start_date.strftime('%d/%m/%Y')}} to {{club.end_date.strftime('%d/%m/%Y')}}
+   </p>
+  <p>{{club.start_time.strftime('%H:%M')}} - {{club.end_time.strftime('%H:%M')}}  {{club.location}}</p>
+  <p></p>
+  {% if club.photo %}
+    <img src="{{ url_for('static', filename='img/club/'+club.photo)}}" height="200" alt="Club activities photo" class="photo--medium">
+  {% endif %}
+
+
+  <h4>Description of club activities</h4>
+  <p>{{club.description}}</p>
+
+  <h4>Year Groups</h4>
+  <p>{%for yg in ygs%}
+      {% if loop.last %}
+        {{yg.name}}
+      {% else %}
+       {{yg.name}},
+      {% endif %}
+     {% endfor %}
+  </p>
+
+  <h4>Cost</h4>
+  {% if club.cost %}
+    <p>{{club.cost}}</p>
+  {% else %}
+    <p>Free</p>
+  {% endif %}
+
+  <h4>Spaces left</h4>
+  <p>{{club.num_of_places}}</p>
+
+  {% if club.equipment %}
+    <h4>Please bring</h4>
+    <p>{{club.equipment}}</p>
+  {% endif %}
+
+  {% if club.outfit %}
+    <h4>Please wear</h4>
+    <p>{{club.outfit}}</p>
+  {% endif %}
+
+  {% if club.experience %}
+    <h4>Experience level</h4>
+    <p>{{club.experience}}</p>
+  {% endif %}
+
+  {% if staff_member.name %}
+    {% set running_the_club = staff_member.name %}
+    {% set running_description = staff_member.description %}
+  {% else  %}
+    {% set running_the_club = ext_c.name %}
+    {% set running_description = ext_c.description %}
+  {% endif %}
+
+  <h4>This club is run by {{running_the_club }}</h4>
+  <p>{{running_description}}</p>
+
+  {% if book.teacher_name %}
+    <p>To book a place, contact: {{book.teacher_name}}</p>
+  {% elif book.email  %}
+    <p>To book a place, contact: {{book.email}}</p>
+  {% elif book.call %}
+    <p>To book a place, contact: {{book.call}}</p>
+  {% endif %}
+  <div class="club-overview__buttons">
+    <a href="{{ url_for('clubs.club', _anchor='popupclub', club_id=club.id)}}" class="btn--delete">
+      delete club
+    </a>
+    <a href="{{ url_for('clubs.edit_club', club_id=club.id)}}" class="btn">
+      edit details
+    </a>
+  </div>
+
+
+
+  <div class="popup" id="popupclub">
+    <div class="popup__container">
+      <p>Are you sure you want to delete the club:</p>
+      {% if club %}
+      <p>{{club.id}}. {{club.name}}?</p>
+      {% endif %}
+      <p>This action cannot be undone once completed</p>
+
+      <form method="POST" class="form">
+        {{ form.hidden_tag() }}<!-- to make sure we can accept the form -->
+        {{ form.delete(class="btn--delete") }}
+       <a href="{{ url_for('clubs.club', club_id=club.id)}}" class="btn">Cancel</a>
+
+      </form>
+    </div>
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

@@ -2,30 +2,38 @@
   border-collapse: collapse;
   font-size: 1.5rem;
   text-align: left;
+  width: 100%;
+
+  @media only screen and (max-width: $bp-small) {
+    font-size: 1.3rem;
+  }
 
   &__header {
     padding: 1rem;
-
-    background-color: $color-secondary;
+    background-color: $color-primary-dark;
     color: white;
 
+    &--side {
+      background-color: $color-primary-dark;
+      color: white;
+      transform: rotate(180deg);
+      writing-mode: vertical-rl;
+      text-align: center;
+      padding: 1rem;
+    }
   }
 
   &__cell {
     border: solid 1px $color-grey-light-2;
     font-weight: 400;
     padding: 1rem;
-
   }
   &__row {
-
     &:nth-child(even) {
       background-color: $color-grey-light-1;
     }
 
-    &:hover {
-      background-color: $color-grey-dark-1;
-    }
+    &:last-child { border-radius: 0 0 2px 2px; }
+    &:hover { background-color: $color-grey-dark-1; }
   }
-
 }

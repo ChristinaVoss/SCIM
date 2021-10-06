@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Clubs</h2>
+
+<p class="comment">Note on status labels<br>
+- Running: Club will be open this weekly<br>
+- Cancelled: Club is cancelled this week (but is normally running)<br>
+- Holiday (off): Club not running during holiday
+</p>
+<p class="comment">Updating the status will immediately update (publish)
+  the status to the parent view cards. You can only update the status of
+  published clubs. Click on any club name to open details, edit or delete.
+</p>
+<table class="table">
+  <tr class="table__row">
+    <th class="table__header">Club status this current week</th>
+    <th class="table__header">Club id and name</th>
+    <th class="table__header">Publish?</th>
+  </tr>
+  {% for club in clubs %}
+  <tr class="table__row">
+    <td class="table__cell">
+      <span class="list-clubs--small">
+      <a href="#" class="btn--disabled">Running</a><!-- should each button be a single submit form or a set of radio buttons (how to submit?)-->
+      <a href="#" class="btn--disabled">Cancelled</a>
+      <a href="#" class="btn--disabled">Holiday (off)</a>
+      </span>
+    </td>
+    <td class="table__cell">
+      <a href="{{url_for('clubs.club', club_id=club.id)}}" class="list-clubs__name">
+        {{club.id}}. {{club.name}}
+      </a>
+    </td>
+    <td class="table__cell">
+      <form method="POST">
+        {% if club.published %}
+
+          <div class="list-clubs__submit">
+          <label for="unpublish" class="btn--outline list-clubs__submit--top">
+            Unpublish
+          </label>
+          <!-- label holds the visible button, with meaningful label, as the actual
+          submit button needs to send back id as its value, which isn't very helpful as label-->
+            {{ form.hidden_tag()}}
+            {{ form.publish(class="list-clubs__submit--bottom", value=club.id)}}<!-- id="unpublish",  -> id always the same - add value to id?-->
+          </div>
+
+        {% else %}
+
+          <div class="list-clubs__submit">
+            <label for="publish" class="btn list-clubs__submit--top" >Publish</label>
+              {{ form.hidden_tag()}}
+              {{ form.publish(class="list-clubs__submit--bottom", value=club.id)}}<!-- id="publish",  -->
+          </div>
+
+        {% endif %}
+      </form>
+    </td>
+
+
+  </tr>
+  {% endfor %}
+
+
+</table>
+<!--
+<div class="list-clubs__header">
+  <p class="list-clubs__header--status">Club status this current week</p>
+  <p class="list-clubs__header--clubname">Club id and name</p>
+  <p class="list-clubs__header--publish">Publish?</p>
+</div>
+{% for club in clubs %}
+<div class="list-clubs">
+  <span class="list-clubs--small">
+  <a href="#" class="btn--disabled">Running</a><!-- should each button be a single submit form or a set of radio buttons (how to submit?)-->
+  <!--<a href="#" class="btn--disabled">Cancelled</a>
+  <a href="#" class="btn--disabled">Holiday (off)</a>
+  </span>
+  <a href="{{url_for('clubs.club', club_id=club.id)}}" class="list-clubs__name">
+    {{club.id}}. {{club.name}}
+  </a>
+  <form method="POST">
+    {% if club.published %}
+
+      <div class="list-clubs__submit">
+      <label for="unpublish" class="btn--outline list-clubs__submit--top">
+        Unpublish
+      </label>
+      <!-- label holds the visible button, with meaningful label, as the actual
+      submit button needs to send back id as its value, which isn't very helpful as label-->
+        <!--{{ form.hidden_tag()}}
+        {{ form.publish(class="list-clubs__submit--bottom", value=club.id)}}<!-- id="unpublish",  -> id always the same - add value to id?-->
+      <!--</div>
+
+    {% else %}
+
+      <div class="list-clubs__submit">
+        <label for="publish" class="btn list-clubs__submit--top" >Publish</label>
+          {{ form.hidden_tag()}}
+          {{ form.publish(class="list-clubs__submit--bottom", value=club.id)}}<!-- id="publish",  -->
+      <!--</div>
+
+    {% endif %}
+  </form>
+</div>
+{% endfor %}-->
+
+{% endblock %}

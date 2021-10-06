@@ -1,0 +1,52 @@
+.list-clubs {
+  display: grid;
+  grid-template-columns: repeat(3, max-content) minmax(max-content, 1fr) max-content;
+  grid-gap: .5rem;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid $color-grey-dark-1;
+
+  &--small > *{
+    @media only screen and (max-width: $bp-small) {
+      display: block;
+      margin-bottom: 1rem;
+    }
+  }
+
+  &__header {
+    background-color: $color-secondary;
+    color: #fff;
+    font-weight: 500;
+    display: grid;
+    grid-template-columns: 52% 1fr 10%;
+    padding: 1rem;
+  }
+
+  &__name {
+    text-decoration: none;
+    @extend h3;
+    color: #222;
+  }
+
+  &__submit {
+    overflow: hidden;
+    display: grid;
+
+    &--top {
+      grid-row: 1/2;
+      grid-column: 1/2;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    &--bottom {
+      grid-row: 1/2;
+      grid-column: 1/2;
+      padding: .8rem 0rem;
+      width: 90%;
+      border-radius: 4px;
+      opacity: 1%;
+      overflow: hidden;
+    }
+  }
+}

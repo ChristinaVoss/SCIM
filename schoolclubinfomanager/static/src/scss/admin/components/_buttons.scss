@@ -1,6 +1,5 @@
 .btn {
 
-
   &,
   &:link,
   &:visited {
@@ -12,12 +11,29 @@
     font-size: 1.2rem;
     font-weight: 400;
     padding: 1rem 2rem;
+    text-align: center;
     text-decoration: none;
     text-transform: uppercase;
   }
 
-  &:hover {
-    font-weight: 700;
+  &:hover { font-weight: 700; }
+
+  &--outline {
+    @extend .btn;
+    background-color: inherit;
+    border: 1px solid $color-primary-dark;
+    color: $color-primary-dark;
+    padding: 1rem;
+  }
+  &--disabled {
+    @extend .btn;
+    background-color: $color-grey-light-2;
+    color: $color-grey-dark-1;
+  }
+
+  &--fullwidth {
+    @extend .btn;
+    width: 100%;
   }
 
   &--delete {
@@ -26,7 +42,7 @@
     border: solid 1px orangered;
     color: orangered;
     font-size: 1rem;
-    padding: .2rem 1.1rem;
+    padding: .3rem 1.1rem;
 
     &:hover {
       background-color: orangered;
@@ -34,6 +50,11 @@
       font-weight: 500;
       padding: .2rem .8rem;
     }
+  }
+
+  &--right {
+    width: auto !important;
+    float: right;
   }
 
   &--back {
@@ -61,14 +82,9 @@
   text-decoration: none;
   font-size: 1.6rem;
   border-bottom: solid 1px;
-  //padding-bottom: .2rem;
 
   &:hover {
     font-size: 1.5rem;
     font-weight: 400;
-  }
-
-  &-small {
-
   }
 }

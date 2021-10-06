@@ -1,0 +1,117 @@
+{% if popup_club %}
+<div class="popup" id="single_card_popup">
+  <div class="popup__container club__card club__card__single">
+    <div class="club__card__title club__card__section">
+
+      {% set club = popup_club %}
+      {% set days = popup_days %}
+      {% set ygs  = popup_ygs %}
+      {% set staff_member = popup_staff_member %}
+      {% set book = popup_book %}
+      {% set ext_c = popup_ext_c %}
+
+      <h2>{{club.name}}</h2>
+      <a class="club__card__single__close" {% if request.path == '/timetable/'+club.id|string %}href="{{url_for('clubs.timetable')}}" {% else %} href="{{url_for('clubs.school_clubs')}}" {% endif %}>
+        &#215;
+      </a>
+    </div>
+    <p  class="club__card__split">
+      <span>
+        {% if days|length > 1 %}
+          {% for day in days %}
+            {% if loop.last %}
+              {{day}}
+            {% else %}
+              {{day}},
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          {{days[0]}}
+        {% endif %}
+      </span><span>{{club.start_time.strftime('%H:%M')}} - {{club.end_time.strftime('%H:%M')}}</span>
+     </p>
+    <p class="club__card__split"><span>Starts {{club.start_date.strftime('%d/%m/%Y')}}      </span><span>Last date {{club.end_date.strftime('%d/%m/%Y')}}</span></p>
+    <p></p>
+    {% if club.photo %}
+      <img src="{{ url_for('static', filename='img/club/'+club.photo)}}" height="200" alt="Club activities photo" class="club__card__photo">
+    {% endif %}
+    <div class="club__card__section">
+      <h4 class="club__card__subheading">Description of club activities</h4>
+      <p>{{club.description}}</p>
+    </div>
+    <div class="club__card__section club__card__circle-section">
+      <span class="club__card__circle__group">
+        <h4 class="club__card__subheading">Year Groups</h4>
+        <p class="club__card__circle">{{ygs}}</p>
+      </span>
+      <span class="club__card__circle__group">
+        <h4 class="club__card__subheading">Cost</h4>
+        {% if club.cost %}
+          <p class="club__card__circle">£{{club.cost}}</p>
+        {% else %}
+          <p class="club__card__circle">Free</p>
+        {% endif %}
+      </span>
+      <span class="club__card__circle__group">
+        <h4 class="club__card__subheading">Spaces left</h4>
+        <p class="club__card__circle">{{club.num_of_places}}</p>
+      </span>
+    </div>
+
+{% if club.equipment or club.outfit or club.experience %}
+<div class="club__card__section club__card__split">
+  {% if club.equipment or club.outfit %}
+  <span>
+    {% if club.equipment %}
+      <h4 class="club__card__subheading">Please bring</h4>
+      <p>{{club.equipment}}</p>
+    {% endif %}
+
+    {% if club.outfit %}
+      <h4 class="club__card__subheading">Please wear</h4>
+      <p>{{club.outfit}}</p>
+    {% endif %}
+  </span>
+  {% endif %}
+  <span>
+    {% if club.experience %}
+      <h4 class="club__card__subheading">Experience level</h4>
+      <p>{{club.experience}}</p>
+    {% endif %}
+  </span>
+</div>
+{% endif %}
+
+    {% if staff_member.name %}
+      {% set running_the_club = staff_member.name %}
+      {% set running_description = staff_member.description %}
+    {% else  %}
+    {% if ext_c %}
+      {% set running_the_club = ext_c.name %}
+      {% set running_description = ext_c.description %}
+      {% endif %}
+    {% endif %}
+
+    {% if staff_member or ext_c %}
+    <div class="club__card__section">
+      <h4 class="club__card__subheading ">This club is run by {{running_the_club }}</h4>
+      <p>{{running_description}}</p>
+    </div>
+    {% endif %}
+
+    <h4 class="club__card__subheading">Club location</h4>
+    <p>{{club.location}}</p>
+
+    {% if book.teacher_name %}
+      <p class="club__card__booking">Talk to {{book.teacher_name}} to book</p>
+    {% elif book.email  %}
+      <p class="club__card__booking">To book email: {{book.email}}</p>
+    {% elif book.call %}
+      <p class="club__card__booking">To book call: {{book.call}}</p>
+    {% else %}
+      <p class="club__card__booking">Drop in club - no need to book</p>
+    {% endif %}
+  </div>
+</div>
+
+{% endif %}

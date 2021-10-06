@@ -11,17 +11,17 @@ from schoolclubinfomanager.models import School
 # checkbox or dropdown options in forms
 YEAR_GROUPS = [('nu', 'Nursery'),
          ('re', 'Reception'),
-         ('y1', 'Year group 1'),
-         ('y2', 'Year group 2'),
-         ('y3', 'Year group 3'),
-         ('y4', 'Year group 4'),
-         ('y5', 'Year group 5'),
-         ('y6', 'Year group 6'),
-         ('y7', 'Year group 7'),
-         ('y8', 'Year group 8'),
-         ('y9', 'Year group 9'),
-         ('y10', 'Year group 10'),
-         ('y11', 'Year group 11')]
+         ('1', 'Year group 1'),
+         ('2', 'Year group 2'),
+         ('3', 'Year group 3'),
+         ('4', 'Year group 4'),
+         ('5', 'Year group 5'),
+         ('6', 'Year group 6'),
+         ('7', 'Year group 7'),
+         ('8', 'Year group 8'),
+         ('9', 'Year group 9'),
+         ('10', 'Year group 10'),
+         ('11', 'Year group 11')]
 
 FONTS = [('Arial', 'Arial'),
          ('Baskerville', 'Baskerville'),

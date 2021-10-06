@@ -11,6 +11,10 @@
   pointer-events: none;
   padding: 25rem 33vw;
 
+  @media only screen and (max-width: $bp-small) {
+    padding: 6rem 10vw;
+  }
+
   &__container {
     justify-content: center;
     background-color: white;
@@ -19,24 +23,20 @@
     position: relative;
     width: 50rem;
     padding: 4rem;
-    position: relative;
     text-align: center;
 
-    p {
-      font-size: 2rem;
-    }
-    
+    p { font-size: 2rem; }
+
     .form {
       background-color: inherit;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      justify-content: space-between;
+      justify-items: center;
       padding: 0;
+      z-index: 10;
 
       .btn,
-      .btn--delete {
-        width: 10rem;
-      }
+      .btn--delete { width: fit-content; }
     }
   }
 }

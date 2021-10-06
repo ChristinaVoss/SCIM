@@ -1,0 +1,5 @@
+.staff-or-comp__delete {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(min-content, 1fr));
+  align-items: center;
+}
