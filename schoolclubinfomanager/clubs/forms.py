@@ -3,7 +3,7 @@ from flask_wtf import FlaskForm
 from schoolclubinfomanager import db
 from schoolclubinfomanager.models import YearGroup, StaffMember, ExternalCompany
 from wtforms import StringField,SubmitField, ValidationError, SelectMultipleField, SelectField, TextAreaField, widgets, DateField, DateTimeField, TimeField, BooleanField, RadioField
-from wtforms.validators import DataRequired, EqualTo, URL, Length, Regexp, Optional, Email
+from wtforms.validators import DataRequired, EqualTo, URL, Length, Regexp, Optional, Email, InputRequired
 from flask_wtf.file import FileField, FileAllowed
 
 #school imports
@@ -37,22 +37,22 @@ class MultiCheckboxField(SelectMultipleField):
 # variable_name = Field_type('Label that will show', validators=[V_func1(), V_func2(),...])
 class CreateClub(FlaskForm):
     # CORE INFORMATION
-    name = StringField('Name of club*', validators=[DataRequired(message='Please enter a name for the club.'), Length(min=2, max=64)])
-    start_date = DateField('Start date (this term)*', validators=[DataRequired(message='Please enter valid date. If it is a new club, the date must be no earlier than today.')])
-    end_date = DateField('End date (this term)*', validators=[DataRequired(message='Please enter date within one year from today.')])
-    start_time = TimeField('Start time*', format='%H:%M', validators=[DataRequired(message='Please enter a start time between 6AM and 11PM.')])
-    end_time = TimeField('End time*', format='%H:%M', validators=[DataRequired(message='Please enter end time, it must be later than start time.')])
-    location = RadioField('', choices=[('at_school', 'at_school'), ('off_school', 'off_school')], validators=[DataRequired(message='Please choose one option and provide room or address to help students find the club.')])
+    name = StringField('Name of club*', validators=[InputRequired(message='Please enter a name for the club.'), Length(min=1, max=64)])
+    start_date = DateField('Start date (this term)*', validators=[InputRequired(message='Please enter valid date. If it is a new club, the date must be no earlier than today.')])
+    end_date = DateField('End date (this term)*', validators=[InputRequired(message='Please enter date within one year from today.')])
+    start_time = TimeField('Start time*', format='%H:%M', validators=[InputRequired(message='Please enter a start time between 6AM and 11PM.')])#
+    end_time = TimeField('End time*', format='%H:%M', validators=[InputRequired(message='Please enter end time, it must be later than start time.')])#
+    location = RadioField('', choices=[('at_school', 'at_school'), ('off_school', 'off_school')], validators=[InputRequired(message='Please choose one option and provide room or address to help students find the club.')])
     at_school_premises = StringField('Please fill in room name/number')
     off_school_premises = TextAreaField('Please provide address')
-    days = MultiCheckboxField('Day(s) the club will be running*', choices=DAYS, validators=[DataRequired(message='Please select at least one day.')])
+    days = MultiCheckboxField('Day(s) the club will be running*', choices=DAYS, validators=[InputRequired(message='Please select at least one day.')])
     #category = RadioField('Category')
     # WHO CAN JOIN
-    year_groups = MultiCheckboxField('Year groups you offer clubs to*', choices=YEAR_GROUPS, validators=[DataRequired(message='Please select at least one year group.')])
+    year_groups = MultiCheckboxField('Year groups you offer clubs to*', choices=YEAR_GROUPS, validators=[InputRequired(message='Please select at least one year group.')])
     experience = StringField('Experience needed to join club')
     outfit = StringField('Please wear')
     equipment = StringField('Please bring')
-    num_places = StringField('How many spaces are there available?', validators=[DataRequired()])
+    num_places = StringField('How many spaces are there available?', validators=[InputRequired(message='Please enter how many spaces are available for this club')])
     # BOOKING AND COST
     book = RadioField("Drop in (no need to book)", choices=BOOKING)
     teacher = StringField('Please provide name of teacher to contact:')
@@ -81,6 +81,10 @@ class CreateClub(FlaskForm):
     # SUBMIT FORM
     submit = SubmitField('Save')
     # Not sure how to add more staff members yet (dynamically) - need to look up!
+
+    def validate_end_date(form, field):
+        if field.data < form.start_date.data:
+            raise ValidationError("End date must not be earlier than start date.")
 
 class Publish(FlaskForm):
     publish = SubmitField('Publish')

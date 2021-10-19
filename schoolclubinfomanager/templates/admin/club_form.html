@@ -1,27 +1,13 @@
 {% extends "base.html" %}
-
 {% block content %}
 
-{% macro check_field(field) %}
-<dt>{{ field.label(class="form__label") }}
-  <dd>{{ field(class="form__input", **kwargs)|safe }}
-  {% if field.errors %}
-    <div class=errors>
-    {% for error in field.errors %}
-      <p>{{ error }}</p>
-    {% endfor %}
-  </div>
-  {% endif %}
-  </dd>
-{% endmacro %}
-
-
+{% from "admin/macros.html" import input_field, textarea_field, datalist_field, checkbox_field, datetime_field with context %}
 
 <section class="club">
   <h2 class="">{{title}} club details</h2>
   <p class="comment"><sup>*</sup> Mandatory fields</p>
 
-  <form action="" method="POST"  class="form club__form" enctype="multipart/form-data">
+  <form action="" method="POST"  class="form club__form" enctype="multipart/form-data" novalidate>
 
     <!-- CORE INFO - NAME, WHAT, WHEN, WHERE -->
     <fieldset class="">
@@ -30,60 +16,24 @@
         {{ form.hidden_tag() }}<!-- to make sure we can accept the form -->
         <div>
           <!-- Name of club -->
-           <!--<dl>
-            {{ check_field(form.name, class="form__input med_margin_bottom", placeholder="Art club") }}
-          </dl>-->
-
-
-
-          {{ form.name.label(class="form__label") }}
-          {{ form.name(class="form__input med_margin_bottom",
-                       placeholder="Art club",
-                       oninvalid="this.setCustomValidity('Enter a name for the club here')",
-                       oninput="this.setCustomValidity('')") }}
+          {{ input_field(form.name, " med_margin_bottom", placeholder="Art club",
+                              oninvalid="this.setCustomValidity('Enter a name for the club here')",
+                              oninput="this.setCustomValidity('')")}}
 
           <!-- Dates -->
           <fieldset>
             <legend class="comment no-margin full-width">Enter dates the club will run</legend>
             <span class="club__form__grid__split-column">
-              <div>
 
+              {% set value = start_d if club else today %}
+              {% set one_year_back = (start_d.year-1)|string + "-" + start_d.strftime('%m') + "-" + start_d.strftime('%d') if club else None%}
+              {% set min = one_year_back if club else today %}
+              {{ datetime_field(form.start_date, value=value, min=min, type="date", onchange="dateTimeEndValidation('start_date', 'end_date')")}}
 
+              {% set value = end_d if club else "" %}
+              {% set max = one_year if club else "" %}
+              {{ datetime_field(form.end_date, value=value, max=max, type="date", onchange="dateTimeEndValidation('start_date', 'end_date')")}}
 
-
-
-                {{ form.start_date.label(class="form__label") }}<br>
-                <input type="date" name="start_date" id="start_date"
-                       {% if club %} value="{{start_d}}"
-                       {% else %} value="{{today}}"
-                       {% endif %} class="form__date-and-time" required
-
-                       {% if club %} min=""
-                       {% else %} min="{{ today }}"
-                       {% endif %}  max="{{ one_year }}"
-
-                       onchange="dateTimeEndValidation('start_date', 'end_date')"
-
-                       oninvalid="this.setCustomValidity('Enter a start date for the club - if it is a new club the date must be no earlier than today.')"
-                       oninput="this.setCustomValidity('')" ><!--  -->
-
-
-
-
-
-              </div>
-              <div>
-                {{ form.end_date.label(class="form__label") }}<br>
-                <input type="date" name="end_date" id="end_date"
-                       {% if club %} value="{{end_d}}" max="{{one_year}}"
-                       {% endif %} class="form__date-and-time"
-                       required
-
-                       onchange="dateTimeEndValidation('start_date', 'end_date')"
-
-                       oninvalid="this.setCustomValidity('Enter an end date for the club - it must not be before the start date.')"
-                       oninput="this.setCustomValidity('')"><!--  -->
-              </div>
             </span>
           </fieldset>
 
@@ -91,42 +41,12 @@
           <fieldset>
             <legend class="comment no-margin">What time will the club be on?</legend>
             <span class="club__form__grid__split-column">
-              <div>
-                <dl>
-                 {{ check_field(form.start_time, class="form__date-and-time", id="start_time", type="time", value=start_t, min="06:00", max="23:00") }}
-               </dl>
-               <!--
-                {{ form.start_time.label(class="form__label") }}<br>
-                <input type="time" name="start_time" id="start_time"
-                       {% if club %} value="{{start_t}}"
-                       {% endif %}
+              {% set value = start_t.strftime('%H:%M') if club else "" %}
+              {{ datetime_field(form.start_time, value=value, min="06:00", max="23:00", type="time", onchange="dateTimeEndValidation('start_time', 'end_time')")}}
 
-                       class="form__date-and-time"
-                       required
-                       min="06:00" max="23:00"
-                       onchange="dateTimeEndValidation('start_time', 'end_time')"
+              {% set value = end_t.strftime('%H:%M') if club else "" %}
+              {{ datetime_field(form.end_time, value=value, min="", max="23:00", type="time", onchange="dateTimeEndValidation('start_time', 'end_time')")}}
 
-                       oninvalid="this.setCustomValidity('Enter a start time for the club.')"
-                       oninput="this.setCustomValidity('')"> <!--  -->
-              </div>
-              <div>
-
-                <dl>
-                 {{ check_field(form.end_time, class="form__date-and-time", id="end_time", type="time", value=end_t) }}
-               </dl>
-                <!-- {{ form.end_time.label(class="form__label") }}<br>
-                <input type="time" name="end_time" id="end_time"
-                       {% if club %} value="{{end_t}}"
-                       {% endif %}
-
-                       class="form__date-and-time"
-                       required
-                       min="" max="23:00"
-                       onchange="dateTimeEndValidation('start_time', 'end_time')"
-
-                       oninvalid="this.setCustomValidity('Enter an end time for the club - it must be later than the start time.')"
-                       oninput="this.setCustomValidity('')">
-              </div> -->
             </span>
           </fieldset>
 
@@ -157,16 +77,13 @@
             </div>
             </span>
             <div id="at_school_form" {% if (club) and (club.at_school) %} class="" {% else %} class="hide" {% endif %}>
-              {{ form.at_school_premises.label(class="form__label") }}
-              {{ form.at_school_premises(class="form__input", id="at_school_input", onclick="checkRadio('at_school')", placeholder="Room 23b") }}
+              {{ input_field(form.at_school_premises, "", id="at_school_input", placeholder="Room 23b")}}
             </div>
             <div id="off_school_form" {% if (club)  and (club.at_school == False) %} class="" {% else %} class="hide" {% endif %}>
-              {{ form.off_school_premises.label(class="form__label") }}
-              {{ form.off_school_premises(class="form__textarea", id="off_school_input",
-              placeholder="Art center,
+              {{ textarea_field(form.off_school_premises, "", id="off_school_input", placeholder="Art center,
 Downton street,
 Madeup Town,
-AB1 2CD", onclick="checkRadio('off_school')") }}
+AB1 2CD")}}
             </div>
           </fieldset>
         </div>
@@ -174,16 +91,7 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
         <!-- Days -->
         <fieldset>
           <legend for="" class="form__label">Day(s) the club will be running*</legend>
-          <div class="form__checkbox club__small-screen-grid">
-            {% for day in form.days %}
-              <div class="form__checkbox__group">
-                  {{day(class="form__checkbox__field ", id="days-"+(loop.index - 1)|string,
-                        oninvalid="this.setCustomValidity('Please select at least one day.')",
-                        oninput="this.setCustomValidity('')")}}
-                  {{day.label(class="form__checkbox__label")}}
-              </div>
-            {% endfor %}
-          </div>
+          {{ checkbox_field(form.days)}}
         </fieldset>
       </span>
     </fieldset>
@@ -196,33 +104,21 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
           <!-- Year groups -->
           <fieldset class="club__form__item">
             <legend for="" class="form__label">Year group(s) this club will be available to*</legend>
-            <div class="form__checkbox club__small-screen-grid">
-              {% for yg in form.year_groups %}
-                <div class="form__checkbox__group">
-                  {{yg(class="form__checkbox__field",
-                       oninvalid="this.setCustomValidity('Please select at least one year group')",
-                       oninput="this.setCustomValidity('')")}}
-                  {{yg.label(class="form__checkbox__label")}}
-                </div>
-              {% endfor %}
-            </div>
+            {{ checkbox_field(form.year_groups)}}
           </fieldset>
           <!-- Number of places -->
-          {{ form.num_places.label(class="form__label") }}
-          {{ form.num_places(class="form__input--number",
-                             oninvalid="this.setCustomValidity('Enter how many spaces are available')",
-                             oninput="this.setCustomValidity('')") }}
+          {{ input_field(form.num_places, "--number")}}
 
         </div>
         <div>
           <fieldset>
             <legend class="form__label">Equipment/outfit needed:</legend>
             <!-- Oufit -->
-            {{ form.outfit.label(class="form__label") }} {{ form.outfit(class="form__input", placeholder="Apron") }}
+            {{ input_field(form.outfit, "", placeholder="Apron")}}
             <!-- Equipment -->
-            {{ form.equipment.label(class="form__label") }} {{ form.equipment(class="form__input", placeholder="Oil pastels, paint brushes") }}
+            {{ input_field(form.equipment, "", placeholder="Oil pastels, paint brushes")}}
             <!-- Experience -->
-            {{ form.experience.label(class="form__label") }} {{ form.experience(class="form__input", placeholder="None - all welcome/Beginner") }}
+            {{ input_field(form.experience, "", placeholder="None - all welcome/Beginner")}}
 
           </fieldset>
         </div>
@@ -246,9 +142,9 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
 
                      {% if (club) and (club.drop_in) %} checked
                      {% endif %}><!-- id="drop_in" -->
-              <!--<label for="drop_in">-->
+
                 {{ form.book.label(class="form__label--nomargin") }}
-              <!--</label>-->
+
             </div>
             <div class="club__form__radio-and-text-group form__radio__label">
               <input type="radio" id="teacher" name="book" value="teacher"
@@ -282,52 +178,13 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
             </div>
             <p id="bookingtest"></p>
             <div id="book_teacher" {% if (contact_to_book)  and (contact_to_book.teacher_name != None) %} class="" {% else %} class="hide" {% endif %}>
-              {{ form.teacher.label(class="form__label") }}
-              {{ form.teacher(class="form__input", id="teacher-input",
-                              onclick="checkRadio('teacher')",
-                              placeholder="Mr Smith",
-                              list="teachers",
-                              oninvalid="this.setCustomValidity('Enter name of teacher to contact')",
-                              oninput="this.setCustomValidity('')") }}
-              <datalist id="teachers">
-                {% for t in teachers %}
-                  {% if t %}
-                    <option value="{{t}}">
-                  {% endif %}
-                {% endfor %}
-              </datalist>
+              {{ datalist_field(form.teacher, "teachers", class="form__input", id="teacher-input")}}
             </div>
             <div id="book_email" {% if (contact_to_book)  and (contact_to_book.email != None) %} class="" {% else %} class="hide"{% endif %}>
-              {{ form.email.label(class="form__label") }}
-              {{ form.email(class="form__input", id="email-input",
-                            onclick="checkRadio('email')",
-                            placeholder="smith@email.com",
-                            list="emails",
-                            oninvalid="this.setCustomValidity('Enter the email to contact')",
-                            oninput="this.setCustomValidity('')") }}
-              <datalist id="emails">
-                {% for e in emails %}
-                  {% if e %}
-                    <option value="{{e}}">
-                  {% endif %}
-                {% endfor %}
-              </datalist>
+              {{ datalist_field(form.email, "emails", class="form__input", id="email-input")}}
             </div>
             <div id="book_call" {% if (contact_to_book)  and (contact_to_book.call != None) %} class="" {% else %} class="hide" {% endif %}>
-              {{ form.call.label(class="form__label") }}
-              {{ form.call(class="form__input", id="call-input",
-                           onclick="checkRadio('call')",
-                           placeholder="01234567890",
-                           list="phone_numbers",
-                           oninvalid="this.setCustomValidity('Enter phone number')",
-                           oninput="this.setCustomValidity('')") }}
-              <datalist id="phone_numbers">
-                {% for p in phone_numbers %}
-                  {% if p %}
-                    <option value="{{p}}">
-                  {% endif %}
-                {% endfor %}
-              </datalist>
+              {{ datalist_field(form.call, "phone_numbers", class="form__input", id="call-input")}}
             </div>
           </fieldset>
         </div>
@@ -385,9 +242,7 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
           {% endif %}
         </div>
         <div class="">
-          {{ form.description.label(class="form__label") }}
-          {{ form.description(class="form__textarea tall", oninvalid="this.setCustomValidity('Enter how many spaces are available')",
-          oninput="this.setCustomValidity('')") }}
+          {{ textarea_field(form.description, " tall")}}
         </div>
       </span>
     </fieldset>
@@ -446,25 +301,20 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
           <!-- person form -->
           <fieldset class="person big-top-margin left hide" id="person_form">
             <legend class="comment">Enter details about the new staff member</legend>
-            {{ form.staff_name.label(class="form__label") }}
-            {{ form.staff_name(class="form__input", placeholder="Ms Kahlo") }}
-            {{ form.staff_email.label(class="form__label") }}
-            {{ form.staff_email(class="form__input", placeholder="kahlo@email.com") }}
-            {{ form.staff_description.label(class="form__label") }}
-            {{ form.staff_description(class="form__textarea", placeholder="Ms Kahlo spends most of her time painting and is excited to be teaching a new generation of artists.") }}
+            {{ input_field(form.staff_name, "", placeholder="Ms Kahlo")}}
+            {{ input_field(form.staff_email, "", placeholder="kahlo@email.com")}}
+            {{ textarea_field(form.staff_description, "", placeholder="Ms Kahlo spends most of her time painting and is excited to be teaching a new generation of artists.")}}
+
           </fieldset>
 
           <!-- company form -->
           <fieldset class="company big-top-margin left hide" id="company_form">
             <legend class="comment">Enter details about the new company</legend>
-            {{ form.company_name.label(class="form__label") }}
-            {{ form.company_name(class="form__input", placeholder="Arty Party") }}
-            {{ form.company_email.label(class="form__label") }}
-            {{ form.company_email(class="form__input", placeholder="info@artyparty.com") }}
-            {{ form.company_website.label(class="form__label") }}
-            {{ form.company_website(class="form__input", placeholder="www.artyparty.com") }}
-            {{ form.company_description.label(class="form__label") }}
-            {{ form.company_description(class="form__textarea", placeholder="Arty Party brings experienced staff in every art form to your schools to give children access to new techinques in painting, drawing, building and so much more, with fun and inspiring projects!") }}
+            {{ input_field(form.company_name, "", placeholder="Arty Party")}}
+            {{ input_field(form.company_email, "", placeholder="info@artyparty.com")}}
+            {{ input_field(form.company_website, "", placeholder="https://www.artyparty.com")}}
+            {{ textarea_field(form.company_description, "", placeholder="Arty Party brings experienced staff in every art form to your schools to give children access to new techinques in painting, drawing, building and so much more, with fun and inspiring projects!")}}
+
           </fieldset>
 
         </div>
@@ -488,10 +338,6 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
           <!-- staff list -->
           <div  id="staff_dropdown" {% if club and (not club.ext_company_id) %} class="staff-dropdown" {% else %} class="staff-dropdown hide" {% endif %}>
             {{ form.staff.label(class="form__label") }}
-            <div class="hide">
-              <ion-icon name="chevron-down-outline" id="chevron-down"></ion-icon>
-            </div>
-            <!--{{ form.staff(class="form__dropdown")}}-->
             <select name="staff" id="staff" class="form__dropdown">
               {% for s in staff_list %}
                 <option value="{{s.name}}" {% if club and (s.name == sm) %}selected="selected"{% endif %}>{{s}}</option>
@@ -502,23 +348,16 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
           <!-- company list -->
           <div id="companies_dropdown" {% if club and club.ext_company_id %} class="companies-dropdown" {% else %} class="companies-dropdown hide" {% endif %}>
             {{ form.companies.label(class="form__label") }}
-            <div class="hide">
-              <ion-icon name="chevron-down-outline" id="chevron-down"></ion-icon>
-            </div>
             <select name="companies" id="companies" class="form__dropdown">
               {% for c in company_list %}
                 <option value="{{c.name}}" {% if club and (c.name == comp) %}selected="selected"{% endif %}>{{c}}</option>
               {% endfor %}
             </select>
-            <!--{{ form.companies(class="form__dropdown")}}-->
           </div>
 
         </div>
       </span>
-
-
     </fieldset>
-
 
     <div class="club__form__item--submit">
       {{ form.submit(class="btn", onclick="validateForm('days', 'year_groups')") }}
@@ -538,9 +377,9 @@ AB1 2CD", onclick="checkRadio('off_school')") }}
   }
 
   // when input element is selected, check connected radiobutton
-  function checkRadio(id) {
-    document.getElementById(id).checked = true;
-  }
+  //function checkRadio(id) {
+    //document.getElementById(id).checked = true;
+  //}
 
   // Only show subforms that are connected to relevant radiobutton (hide the other)
   function showSubFormHideOther(id1, id2) {

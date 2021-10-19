@@ -1,0 +1,83 @@
+{% macro input_field(field, classNames) %}
+  {% set classNames = "form__input" + classNames %}
+  {{ field.label(class="form__label") }}
+  {% if field.errors %}
+    {% set classNames = classNames + " errors__field" %}
+    <div class="errors">
+    {% for error in field.errors %}
+      <p>{{ error }}</p>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {{ field(class=classNames, **kwargs)|safe }}
+{% endmacro %}
+
+{% macro textarea_field(field, classNames) %}
+  {% set classNames = "form__textarea" + classNames %}
+  {{ field.label(class="form__label") }}
+  {% if field.errors %}
+    {% set classNames = classNames + " errors__field" %}
+    <div class="errors">
+    {% for error in field.errors %}
+      <p>{{ error }}</p>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {{ field(class=classNames, **kwargs)|safe }}
+{% endmacro %}
+
+{% macro datalist_field(field, field_id) %}
+  {{ field.label(class="form__label") }}
+  {{ field(class="form__input", **kwargs)|safe }}
+  <datalist id=field_id>
+    {% for item in field_id %}
+      {% if item %}
+        <option value="{{item}}">
+      {% endif %}
+    {% endfor %}
+  </datalist>
+  {% if field.errors %}
+    <div class=errors>
+    {% for error in field.errors %}
+      <p>{{ error }}</p>
+    {% endfor %}
+  </div>
+  {% endif %}
+{% endmacro %}
+
+{% macro checkbox_field(field) %}
+{% if field.errors %}
+  <div class=errors>
+  {% for error in field.errors %}
+    <p>{{ error }}</p>
+  {% endfor %}
+</div>
+{% endif %}
+  <div class="form__checkbox club__small-screen-grid">
+    {% for item in field %}
+      <div class="form__checkbox__group">
+        {{item(class="form__checkbox__field", **kwargs)|safe }}
+        {{item.label(class="form__checkbox__label")}}
+      </div>
+    {% endfor %}
+  </div>
+
+{% endmacro %}
+
+{% macro datetime_field(field) %}
+  <div>
+  {% set classNames = "form__date-and-time" %}
+
+
+  {% if field.errors %}
+    {% set classNames = classNames + " errors__field" %}
+    <div class="errors">
+    {% for error in field.errors %}
+      <p>{{ error }}</p>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {{ field.label(class="form__label") }}
+  {{ field(class=classNames, **kwargs)|safe }}
+</div>
+{% endmacro %}

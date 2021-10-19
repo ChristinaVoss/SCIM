@@ -5,6 +5,7 @@ from schoolclubinfomanager import db
 from schoolclubinfomanager.models import School, YearGroup, Club, ClubDay, ClubYearGroup, ContactToBook, StaffClub, StaffMember, ExternalCompany
 from schoolclubinfomanager.clubs.forms import CreateClub, Publish, DeleteClub, EditStaffDetails, EditCompanyDetails, ChooseDay
 from schoolclubinfomanager.clubs.picture_handler import add_photo
+from schoolclubinfomanager.clubs.helpers import addCheckboxes, updateCheckboxes, contactToBook, setupClubRunner, format_yeargroups, staff_or_company, popup_card
 import datetime
 import sys
 
@@ -20,34 +21,19 @@ def create_club():
     today = datetime.date.today()
     one_year = str(today)
     one_year = one_year[:3] + str(int(one_year[3]) + 1) + one_year[4:]
+    #contact to book details
     teachers = [contact.teacher_name for contact in ContactToBook.query.all()]
     emails = [contact.email for contact in ContactToBook.query.all()]
     phone_numbers = [contact.call for contact in ContactToBook.query.all()]
-
+    #club runners
     staff_list = StaffMember.query.all()
     company_list = ExternalCompany.query.all()
 
     if form.validate_on_submit():
-
-        # SAVE PHOTO
-        if form.photo.data: #if they actually uploaded a photo
-            club_name = form.name.data
-            club_name = club_name.replace(' ', '') + '_' + str(datetime.datetime.now().date()) + '_' + str(datetime.datetime.now().time()).replace(':', '-')[-6:]
-            pic = add_photo(form.photo.data, club_name)
-
-        else:
-            pic = None
-
-        location = form.location.data
-        if location == 'at_school':
-            at_school = True
-            location = form.at_school_premises.data
-        else:
-            at_school = False
-            location = form.off_school_premises.data
-
+        #CREATE CLUB
+        at_school = form.location.data == 'at_school'
+        location = form.at_school_premises.data if at_school else form.off_school_premises.data
         is_free = (form.is_free.data == "free")
-        cost = form.cost.data
         drop_in = form.book.data == 'drop_in'
         num_places = form.num_places.data
 
@@ -60,131 +46,36 @@ def create_club():
                     at_school = at_school,
                     is_free = is_free,
                     num_of_places = num_places,
-                    drop_in = drop_in
-                    )
-
+                    drop_in = drop_in)
         db.session.add(club)
         db.session.commit()
 
-        #update database with days
-        days = form.days.data
-        for d in days:
-            day = ClubDay(d, club.id)
-            db.session.add(day)
-        db.session.commit()
-
-        #update database with year groups
-        year_groups = form.year_groups.data
-        for group in year_groups:
-            yg = ClubYearGroup(group, club.id)
-            db.session.add(yg)
-        db.session.commit()
-
-        booking_details_exist = False
-
-        # CONTACT TO BOOK
-        if not drop_in: # checks radio button for choosing how to book
-            if form.book.data == 'teacher':
-                teacher_name = form.teacher.data
-                if bool(ContactToBook.query.filter_by(teacher_name=teacher_name).first()):
-                    #name already exists in the system, just link to club
-                    booking_details_exist = True
-                    contact = ContactToBook.query.filter_by(teacher_name=teacher_name).first()
-                    club.contact_to_book_id = contact.id
-                    db.session.commit()
-            else:
-                teacher_name = None
-
-            if form.book.data == 'email':
-                email = form.email.data
-                if bool(ContactToBook.query.filter_by(email=email).first()):
-                    #email already exists in the system, just link to club
-                    booking_details_exist = True
-                    contact = ContactToBook.query.filter_by(email=email).first()
-                    club.contact_to_book_id = contact.id
-                    db.session.commit()
-            else:
-                email = None
-
-            if form.book.data =='call':
-                call = form.call.data
-                if bool(ContactToBook.query.filter_by(call=call).first()):
-                    #number already exists in the system, just link to club
-                    booking_details_exist = True
-                    contact = ContactToBook.query.filter_by(call=call).first()
-                    club.contact_to_book_id = contact.id
-                    db.session.commit()
-            else:
-                call = None
-
-            if not booking_details_exist:
-                #new entry, create new object/row
-                contact = ContactToBook(teacher_name = teacher_name,
-                                        email = email,
-                                        call = call)
-
-                db.session.add(contact)
-                db.session.commit()
-                club.contact_to_book_id = contact.id
-                db.session.commit()
-
-        # Add data about StaffMember or ExternalCompany
-        if form.new_entry.data == 'new':
-            # New entry to system, add to database
-            if form.type_of_staff.data == 'person':
-                staff_member = StaffMember(name = form.staff_name.data,
-                                           email = form.staff_email.data,
-                                           description = form.staff_description.data)
-                db.session.add(staff_member)
-                db.session.commit()
-
-                staff_club = StaffClub(club_id = club.id,
-                                       staffmember_id = staff_member.id)
-
-                db.session.add(staff_club)
-                db.session.commit()
-
-            else:
-                #company
-                company = ExternalCompany(name = form.company_name.data,
-                                          website = form.company_website.data,
-                                          email = form.company_email.data,
-                                          description = form.company_description.data)
-
-                db.session.add(company)
-                db.session.commit()
-
-                club.ext_company_id = company.id
-                db.session.commit()
-
+        # SAVE PHOTO
+        if form.photo.data: #if they actually uploaded a photo
+            club_name = form.name.data
+            club_name = club_name.replace(' ', '') + '_' + str(datetime.datetime.now().date()) + '_' + str(datetime.datetime.now().time()).replace(':', '-')[-6:]
+            pic = add_photo(form.photo.data, club_name)
         else:
-            # Staff or company exists in system, link to clubs
-            if form.existing_clubrunner.data == 'existing_staff':
-                #staff
-                staff_member = form.staff.data
-                staff_member = StaffMember.query.filter_by(name=staff_member).first()
-                staff_club = StaffClub(club_id = club.id,
-                                     staffmember_id = staff_member.id)
+            pic = None
 
-                db.session.add(staff_club)
-                db.session.commit()
-            else:
-                #company
-                company = form.companies.data
-                company = ExternalCompany.query.filter_by(name=company).first()
-                club.ext_company_id = company.id
-                db.session.commit()
-
-
-        # ALL CLUB INFO NOT COMPULSORY
+        # NOT COMPULSORY CLUB INFO
         club.experience = form.experience.data
         club.outfit = form.outfit.data
         club.equipment = form.equipment.data
         club.description = form.description.data
         club.photo = pic
-        club.cost = cost
-
+        club.cost = None if is_free else form.cost.data
         db.session.commit()
+
+        #DAYS
+        addCheckboxes(ClubDay, form.days.data, club)
+        #YEAR GROUPS
+        addCheckboxes(ClubYearGroup, form.year_groups.data, club)
+        # CONTACT TO BOOK
+        contactToBook(drop_in, form, club)
+        # CLUB RUNNING COMPANY OR STAFF
+        setupClubRunner(form, club)
+
         return redirect(url_for('clubs.club', club_id=club.id))
     return (render_template('admin/club_form.html', form=form, title="Create", school=school, today=today, one_year=one_year, teachers=teachers, emails=emails, phone_numbers=phone_numbers, staff_list=staff_list, company_list=company_list))
 
@@ -215,6 +106,7 @@ def edit_club(club_id):
     emails = [contact.email for contact in ContactToBook.query.all()]
     phone_numbers = [contact.call for contact in ContactToBook.query.all()]
 
+    # club runners
     staff_list = StaffMember.query.all()
     company_list = ExternalCompany.query.all()
 
@@ -227,31 +119,17 @@ def edit_club(club_id):
     end_t = club.end_time
 
     if form.validate_on_submit():
-
         # SAVE PHOTO
         if form.photo.data: #if they actually uploaded a photo
             club_name = form.name.data
             club_name = club_name.replace(' ', '') + '_' + str(datetime.datetime.now().date()) + '_' + str(datetime.datetime.now().time()).replace(':', '-')[-6:]
             club.photo = add_photo(form.photo.data, club_name) # old picture is still in the system - decide if you want to delete it?
 
-        location = form.location.data
-        if location == 'at_school':
-            at_school = True
-            location = form.at_school_premises.data
-        else:
-            at_school = False
-            location = form.off_school_premises.data
-
-        free_boolean = form.is_free.data
-        if free_boolean == 'free':
-            is_free = True
-            cost = None
-        else:
-            is_free = False
-            cost = form.cost.data
-
+        at_school = form.location.data == 'at_school'
+        location = form.at_school_premises.data if at_school else form.off_school_premises.data
+        is_free = form.is_free.data == "free"
+        cost =  None if is_free else form.cost.data
         drop_in = form.book.data == 'drop_in'
-        num_places = form.num_places.data
 
         club.name = form.name.data
         club.start_date = form.start_date.data
@@ -261,161 +139,24 @@ def edit_club(club_id):
         club.location = location
         club.at_school = at_school
         club.is_free = is_free
-        club.num_of_places = num_places
+        club.num_of_places = form.num_places.data
         club.drop_in = drop_in
         club.cost = cost
-
-        db.session.commit()
-
-        #update database with days
-        new_days = set(form.days.data)
-        for d in new_days:
-            if d not in existing_days:
-                day = ClubDay(d, club.id)
-                db.session.add(day)
-
-        to_delete = existing_days - new_days
-        if to_delete:
-            for d in to_delete:
-                temp = ClubDay.query.filter_by(name=d, club_id=club.id).first()
-                db.session.delete(temp)
-        db.session.commit()
-
-        #update database with year groups
-        '''to_delete = ClubYearGroup.query.filter_by(club_id=club.id).all()
-        for yg in to_delete:
-            db.session.delete(yg)'''
-
-        new_year_groups = set(form.year_groups.data)
-        for group in new_year_groups:
-            if group not in existing_ygs:
-                yg = ClubYearGroup(group, club.id)
-                db.session.add(yg)
-
-        to_delete = existing_ygs - new_year_groups
-        if to_delete:
-            for yg in to_delete:
-                temp = ClubYearGroup.query.filter_by(name=yg, club_id=club.id).first()
-                db.session.delete(temp)
-
-        db.session.commit()
-
-        booking_details_exist = False
-
-        # CONTACT TO BOOK
-        if not drop_in: # checks radio button for choosing how to book
-            if form.book.data == 'teacher':
-                teacher_name = form.teacher.data
-                if bool(ContactToBook.query.filter_by(teacher_name=teacher_name).first()):
-                    #name already exists in the system, just link to club
-                    booking_details_exist = True
-                    contact = ContactToBook.query.filter_by(teacher_name=teacher_name).first()
-                    club.contact_to_book_id = contact.id
-                    db.session.commit()
-            else:
-                teacher_name = None
-
-            if form.book.data == 'email':
-                email = form.email.data
-                if bool(ContactToBook.query.filter_by(email=email).first()):
-                    #email already exists in the system, just link to club
-                    booking_details_exist = True
-                    contact = ContactToBook.query.filter_by(email=email).first()
-                    club.contact_to_book_id = contact.id
-                    db.session.commit()
-            else:
-                email = None
-
-            if form.book.data =='call':
-                call = form.call.data
-                if bool(ContactToBook.query.filter_by(call=call).first()):
-                    #number already exists in the system, just link to club
-                    booking_details_exist = True
-                    contact = ContactToBook.query.filter_by(call=call).first()
-                    club.contact_to_book_id = contact.id
-                    db.session.commit()
-            else:
-                call = None
-
-            if not booking_details_exist:
-                #new entry, create new object/row
-                contact = ContactToBook(teacher_name = teacher_name,
-                                        email = email,
-                                        call = call)
-
-                db.session.add(contact)
-                db.session.commit()
-                club.contact_to_book_id = contact.id
-                db.session.commit()
-
-        # Add data about StaffMember or ExternalCompany
-        if form.new_entry.data == 'new':
-            # New entry to system, add to database
-            if form.type_of_staff.data == 'person':
-                staff_member = StaffMember(name = form.staff_name.data,
-                                           email = form.staff_email.data,
-                                           description = form.staff_description.data)
-                db.session.add(staff_member)
-                db.session.commit()
-
-                staff_club = StaffClub(club_id = club.id,
-                                       staffmember_id = staff_member.id)
-
-                db.session.add(staff_club)
-                db.session.commit()
-
-            else:
-                #company
-                company = ExternalCompany(name = form.company_name.data,
-                                          website = form.company_website.data,
-                                          email = form.company_email.data,
-                                          description = form.company_description.data)
-
-                db.session.add(company)
-                db.session.commit()
-
-                club.ext_company_id = company.id
-                db.session.commit()
-
-        else:
-            # Staff or company exists in system, link to clubs
-
-            # check if club has existing staff member to change
-            existing_sc = StaffClub.query.filter_by(club_id=club.id).first()
-            if form.existing_clubrunner.data == 'existing_staff':
-                #staff
-                staff_member = form.staff.data
-
-                staff_member = StaffMember.query.filter_by(name=staff_member).first()
-                club.ext_company_id = None #make sure club is only linked to staff or a company, not both
-
-                if existing_sc:
-                    existing_sc.staffmember_id = staff_member.id
-                else:
-                    if staff_member:#FIX THIS -- SOME VALIDATION TO ENSURE REMOVED STAFF ARE NOT STILL LINKED TO CLUBS!
-                        staff_club = StaffClub(club_id = club.id,
-                                           staffmember_id = staff_member.id)
-
-                        db.session.add(staff_club)
-                db.session.commit()
-            else:
-                #company
-                if existing_sc:
-                    #make sure club is only linked to staff or a company, not both
-                    db.session.delete(existing_sc)
-                company = form.companies.data
-                company = ExternalCompany.query.filter_by(name=company).first()
-                club.ext_company_id = company.id
-                db.session.commit()
-
-
-        # ALL CLUB INFO NOT COMPULSORY
         club.experience = form.experience.data
         club.outfit = form.outfit.data
         club.equipment = form.equipment.data
         club.description = form.description.data
-
         db.session.commit()
+
+        # DAYS
+        updateCheckboxes(ClubDay, existing_days, set(form.days.data), club)
+        # YEAR GROUPS
+        updateCheckboxes(ClubYearGroup, existing_ygs, set(form.year_groups.data), club)
+        # CONTACT TO BOOK
+        contactToBook(drop_in, form, club)
+        # CLUB RUNNER
+        setupClubRunner(form, club)
+
         return redirect(url_for('clubs.club', club_id=club.id))
     elif request.method == "GET":
         # they are not yet submitting, they want to see the form, so we grab the current details and populate the form
@@ -443,12 +184,6 @@ def edit_club(club_id):
                 form.call.data = contact_to_book.call
         form.cost.data = club.cost
         form.description.data = club.description
-        '''if sc:
-            staffmember = StaffMember.query.filter_by(id=sc.staffmember_id).first()
-            form.staff.data = staffmember.name
-        if club.ext_company_id:
-            company = ExternalCompany.query.filter_by(id = club.ext_company_id).first()
-            form.companies.data = company.name'''
 
         if sc:
             staffmember = StaffMember.query.filter_by(id=sc.staffmember_id).first()
@@ -490,21 +225,16 @@ def club(club_id):
         ext_c = None
 
     if form.validate_on_submit():
-        for yg in ygs:
-            db.session.delete(yg)
-
-        for day in days:
-            db.session.delete(day)
-
-        if sc:
-            db.session.delete(sc)
-
-        db.session.delete(club)
-        db.session.commit()
         # user has pressed "Delete club,
         # so delete it and return to list overview"
-
-
+        for yg in ygs:
+            db.session.delete(yg)
+        for day in days:
+            db.session.delete(day)
+        if sc:
+            db.session.delete(sc)
+        db.session.delete(club)
+        db.session.commit()
         return redirect(url_for('clubs.list_clubs', _anchor="close-delete-club"))
     return render_template('admin/club.html', school=school, club=club, days=days, ygs=ygs, book=book, staff_member=staff_member, ext_c=ext_c, form=form)
 
@@ -515,32 +245,17 @@ def list_clubs():
     school= School.query.first()
     clubs = Club.query.all()
     form = Publish()
-    #form = UnPublish()
     test = None
 
     if form.validate_on_submit():
         club_id = request.form['publish']
-
         club = Club.query.filter_by(id=club_id).first()
-        if club.published:
-            club.published = False
-        else:
-            club.published = True
+        #Flip the boolean to opposite state depending on prior state.
+        club.published = False if club.published else True
         db.session.commit()
-        #club = Club.query.filter_by(id=publish_form['publish']).first()
-        #club.published = True
-        #db.session.commit()
 
-        return redirect(url_for('clubs.list_clubs'))#render_template('admin/list_clubs.html',test=club_id, school=school, clubs=clubs, form=form)#render_template('admin/list_clubs.html',test=test, school=school, clubs=clubs, publish_form=publish_form, unpublish_form=unpublish_form)
-
-    '''if unpublish_form.validate_on_submit():
-        club = Club.query.filter_by(id=unpublish_form['unpublish']).first()
-        club.published = False
-        db.session.commit()'''
-
+        return redirect(url_for('clubs.list_clubs'))
     return render_template('admin/list_clubs.html',test=test, school=school, clubs=clubs, form=form)
-
-
 
 # MANAGE STAFF AND Companies
 @clubs.route('/list_staff_and_companies/', methods=['GET', 'POST'])
@@ -563,10 +278,8 @@ def staffmember(sm_id, club_id=None):
     sm = StaffMember.query.filter_by(id=sm_id).first()
     scs = StaffClub.query.filter_by(staffmember_id=sm.id).all()
     clubs = [Club.query.filter_by(id=sc.club_id).first() for sc in scs]
-    if club_id:
-        popup_club = Club.query.filter_by(id=club_id).first()
-    else:
-        popup_club = None
+    popup_club = Club.query.filter_by(id=club_id).first() if club_id else None
+
     if form.validate_on_submit():
         if form.removeStaff.data:#if request.form['removeStaff']:
             for sc in scs:
@@ -605,10 +318,8 @@ def company(c_id, club_id=None):
     school= School.query.first()
     c = ExternalCompany.query.filter_by(id=c_id).first()
     clubs = Club.query.filter_by(ext_company_id=c.id).all()
-    if club_id:
-        popup_club = Club.query.filter_by(id=club_id).first()
-    else:
-        popup_club = None
+    popup_club = Club.query.filter_by(id=club_id).first() if club_id else None
+
     if form.validate_on_submit():
         if form.removeCompany.data:
             for club in clubs:
@@ -644,28 +355,7 @@ def company(c_id, club_id=None):
 ################### PARENT SIDE ######################
 ######################################################
 
-# HELPER FUNCTIONS
-def format_yeargroups(ygs):
-    year_groups = []
-    for yg in ygs:
-        year_groups.append(int(yg.name))
-    # if there is more than one year group connected to the club:
-    if len(year_groups) > 1:
-        # check if the year groups are consequtive:
-        if (sorted(year_groups) == list(range(min(year_groups), max(year_groups)+1))): #https://www.geeksforgeeks.org/python-check-if-list-contains-consecutive-numbers/
-            return str(year_groups[0]) + '-' + str(year_groups[-1])
-        else:
-            #not consequtive, just sort and store as string
-            temp = sorted(year_groups)
-            temp2 = [str(x) for x in temp]
-            return ", ".join(temp2)
-    else:
-        #single year group, just store name
-        return ygs[0].name
-
-
-
-# View all clubs (parent side)
+# View all clubs (parent cards)
 @clubs.route('/clubs', methods=['GET', 'POST'])
 @clubs.route('/clubs/<club_id>', methods=['GET', 'POST'])
 def school_clubs(club_id=None):
@@ -673,41 +363,15 @@ def school_clubs(club_id=None):
     clubs = Club.query.all()
     club_info_grouped = []
 
-
     # POPUP CLUB CARD
-    if club_id:
+    popup = popup_card(club_id)
+    '''if club_id:
         popup_club = Club.query.filter_by(id=club_id).first()
         popup_days = ClubDay.query.filter_by(club_id=popup_club.id).all()
-        popup_ygs = ClubYearGroup.query.filter_by(club_id=popup_club.id).all()
+        popup_ygs = format_yeargroups(ClubYearGroup.query.filter_by(club_id=popup_club.id).all())
         popup_sc = StaffClub.query.filter_by(club_id=popup_club.id).first()
         popup_book = ContactToBook.query.filter_by(id=popup_club.contact_to_book_id).first()
-
-        if popup_sc:
-            # club is run by individual staff and not a company. (should I check for all instead of first?)
-            popup_staff_member = StaffMember.query.filter_by(id=popup_sc.staffmember_id).first()
-        else:
-            popup_staff_member = None
-        if popup_club.ext_company_id:
-            popup_ext_c = ExternalCompany.query.filter_by(id=popup_club.ext_company_id).first()
-        else:
-            popup_ext_c = None
-
-        popup_year_groups = []
-        for yg in popup_ygs:
-            popup_year_groups.append(int(yg.name))
-        # if there is more than one year group connected to the club:
-        if len(popup_year_groups) > 1:
-            # check if the year groups are consequtive:
-            if (sorted(popup_year_groups) == list(range(min(popup_year_groups), max(popup_year_groups)+1))): #https://www.geeksforgeeks.org/python-check-if-list-contains-consecutive-numbers/
-                popup_ygs = str(popup_year_groups[0]) + '-' + str(popup_year_groups[-1])
-            else:
-                #not consequtive, just sort and store as string
-                temp = sorted(popup_year_groups)
-                temp2 = [str(x) for x in temp]
-                popup_ygs = ", ".join(temp2)
-        else:
-            #single year group, just store name
-            popup_ygs = popup_ygs[0].name
+        popup_staff_member, popup_ext_c = staff_or_company(popup_sc, popup_club)
 
         # Sort weekday names
         temp = [day.name for day in popup_days]
@@ -720,9 +384,7 @@ def school_clubs(club_id=None):
         popup_sc = None
         popup_book = None
         popup_staff_member = None
-        popup_ext_c = None
-
-
+        popup_ext_c = None'''
 
     # NOT POPUP - LIST ALL PUBLISHED CLUBS
     for club in clubs:
@@ -731,16 +393,7 @@ def school_clubs(club_id=None):
             ygs = ClubYearGroup.query.filter_by(club_id=club.id).all()
             sc = StaffClub.query.filter_by(club_id=club.id).first()
             book = ContactToBook.query.filter_by(id=club.contact_to_book_id).first()
-
-            if sc:
-                # club is run by individual staff and not a company. (should I check for all instead of first?)
-                staff_member = StaffMember.query.filter_by(id=sc.staffmember_id).first()
-            else:
-                staff_member = None
-            if club.ext_company_id:
-                ext_c = ExternalCompany.query.filter_by(id=club.ext_company_id).first()
-            else:
-                ext_c = None
+            staff_member, ext_c = staff_or_company(sc, club)
 
             ygs = format_yeargroups(ygs)
 
@@ -750,10 +403,10 @@ def school_clubs(club_id=None):
 
             club_info_grouped.append((club, days, ygs, staff_member, book, ext_c))
 
-    return render_template('parent/cards.html', school=school, clubs=club_info_grouped, popup_club=popup_club, popup_days=popup_days, popup_ygs=popup_ygs, popup_staff_member=popup_staff_member, popup_book=popup_book, popup_ext_c=popup_ext_c)
+    return render_template('parent/cards.html', school=school, clubs=club_info_grouped, popup=popup)#school=school, clubs=club_info_grouped, popup_club=popup_club, popup_days=popup_days, popup_ygs=popup_ygs, popup_staff_member=popup_staff_member, popup_book=popup_book, popup_ext_c=popup_ext_c
 
 
-# View all clubs (parent side)
+# View all clubs (parent timetable)
 @clubs.route('/timetable', methods=['GET', 'POST'])
 @clubs.route('/timetable/<x>', methods=['GET', 'POST'])# x as mixed variable for either weekday or club_id, as Flask gets confused by different routes with same number arguments
 def timetable(x=None):
@@ -762,7 +415,7 @@ def timetable(x=None):
     form = ChooseDay()
     today = datetime.datetime.now()
 
-    # SMALL SCREEN TIMETABLE
+    # CHECK ARGUMENT (weekday, club id or nothing)
     if x and x.isnumeric():
         club_id = x
         weekday = None
@@ -774,39 +427,15 @@ def timetable(x=None):
         weekday = None
 
     # POPUP CLUB CARD
-    if club_id and club_id.isnumeric():
+    popup = popup_card(club_id)
+    '''if club_id and club_id.isnumeric():
         popup_club = Club.query.filter_by(id=club_id).first()
         popup_days = ClubDay.query.filter_by(club_id=popup_club.id).all()
         popup_ygs = ClubYearGroup.query.filter_by(club_id=popup_club.id).all()
         popup_sc = StaffClub.query.filter_by(club_id=popup_club.id).first()
         popup_book = ContactToBook.query.filter_by(id=popup_club.contact_to_book_id).first()
-
-        if popup_sc:
-            # club is run by individual staff and not a company. (should I check for all instead of first?)
-            popup_staff_member = StaffMember.query.filter_by(id=popup_sc.staffmember_id).first()
-        else:
-            popup_staff_member = None
-        if popup_club.ext_company_id:
-            popup_ext_c = ExternalCompany.query.filter_by(id=popup_club.ext_company_id).first()
-        else:
-            popup_ext_c = None
-
-        popup_year_groups = []
-        for yg in popup_ygs:
-            popup_year_groups.append(int(yg.name))
-        # if there is more than one year group connected to the club:
-        if len(popup_year_groups) > 1:
-            # check if the year groups are consequtive:
-            if (sorted(popup_year_groups) == list(range(min(popup_year_groups), max(popup_year_groups)+1))): #https://www.geeksforgeeks.org/python-check-if-list-contains-consecutive-numbers/
-                popup_ygs = str(popup_year_groups[0]) + '-' + str(popup_year_groups[-1])
-            else:
-                #not consequtive, just sort and store as string
-                temp = sorted(popup_year_groups)
-                temp2 = [str(x) for x in temp]
-                popup_ygs = ", ".join(temp2)
-        else:
-            #single year group, just store name
-            popup_ygs = popup_ygs[0].name
+        popup_staff_member, popup_ext_c = staff_or_company(popup_sc, popup_club)
+        popup_ygs = format_yeargroups(popup_ygs)
 
         # Sort weekday names
         temp = [day.name for day in popup_days]
@@ -819,7 +448,7 @@ def timetable(x=None):
         popup_sc = None
         popup_book = None
         popup_staff_member = None
-        popup_ext_c = None
+        popup_ext_c = None'''
 
     # TIMETABLE variables
     # first find out wether the timetable should include weekend days (are there clubs in weekend?)
@@ -837,7 +466,6 @@ def timetable(x=None):
 
     for d in weekdays:
         timetable_clubs[d] = ClubDay.query.filter_by(name=d).all()
-
         day_clubs = []
         for day_club in timetable_clubs[d]:
             temp = Club.query.filter_by(id=day_club.club_id).first()
@@ -854,4 +482,4 @@ def timetable(x=None):
         after_school = not hours.isdisjoint(range(15,24))
         timeofday[d] = (morning, lunch, after_school)
 
-    return render_template('parent/timetable.html', school=school, form=form, popup_club=popup_club, popup_days=popup_days, popup_ygs=popup_ygs, popup_staff_member=popup_staff_member, popup_book=popup_book, popup_ext_c=popup_ext_c, timetable_clubs=timetable_clubs, weekdays=weekdays, weekday=weekday, timeofday=timeofday, today=today)
+    return render_template('parent/timetable.html', school=school, form=form, popup=popup, timetable_clubs=timetable_clubs, weekdays=weekdays, weekday=weekday, timeofday=timeofday, today=today)#school=school, form=form, popup_club=popup_club, popup_days=popup_days, popup_ygs=popup_ygs, popup_staff_member=popup_staff_member, popup_book=popup_book, popup_ext_c=popup_ext_c, timetable_clubs=timetable_clubs, weekdays=weekdays, weekday=weekday, timeofday=timeofday, today=today
