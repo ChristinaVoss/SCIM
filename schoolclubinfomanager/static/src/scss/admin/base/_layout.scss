@@ -121,3 +121,15 @@
 
 .margin-top-medium { margin-top: 4rem !important; }
 .margin-top-big { margin-top: 8rem !important; }
+
+.errors {
+  p {
+    color: orangered;
+    font-weight: 400;
+  }
+
+
+  &__field {
+    border: solid orangered 2px !important;
+  }
+}

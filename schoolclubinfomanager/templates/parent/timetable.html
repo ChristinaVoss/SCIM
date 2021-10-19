@@ -112,6 +112,7 @@
 
         {% if (club[0].start_time.hour >= min_hour) and (club[0].start_time.hour < max_hour) %}
         <a href="{{url_for('clubs.timetable', _anchor='single_card_popup', club_id=club[0].id)}}">
+          
           <div class="table__timetable__card">
             <div class="table__timetable__times">
               <p>{{club[0].start_time.strftime("%H:%M")}}</p>

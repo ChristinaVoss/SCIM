@@ -3,12 +3,27 @@
   <div class="popup__container club__card club__card__single">
     <div class="club__card__title club__card__section">
 
-      {% set club = popup_club %}
+      {% set club = popup[0] %}
+      {% set days = popup[1] %}
+      {% set ygs  = popup[2] %}
+      {% set staff_member = popup[5] %}
+      {% set book = popup[4] %}
+      {% set ext_c = popup[6] %}
+
+
+      <!--{% set club = popup_club %}
       {% set days = popup_days %}
       {% set ygs  = popup_ygs %}
       {% set staff_member = popup_staff_member %}
       {% set book = popup_book %}
       {% set ext_c = popup_ext_c %}
+      popup_club = None
+          popup_days = None
+          popup_ygs = None
+          popup_sc = None
+          popup_book = None
+          popup_staff_member = None
+          popup_ext_c = None-->
 
       <h2>{{club.name}}</h2>
       <a class="club__card__single__close" {% if request.path == '/timetable/'+club.id|string %}href="{{url_for('clubs.timetable')}}" {% else %} href="{{url_for('clubs.school_clubs')}}" {% endif %}>
